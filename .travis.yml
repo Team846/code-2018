@@ -1,0 +1,6 @@
+language: scala
+branches:
+  only:
+    - master
+script:
+  - sbt assembly
