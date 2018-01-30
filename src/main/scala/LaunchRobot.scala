@@ -1,6 +1,6 @@
-import edu.wpi.first.wpilibj.IterativeRobot
+import edu.wpi.first.wpilibj.{RobotBase}
 
-class Robot extends IterativeRobot {
+class LaunchRobot extends RobotBase {
   override def teleopInit(): Unit = println("Hello world!")
 
   override def teleopPeriodic(): Unit = {
