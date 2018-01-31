@@ -5,8 +5,8 @@ import com.lynbrookrobotics.potassium.streams.Stream
 
 trait CollectorClampState
 
-case object ClosedClamp extends  CollectorClampState
-case object OpenClamp extends  CollectorClampState
+case object ClosedClamp extends CollectorClampState
+case object OpenClamp extends CollectorClampState
 
 class CollectorClamp(val coreTicks: Stream[Unit])(implicit hardware: CollectorClampHardware) extends Component[CollectorClampState]{
   override def defaultController: Stream[CollectorClampState] = coreTicks.mapToConstant(OpenClamp)
