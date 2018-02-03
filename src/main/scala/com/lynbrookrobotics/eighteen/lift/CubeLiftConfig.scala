@@ -1,3 +1,3 @@
 package com.lynbrookrobotics.eighteen.lift
 
-case class LiftConfig(ports: LiftPorts, props: LiftProperties)
+case class CubeLiftConfig(ports: CubeLiftPorts, props: CubeLiftProperties)

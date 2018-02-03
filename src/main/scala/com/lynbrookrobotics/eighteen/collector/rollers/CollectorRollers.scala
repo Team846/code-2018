@@ -2,7 +2,6 @@ package com.lynbrookrobotics.eighteen.collector.rollers
 
 import com.lynbrookrobotics.potassium.Component
 import com.lynbrookrobotics.potassium.streams.Stream
-import squants.time.Milliseconds
 import squants.{Dimensionless, Each}
 
 class CollectorRollers(val coreTicks: Stream[Unit])(implicit hardware: CollectorRollersHardware) extends Component[(Dimensionless, Dimensionless)] {
@@ -10,6 +9,6 @@ class CollectorRollers(val coreTicks: Stream[Unit])(implicit hardware: Collector
 
   override def applySignal(signal: (Dimensionless, Dimensionless)): Unit = {
     hardware.rollerLeft.set(signal._1.toEach)
-    hardware.rollerRight.set(signal._1.toEach)
+    hardware.rollerRight.set(signal._2.toEach)
   }
 }

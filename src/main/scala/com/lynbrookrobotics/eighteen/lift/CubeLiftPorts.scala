@@ -2,4 +2,4 @@ package com.lynbrookrobotics.eighteen.lift
 
 import com.lynbrookrobotics.potassium.units.Ratio
 
-case class LiftPorts(potentiometerPort: Int, motorPort: Int)
+case class CubeLiftPorts(potentiometerPort: Int, motorPort: Int)

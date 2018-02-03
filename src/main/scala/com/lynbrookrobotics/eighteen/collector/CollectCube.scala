@@ -5,10 +5,10 @@ import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, Collec
 import com.lynbrookrobotics.potassium.tasks.ContinuousTask
 import com.lynbrookrobotics.potassium.streams.Stream
 
-class CollectCube(clamp: CollectorClamp, rollers: CollectorRollers)(implicit collectorRollersConfig: Stream[CollectorRollersConfig]) extends ContinuousTask{
+class CollectCube(clamp: CollectorClamp, rollers: CollectorRollers)(implicit collectorRollersConfig: Stream[CollectorRollersConfig]) extends ContinuousTask {
   override protected def onStart(): Unit = {
     clamp.setController(clamp.coreTicks.mapToConstant(ClosedClamp))
-    rollers.setController(collectorRollersConfig.map(_.collectSpeed))
+    rollers.setController(collectorRollersConfig.map(x => (x.collectSpeed, x.collectSpeed)))
   }
 
   override protected def onEnd(): Unit = {
