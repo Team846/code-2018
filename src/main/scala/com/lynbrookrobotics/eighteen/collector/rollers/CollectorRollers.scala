@@ -12,3 +12,4 @@ class CollectorRollers(val coreTicks: Stream[Unit])(implicit hardware: Collector
     hardware.rollerRight.set(signal._2.toEach)
   }
 }
+
