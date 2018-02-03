@@ -1,3 +1,5 @@
+/*
+
 import edu.wpi.first.wpilibj.{RobotBase}
 
 class LaunchRobot extends RobotBase {
@@ -7,3 +9,5 @@ class LaunchRobot extends RobotBase {
     // TODO code robot
   }
 }
+
+*/
