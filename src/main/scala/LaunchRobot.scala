@@ -27,10 +27,10 @@ class LaunchRobot extends RobotBase {
 
   implicit val config = Signal.constant(RobotConfig(
     driver = DriverConfig(
-      0,
-      1,
-      2,
-      -1
+      driverPort = 0,
+      operatorPort = 1,
+      driverWheelPort = 2,
+      launchpadPort = -1
     ),
     drivetrain = DrivetrainConfig(
       ports = DrivetrainPorts(
