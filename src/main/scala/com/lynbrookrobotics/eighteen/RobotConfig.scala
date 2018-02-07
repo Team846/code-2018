@@ -1,3 +1,9 @@
 package com.lynbrookrobotics.eighteen
 
-case class RobotConfig()
+import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollersConfig
+import com.lynbrookrobotics.eighteen.driver.DriverConfig
+import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainConfig
+
+case class RobotConfig(driver: DriverConfig,
+                       drivetrain: DrivetrainConfig,
+                       collectorRollers: CollectorRollersConfig)
