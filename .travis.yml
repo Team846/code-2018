@@ -3,4 +3,4 @@ branches:
   only:
     - master
 script:
-  - sbt assembly
+  - sbt robotJVM/assembly robotNative/compile
