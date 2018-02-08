@@ -1,5 +1,5 @@
+package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.{CoreRobot, RobotConfig, RobotHardware}
 import com.lynbrookrobotics.eighteen.driver.{DriverConfig, DriverHardware}
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
 import com.lynbrookrobotics.potassium.Signal

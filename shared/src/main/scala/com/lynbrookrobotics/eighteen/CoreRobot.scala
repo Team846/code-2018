@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
-import com.lynbrookrobotics.eighteen.drivetrain.Drivetrain
+import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComp
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.streams.Stream
@@ -17,8 +17,8 @@ class CoreRobot (configFileValue: Signal[String], updateConfigFile: String => Un
 
   implicit val drivetrainHardware = hardware.drivetrain
   implicit val drivetrainProps = config.map(_.drivetrain.props)
-  val drivetrain: Option[Drivetrain] =
-    Option(hardware.drivetrain).map(_ => new Drivetrain(coreTicks))
+  val drivetrain: Option[DrivetrainComp] =
+    Option(hardware.drivetrain).map(_ => new DrivetrainComp(coreTicks))
 
   implicit val collectorRollersHardware = hardware.collectorRollers
   implicit val collectorRollersProps = config.map(_.collectorRollers.props)
@@ -34,6 +34,12 @@ class CoreRobot (configFileValue: Signal[String], updateConfigFile: String => Un
 
   isTeleopEnabled.onStart.foreach { () =>
     components.foreach(_.resetToDefault())
+  }
+
+  isEnabled.onStart.foreach { () =>
+    if (drivetrain.isDefined) {
+      drivetrainHardware.gyro.endCalibration()
+    }
   }
 
   isEnabled.onEnd.foreach { () =>

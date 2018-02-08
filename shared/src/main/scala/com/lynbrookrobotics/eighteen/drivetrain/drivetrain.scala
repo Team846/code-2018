@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.potassium.clock.Clock
-import com.lynbrookrobotics.potassium.commons.drivetrain.{ArcadeControlsOpen, NoOperation}
+import com.lynbrookrobotics.potassium.commons.drivetrain.{ArcadeControlsClosed, NoOperation}
 import com.lynbrookrobotics.potassium.commons.drivetrain.offloaded.OffloadedDrive
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSided
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
@@ -20,18 +20,20 @@ package object drivetrain extends OffloadedDrive { self =>
 
   override protected def controlMode(implicit hardware: Hardware, props: Properties) = {
     if (hardware.driverHardware.station.isEnabled && hardware.driverHardware.station.isOperatorControl) {
-      ArcadeControlsOpen(
+      ArcadeControlsClosed(
         hardware.driverHardware.joystickStream.map(v => -v.driver.y).map(s =>
-          Each(Math.copySign((s * s).toEach, s.toEach))).syncTo(hardware.leftPosition),
+          Each(Math.copySign((s * s).toEach, s.toEach))),
         hardware.driverHardware.joystickStream.map(v => v.driverWheel.x).map(s =>
-          Each(Math.copySign((s * s).toEach, s.toEach))).syncTo(hardware.leftPosition)
+          Each(Math.copySign((s * s).toEach, s.toEach)))
       )
     } else {
       NoOperation
     }
   }
 
-  class Drivetrain(coreTicks: Stream[Unit])(implicit hardware: Hardware,
+  type Drivetrain = DrivetrainComp
+
+  class DrivetrainComp(coreTicks: Stream[Unit])(implicit hardware: Hardware,
                    props: Signal[Properties],
                    clock: Clock) extends Component[DriveSignal] {
     override def defaultController: Stream[DriveSignal] = self.defaultController

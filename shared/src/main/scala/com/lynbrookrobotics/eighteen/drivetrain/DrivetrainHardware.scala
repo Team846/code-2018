@@ -7,18 +7,29 @@ import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSidedDriveHardware
 import com.lynbrookrobotics.potassium.frc.{LazyTalon, TalonEncoder}
+import com.lynbrookrobotics.potassium.sensors.imu.{ADIS16448, DigitalGyro}
 import com.lynbrookrobotics.potassium.streams._
-import com.lynbrookrobotics.potassium.units.Ratio
-import squants.time.Seconds
-import squants.{Length, Velocity}
+import com.lynbrookrobotics.potassium.units.{Ratio, Value3D}
+import com.lynbrookrobotics.potassium.frc.Implicits._
+import edu.wpi.first.wpilibj.SPI
+import squants.motion.AngularVelocity
+import squants.time.{Milliseconds, Seconds}
+import squants.{Angle, Length, Velocity}
 
-class DrivetrainHardware(coreTicks: Stream[Unit],
-                         leftSRX: TalonSRX,
-                         rightSRX: TalonSRX,
-                         leftFollowerSRX: TalonSRX,
-                         rightFollowerSRX: TalonSRX,
-                         val driverHardware: DriverHardware,
-                         props: DrivetrainProperties)(implicit clock: Clock) extends TwoSidedDriveHardware {
+case class DrivetrainData(leftEncoderVelocity: AngularVelocity,
+                          rightEncoderVelocity: AngularVelocity,
+                          leftEncoderRotation: Angle,
+                          rightEncoderRotation: Angle,
+                          gyroVelocities: Value3D[AngularVelocity])
+
+case class DrivetrainHardware(coreTicks: Stream[Unit],
+                              leftSRX: TalonSRX,
+                              rightSRX: TalonSRX,
+                              leftFollowerSRX: TalonSRX,
+                              rightFollowerSRX: TalonSRX,
+                              gyro: DigitalGyro,
+                              driverHardware: DriverHardware,
+                              props: DrivetrainProperties)(implicit clock: Clock) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
   val escIdx = 0
@@ -60,9 +71,10 @@ class DrivetrainHardware(coreTicks: Stream[Unit],
       it.configVoltageMeasurementFilter(32, escTout)
       it.enableVoltageCompensation(true)
 
-      it.configContinuousCurrentLimit(75, escTout)
+      it.configContinuousCurrentLimit(20, escTout)
       it.configPeakCurrentDuration(0, escTout)
       it.enableCurrentLimit(true)
+
       Map(
         Status_1_General -> 10,
         Status_2_Feedback0 -> 20,
@@ -106,23 +118,39 @@ class DrivetrainHardware(coreTicks: Stream[Unit],
   }
 
   private val t = Seconds(1)
-  override val leftVelocity: Stream[Velocity] = coreTicks.map { _ =>
-    val x = wheelOverEncoderGears * Ratio(leftEncoder.getAngularVelocity * t, t)
+
+  val rootDataStream = Stream.periodic(Milliseconds(5))(
+    DrivetrainData(
+      leftEncoder.getAngularVelocity,
+      rightEncoder.getAngularVelocity,
+
+      leftEncoder.getAngle,
+      rightEncoder.getAngle,
+
+      gyro.getVelocities
+    )
+  )
+
+  override val leftVelocity: Stream[Velocity] = rootDataStream.map(_.leftEncoderVelocity).map { av =>
+    val x = wheelOverEncoderGears * Ratio(av * t, t)
     (x.num / x.den) onRadius (wheelDiameter / 2)
   }
 
-  override val rightVelocity: Stream[Velocity] = coreTicks.map { _ =>
-    val x = wheelOverEncoderGears * Ratio(rightEncoder.getAngularVelocity * t, t)
+  override val rightVelocity: Stream[Velocity] = rootDataStream.map(_.rightEncoderVelocity).map { av =>
+    val x = wheelOverEncoderGears * Ratio(av * t, t)
     (x.num / x.den) onRadius (wheelDiameter / 2)
   }
 
-  override val leftPosition: Stream[Length] = coreTicks.map { _ =>
-    (wheelOverEncoderGears * leftEncoder.getAngle) onRadius (wheelDiameter / 2)
+  override val leftPosition: Stream[Length] = rootDataStream.map(_.leftEncoderRotation).map { ar =>
+    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
   }
 
-  override val rightPosition: Stream[Length] = coreTicks.map { _ =>
-    (wheelOverEncoderGears * rightEncoder.getAngle) onRadius (wheelDiameter / 2)
+  override val rightPosition: Stream[Length] = rootDataStream.map(_.rightEncoderRotation).map { ar =>
+    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
   }
+
+  override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
+  override lazy val turnPosition: Stream[Angle] = turnVelocity.integral.preserve
 }
 
 object DrivetrainHardware {
@@ -134,6 +162,7 @@ object DrivetrainHardware {
       new TalonSRX(config.ports.rightPort),
       new TalonSRX(config.ports.leftFollowerPort),
       new TalonSRX(config.ports.rightFollowerPort),
+      new ADIS16448(new SPI(SPI.Port.kMXP), null),
       driverHardware,
       config.props
     )
