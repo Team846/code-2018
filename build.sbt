@@ -37,9 +37,9 @@ lazy val jvm = robot.jvm.enablePlugins(FRCPlugin).settings(
   teamNumber := 846
 )
 
-val boehmFolder = file("/Users/shadaj/cross-compile/bdwgc")
-val libunwindFolder = file("/Users/shadaj/cross-compile/libunwind-1.2.1")
-val librtFolder = file("/Users/shadaj/cross-compile/re2")
+val boehmFolder = file("cross-compile/bdwgc")
+val libunwindFolder = file("cross-compile/libunwind")
+val librtFolder = file("cross-compile/re2")
 
 import scala.scalanative.sbtplugin.ScalaNativePluginInternal._
 import scala.scalanative.sbtplugin.Utilities._
@@ -77,7 +77,7 @@ val crossCompileSettings = Seq(
       (file("custom-c") ** "*.o").get.map(_.abs)) :+
       (libunwindFolder / "lib" / "libunwind.a").abs :+
       (libunwindFolder / "lib" / "libunwind-arm.a").abs :+
-      (librtFolder / "lib" / "libre2.a").abs :+
+      (librtFolder / "obj" / "libre2.a").abs :+
       (boehmFolder / "gc.a").abs
 
     val paths     = apppaths.map(_.abs) ++ opaths
