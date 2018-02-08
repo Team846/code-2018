@@ -9,6 +9,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.units._
 import GenericValue._
 import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollersConfig, CollectorRollersPorts, CollectorRollersProperties}
+import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampConfig
 import squants.time.Seconds
 import squants.Percent
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
@@ -82,6 +83,9 @@ class LaunchRobot extends RobotBase {
       props = CollectorRollersProperties(
         collectSpeed = Percent(50)
       )
+    ),
+    collectorClamp = CollectorClampConfig(
+      pneumaticPort = -1
     )
   ))
 

@@ -1,6 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
+import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComp
 import com.lynbrookrobotics.potassium.{Component, Signal}
@@ -9,8 +10,8 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.ContinuousTask
 import squants.Each
 
-class CoreRobot (configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])
-                (implicit val config: Signal[RobotConfig], hardware: RobotHardware,
+class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])
+               (implicit val config: Signal[RobotConfig], hardware: RobotHardware,
                  val clock: Clock) {
   implicit val driverHardware: DriverHardware = hardware.driver
   private val ds = driverHardware.station
@@ -22,12 +23,18 @@ class CoreRobot (configFileValue: Signal[String], updateConfigFile: String => Un
 
   implicit val collectorRollersHardware = hardware.collectorRollers
   implicit val collectorRollersProps = config.map(_.collectorRollers.props)
-  val collectorRollers : Option[CollectorRollers] =
+  val collectorRollers: Option[CollectorRollers] =
     Option(hardware.collectorRollers).map(_ => new CollectorRollers(coreTicks))
+
+  implicit val collectorClampHardware = hardware.collectorClamp
+  implicit val collectorClampProps = config.map(_.collectorClamp)
+  val collectorClamp: Option[CollectorClamp] =
+    Option(hardware.collectorClamp).map(_ => new CollectorClamp(coreTicks))
 
   lazy val components: Seq[Component[_]] = Seq(
     drivetrain,
-    collectorRollers
+    collectorRollers,
+    collectorClamp
   ).flatten
 
   import driverHardware._
@@ -46,20 +53,26 @@ class CoreRobot (configFileValue: Signal[String], updateConfigFile: String => Un
     components.foreach(_.resetToDefault())
   }
 
-
   for {
     collectorRollers <- collectorRollers
+    collectorClamp <- collectorClamp
   } {
-    driverHardware.joystickStream.eventWhen(_ => driverHardware.driverJoystick.getRawButton(1)).foreach(new ContinuousTask {
-      override protected def onStart(): Unit = {
-        collectorRollers.setController(coreTicks.mapToConstant(
-          (Each(0.5), Each(-0.5))
-        ))
-      }
+    driverHardware.joystickStream.eventWhen(_ =>
+      driverHardware.driverJoystick.getRawButton(1) &&
+        driverHardware.driverJoystick.getRawButton(2)).foreach(
+      new collector.CollectCubeClamped(collectorClamp, collectorRollers)
+    )
 
-      override protected def onEnd(): Unit = {
-        collectorRollers.resetToDefault()
-      }
-    })
+    driverHardware.joystickStream.eventWhen(_ =>
+      driverHardware.driverJoystick.getRawButton(1) &&
+        !driverHardware.driverJoystick.getRawButton(2)).foreach(
+      new collector.CollectCubeOpen(collectorRollers)
+    )
+
+    driverHardware.joystickStream.eventWhen(_ =>
+      !driverHardware.driverJoystick.getRawButton(1) &&
+        driverHardware.driverJoystick.getRawButton(2)).foreach(
+      new collector.clamp.ClampCollector(collectorClamp)
+    )
   }
 }

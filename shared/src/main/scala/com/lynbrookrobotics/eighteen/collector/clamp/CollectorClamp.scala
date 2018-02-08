@@ -18,5 +18,3 @@ class CollectorClamp(val coreTicks: Stream[Unit])(implicit hardware: CollectorCl
     }
   }
 }
-
-
