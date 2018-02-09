@@ -1,11 +1,10 @@
-package com.lynbrookrobotics.eighteen.collector
+package com.lynbrookrobotics.eighteen.collector.rollers
 
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, CollectorRollersProperties}
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.tasks.ContinuousTask
 
-class CollectCubeOpen(rollers: CollectorRollers)
-                     (implicit collectorRollersProps: Signal[CollectorRollersProperties]) extends ContinuousTask {
+class SpinForCollect(rollers: CollectorRollers)
+                    (implicit collectorRollersProps: Signal[CollectorRollersProperties]) extends ContinuousTask {
   override protected def onStart(): Unit = {
     rollers.setController(rollers.coreTicks.map(_ =>
       (collectorRollersProps.get.collectSpeed, -collectorRollersProps.get.collectSpeed)
