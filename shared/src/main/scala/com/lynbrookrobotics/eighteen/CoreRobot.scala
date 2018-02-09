@@ -37,42 +37,20 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     collectorClamp
   ).flatten
 
-  import driverHardware._
-
-  isTeleopEnabled.onStart.foreach { () =>
+  // Register at the end so they are all run first
+  driverHardware.isTeleopEnabled.onStart.foreach { () =>
     components.foreach(_.resetToDefault())
   }
 
-  isEnabled.onStart.foreach { () =>
+  driverHardware.isEnabled.onStart.foreach { () =>
     if (drivetrain.isDefined) {
       drivetrainHardware.gyro.endCalibration()
     }
   }
 
-  isEnabled.onEnd.foreach { () =>
+  driverHardware.isEnabled.onEnd.foreach { () =>
     components.foreach(_.resetToDefault())
   }
 
-  for {
-    collectorRollers <- collectorRollers
-    collectorClamp <- collectorClamp
-  } {
-    driverHardware.joystickStream.eventWhen(_ =>
-      driverHardware.driverJoystick.getRawButton(1) &&
-        driverHardware.driverJoystick.getRawButton(2)).foreach(
-      new collector.CollectCubeClamped(collectorClamp, collectorRollers)
-    )
-
-    driverHardware.joystickStream.eventWhen(_ =>
-      driverHardware.driverJoystick.getRawButton(1) &&
-        !driverHardware.driverJoystick.getRawButton(2)).foreach(
-      new collector.CollectCubeOpen(collectorRollers)
-    )
-
-    driverHardware.joystickStream.eventWhen(_ =>
-      !driverHardware.driverJoystick.getRawButton(1) &&
-        driverHardware.driverJoystick.getRawButton(2)).foreach(
-      new collector.clamp.ClampCollector(collectorClamp)
-    )
-  }
+  ButtonMappings.setup(this)
 }
