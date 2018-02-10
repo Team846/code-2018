@@ -13,7 +13,8 @@ resolvers += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/developme
 organization := "com.lynbrookrobotics"
 teamNumber := 846
 
-val potassiumVersion = "0.1.0-47cb1da8"
+//47cb1da8
+val potassiumVersion = "0.1.0-8b7ddbb9"
 libraryDependencies += "com.lynbrookrobotics" %% "potassium-core" % potassiumVersion
 libraryDependencies += "com.lynbrookrobotics" %% "potassium-commons" % potassiumVersion
 libraryDependencies += "com.lynbrookrobotics" %% "potassium-frc" % potassiumVersion

@@ -3,6 +3,7 @@ package com.lynbrookrobotics.eighteen.drivetrain
 import com.lynbrookrobotics.potassium.commons.drivetrain._
 import com.lynbrookrobotics.potassium.commons.drivetrain.offloaded.OffloadedDrive
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSided
+import com.lynbrookrobotics.potassium.control.OffloadedSignal
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import squants.Each
 
