@@ -97,8 +97,8 @@ val crossCompileSettings = Seq(
     "--sysroot=/usr/local/arm-frc-linux-gnueabi",
     s"-I${(libunwindFolder / "include").abs}", s"-I${(librtFolder / "include").abs}", s"-I${(boehmFolder / "include").abs}",
     "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0", "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0/arm-frc-linux-gnueabi",
-    "-I/Users/shadaj/external-dev/allwpilib/wpilibj/src/arm-linux-jni",
-    "-I/Users/shadaj/external-dev/allwpilib/wpilibj/src/arm-linux-jni/linux"
+    s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni").abs}",
+    s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni/linux").abs}"
   ),
   nativeLinkingOptions ++= Seq(
     "-lm", "-lc", "-lstdc++", "-lpthread", "-ldl", // system stuff,

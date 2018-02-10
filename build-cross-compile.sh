@@ -28,4 +28,10 @@ git checkout 2018-02-01
 git apply ../../re2-cross.patch
 make obj/libre2.a
 cd ..
+
+git clone git@github.com:wpilibsuite/allwpilib.git
+cd allwpilib
+git checkout v2018.2.2
+cd ..
+
 cd ..
