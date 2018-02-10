@@ -107,9 +107,9 @@ val crossCompileSettings = Seq(
     "-l:libRoboRIO_FRC_ChipObject.so.18.0.0", "-l:libvisa.so", "-l:libFRC_NetworkCommunication.so.18.0.0",
     "-l:libNiFpga.so.17.0.0", "-l:libNiFpgaLv.so.17.0.0", "-l:libNiRioSrv.so.17.0.0",
 
-    "-L/Users/shadaj/wpilib/common/current/lib/linux/athena/shared",
-    "-L/Users/shadaj/wpilib/user/java/lib",
-    "-L/Users/shadaj/wpilib/cpp/current/reflib/linux/athena/shared"
+    s"-L${(baseDirectory.value / "../cross-compile/wpilib-core/lib/linux/athena/shared").abs}",
+    s"-L${(baseDirectory.value / "../cross-compile/phoenix/java/lib").abs}",
+    s"-L${(baseDirectory.value / "../cross-compile/wpilib-cpp/reflib/linux/athena/shared").abs}"
   )
 )
 
