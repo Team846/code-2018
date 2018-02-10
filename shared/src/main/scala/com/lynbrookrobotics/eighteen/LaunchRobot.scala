@@ -109,8 +109,8 @@ class LaunchRobot extends RobotBase {
     coreRobot = new CoreRobot(
       Signal(configString),
       newS => newS.decodeOption[RobotConfig].foreach { it =>
-          configString = newS
-          config = it
+        configString = newS
+        config = it
       },
       coreTicks
     )
