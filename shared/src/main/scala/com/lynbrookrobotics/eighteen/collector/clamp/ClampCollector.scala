@@ -4,7 +4,7 @@ import com.lynbrookrobotics.potassium.tasks.ContinuousTask
 
 class ClampCollector(clamp: CollectorClamp) extends ContinuousTask {
   override protected def onStart(): Unit = {
-    clamp.setController(clamp.coreTicks.mapToConstant(OpenClamp))
+    clamp.setController(clamp.coreTicks.mapToConstant(ClosedClamp))
   }
 
   override protected def onEnd(): Unit = {
