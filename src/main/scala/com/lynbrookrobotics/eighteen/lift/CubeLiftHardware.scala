@@ -26,7 +26,7 @@ object CubeLiftHardware {
     CubeLiftHardware(
       config.props,
       new AnalogInput(config.ports.potentiometerPort),
-      new LazyTalon(new TalonSRX(config.ports.motorPort), idx = config.idx, timeout = config.timeout, -1, + 1),
+      new LazyTalon(new TalonSRX(config.ports.motorPort), idx = config.idx, timeout = config.timeout, -1, + 1)
     )
   }
 }
