@@ -19,7 +19,7 @@ case class CubeLiftProperties(
                              ) extends OffloadedLiftProperties() {
   override def positionGains: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless] = pidConfig
 
-  override val escConfig: EscConfig[Length] = _
+  override val escConfig: EscConfig[Length] = ???
 
   override def toNative(height: Length): Dimensionless = ???
 
