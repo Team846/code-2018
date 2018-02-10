@@ -17,11 +17,7 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform).crossType(CrossType.F
   libraryDependencies += "com.lynbrookrobotics" %%% "potassium-core" % potassiumVersion,
   libraryDependencies += "com.lynbrookrobotics" %%% "potassium-commons" % potassiumVersion,
   libraryDependencies += "com.lynbrookrobotics" %%% "potassium-frc" % potassiumVersion,
-  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-config" % potassiumVersion,
-  libraryDependencies += "com.chuusai" %%% "shapeless" % "2.3.3",
-  libraryDependencies += "io.argonaut" %%% "argonaut" % "6.2.1",
-  libraryDependencies += "com.github.alexarchambault" %%% "argonaut-shapeless_6.2" % "1.2.0-M8",
-  libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-config" % potassiumVersion
 ).jvmSettings(
   scalaVersion := "2.12.4",
   libraryDependencies += "edu.wpi.first" % "wpilib" % wpiVersion,
