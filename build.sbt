@@ -113,7 +113,7 @@ val crossCompileSettings = Seq(
   )
 )
 
-lazy val native = robot.native.enablePlugins(ScalaNativePlugin).settings(
+lazy val native = robot.native.settings(
   nativeMode := "debug",
   nativeGC := "boehm",
   crossCompileSettings
