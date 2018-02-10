@@ -14,7 +14,7 @@ organization := "com.lynbrookrobotics"
 teamNumber := 846
 
 //47cb1da8
-val potassiumVersion = "0.1.0-8b7ddbb9"
+val potassiumVersion = "0.1.0-cc17fccd"
 libraryDependencies += "com.lynbrookrobotics" %% "potassium-core" % potassiumVersion
 libraryDependencies += "com.lynbrookrobotics" %% "potassium-commons" % potassiumVersion
 libraryDependencies += "com.lynbrookrobotics" %% "potassium-frc" % potassiumVersion
