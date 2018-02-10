@@ -102,6 +102,7 @@ class LaunchRobot extends RobotBase {
       )
     )
   )
+
   implicit val configSig = Signal(config)
 
   implicit val hardware: RobotHardware = RobotHardware(config, coreTicks)
