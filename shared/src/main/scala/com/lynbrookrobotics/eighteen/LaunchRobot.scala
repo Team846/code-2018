@@ -23,6 +23,7 @@ import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 
 import scala.io.Source
+import scala.util.Try
 
 class LaunchRobot extends RobotBase {
   implicit val clock = WPIClock
@@ -33,9 +34,11 @@ class LaunchRobot extends RobotBase {
 
   val coreTicks = Stream.periodic(Seconds(0.01))(())
 
-  var configString = Source.fromFile(new File("/home/lvuser/robot-config.json"))
-    .getLines
-    .mkString("\n")
+  var configString = Try(
+    Source.fromFile(new File("/home/lvuser/robot-config.json"))
+      .getLines
+      .mkString("\n")
+  ).getOrElse("")
 
   implicit var config = configString.decodeOption[RobotConfig].getOrElse(
     RobotConfig(
