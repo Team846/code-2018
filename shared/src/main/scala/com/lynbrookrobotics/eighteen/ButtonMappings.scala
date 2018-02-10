@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
-import com.lynbrookrobotics.eighteen.collector.clamp.ClampCollector
+import com.lynbrookrobotics.eighteen.collector.clamp.OpenCollector
 import com.lynbrookrobotics.eighteen.collector.rollers.SpinForCollect
 
 object ButtonMappings {
@@ -13,8 +13,13 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen(_ =>
         driverHardware.driverJoystick.getRawButton(1) &&
-          !driverHardware.driverJoystick.getRawButton(2)).foreach(
-        new SpinForCollect(collectorRollers)
+          driverHardware.driverJoystick.getRawButton(2)).foreach(
+        CollectorTasks.collectCubeWithoutOpen(collectorRollers)
+      )
+
+      driverHardware.joystickStream.eventWhen(_ =>
+        driverHardware.operatorJoystick.getRawButton(1)).foreach(
+        CollectorTasks.purgeCube(collectorRollers)
       )
     }
 
@@ -24,7 +29,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen(_ =>
         !driverHardware.driverJoystick.getRawButton(1) &&
           driverHardware.driverJoystick.getRawButton(2)).foreach(
-        new ClampCollector(collectorClamp)
+        new OpenCollector(collectorClamp)
       )
     }
 
@@ -34,14 +39,14 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen(_ =>
         driverHardware.driverJoystick.getRawButton(1) &&
-          driverHardware.driverJoystick.getRawButton(2)).foreach(
-        CollectorTasks.collectCubeClamped(collectorRollers, collectorClamp)
+          !driverHardware.driverJoystick.getRawButton(2)).foreach(
+        CollectorTasks.collectCube(collectorRollers, collectorClamp)
       )
 
-      driverHardware.joystickStream.eventWhen(_ =>
-        driverHardware.operatorJoystick.getRawButton(1)).foreach(
-        CollectorTasks.purgeCubeClamped(collectorRollers, collectorClamp)
-      )
+      // driverHardware.joystickStream.eventWhen(_ =>
+      //   driverHardware.operatorJoystick.getRawButton(1)).foreach(
+      //   CollectorTasks.purgeCubeOpen(collectorRollers, collectorClamp)
+      // )
     }
   }
 }
