@@ -9,14 +9,19 @@ import squants.Dimensionless
 import squants.motion.Velocity
 import squants.space.{Inches, Length}
 
-case class CubeLiftProperties(PIDConfig: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless]) extends OffloadedLiftProperties() {
-  override def positionGains: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless] = PIDConfig
+case class CubeLiftProperties(
+                               pidConfig: PIDConfig[Length,
+                                 Length,
+                                 GenericValue[Length],
+                                 Velocity,
+                                 GenericIntegral[Length],
+                                 Dimensionless]
+                             ) extends OffloadedLiftProperties() {
+  override def positionGains: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless] = pidConfig
 
   override val escConfig: EscConfig[Length] = _
 
   override def toNative(height: Length): Dimensionless = ???
 
-  override def fromNative(native: Dimensionless): Length = {
-    Inches(1)
-  }
+  override def fromNative(native: Dimensionless): Length = ???
 }

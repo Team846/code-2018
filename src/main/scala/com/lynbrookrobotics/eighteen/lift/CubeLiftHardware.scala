@@ -12,9 +12,8 @@ import squants.{Dimensionless, Each, Time}
 import squants.space.{Inches, Length}
 import squants.time.Milliseconds
 
-case class CubeLiftHardware(props: CubeLiftProperties,
-                            potentiometer: AnalogInput,
-                            talon: LazyTalon) (implicit clock: Clock, coreTicks: Stream[Unit]) extends LiftHardware {
+case class CubeLiftHardware(potentiometer: AnalogInput,
+                            talon: LazyTalon) (implicit coreTicks: Stream[Unit], props: CubeLiftProperties) extends LiftHardware {
 
   override def position: Stream[Length] = coreTicks.map( _=>
     props.fromNative(Each(potentiometer.getAverageVoltage))
@@ -22,12 +21,11 @@ case class CubeLiftHardware(props: CubeLiftProperties,
 }
 
 object CubeLiftHardware {
-  def apply(config: CubeLiftConfig)(implicit clock: Clock, coreTicks: Stream[Unit]): CubeLiftHardware = {
+  def apply(config: CubeLiftConfig)(implicit coreTicks: Stream[Unit]): CubeLiftHardware = {
     CubeLiftHardware(
-      config.props,
       new AnalogInput(config.ports.potentiometerPort),
       new LazyTalon(new TalonSRX(config.ports.motorPort), idx = config.idx, timeout = config.timeout, -1, + 1)
-    )
+    )(coreTicks, config.props)
   }
 }
 
