@@ -44,33 +44,33 @@ class LaunchRobot extends RobotBase {
         maxLeftVelocity = FeetPerSecond(18.8),
         maxRightVelocity = FeetPerSecond(19.25),
         leftVelocityGains = PIDConfig(
-          Ratio(Percent(40), FeetPerSecond(5)),
+          Ratio(Percent(50), FeetPerSecond(5)),
           Ratio(Percent(0), Feet(5)),
           Ratio(Percent(0), FeetPerSecondSquared(5))
         ),
         rightVelocityGains = PIDConfig(
-          Ratio(Percent(40), FeetPerSecond(5)),
+          Ratio(Percent(50), FeetPerSecond(5)),
           Ratio(Percent(0), Feet(5)),
           Ratio(Percent(0), FeetPerSecondSquared(5))
         ),
         forwardPositionGains = PIDConfig(
-          Percent(0) / Feet(5),
+          Percent(20) / Feet(1),
           Percent(0) / (Feet(5) * Seconds(1)),
           Percent(0) / FeetPerSecond(5)
         ),
         turnVelocityGains = PIDConfig(
-          Percent(0) / DegreesPerSecond(1),
+          Percent(40) / DegreesPerSecond(90),
           Percent(0) / (DegreesPerSecond(1) * Seconds(1)),
           Percent(0) / (toGenericValue(DegreesPerSecond(1)) / Seconds(1))
         ),
         turnPositionGains = PIDConfig(
-          Percent(0) / Degrees(1),
+          Percent(125) / Degrees(90),
           Percent(0) / (Degrees(1) * Seconds(1)),
           Percent(0) / (Degrees(1) / Seconds(1))
         ),
         maxTurnVelocity = DegreesPerSecond(90),
         maxAcceleration = FeetPerSecondSquared(0),
-        defaultLookAheadDistance = Feet(2.5),
+        defaultLookAheadDistance = Feet(2),
         blendExponent = 0,
         track = Inches(21.75)
       )
