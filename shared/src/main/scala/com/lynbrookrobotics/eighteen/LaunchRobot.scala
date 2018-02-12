@@ -1,7 +1,5 @@
 package com.lynbrookrobotics.eighteen
 
-import java.io.File
-
 import argonaut.Argonaut._
 import argonaut._
 import ArgonautShapeless._
@@ -23,6 +21,7 @@ import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 
 import scala.io.Source
+import scala.reflect.io.File
 import scala.util.Try
 
 class LaunchRobot extends RobotBase {
@@ -34,13 +33,11 @@ class LaunchRobot extends RobotBase {
 
   val coreTicks = Stream.periodic(Seconds(0.01))(())
 
-  var configString = Try(
-    Source.fromFile(new File("/home/lvuser/robot-config.json"))
-      .getLines
-      .mkString("\n")
-  ).getOrElse("")
+  val configFile = File("/home/lvuser/robot-config.json")
 
-  implicit var config = configString.decodeOption[RobotConfig].getOrElse(
+  var configString = configFile.safeSlurp.getOrElse("")
+
+  implicit var configJson = configString.decodeOption[RobotConfig].getOrElse(
     RobotConfig(
       driver = DriverConfig(
         driverPort = 0,
@@ -103,16 +100,18 @@ class LaunchRobot extends RobotBase {
     )
   )
 
-  implicit val configSig = Signal(config)
+  implicit val configSig = Signal(configJson)
 
-  implicit val hardware: RobotHardware = RobotHardware(config, coreTicks)
+  implicit val hardware: RobotHardware = RobotHardware(configJson, coreTicks)
 
   override def startCompetition(): Unit = {
     coreRobot = new CoreRobot(
       Signal(configString),
       newS => newS.decodeOption[RobotConfig].foreach { it =>
+        println("writing to robot-config.json")
         configString = newS
-        config = it
+        configJson = it
+        configFile.writeAll(newS)
       },
       coreTicks
     )
