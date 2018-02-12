@@ -62,6 +62,10 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     addAutonomousRoutine(1) {
       generator.twoCubeAuto(drivetrain, collectorRollers, collectorClamp).toContinuous
     }
+
+    addAutonomousRoutine(2) {
+      generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp).toContinuous
+    }
   }
 
   val inst = NetworkTableInstance.getDefault()
