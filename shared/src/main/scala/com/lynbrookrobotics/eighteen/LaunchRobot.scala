@@ -73,7 +73,8 @@ class LaunchRobot extends RobotBase {
         defaultLookAheadDistance = Feet(2.5),
         blendExponent = 0,
         track = Inches(21.75)
-      )
+      ),
+      idx = 0
     ),
     collectorRollers = CollectorRollersConfig(
       ports = CollectorRollersPorts(
