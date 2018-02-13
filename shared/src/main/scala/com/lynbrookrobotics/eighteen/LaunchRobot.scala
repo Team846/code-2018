@@ -21,7 +21,8 @@ import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 
 import scala.io.Source
-import scala.reflect.io.File
+import java.io.{File, FileWriter, PrintStream, PrintWriter}
+
 import scala.util.Try
 
 class LaunchRobot extends RobotBase {
@@ -33,9 +34,11 @@ class LaunchRobot extends RobotBase {
 
   val coreTicks = Stream.periodic(Seconds(0.01))(())
 
-  val configFile = File("/home/lvuser/robot-config.json")
+  val configFile = new File("/home/lvuser/robot-config.json")
 
-  var configString = configFile.safeSlurp.getOrElse("")
+  var configString = Try (
+    Source.fromFile(configFile).mkString
+    ).getOrElse("")
 
   implicit var configJson = configString.decodeOption[RobotConfig].getOrElse(
     RobotConfig(
@@ -111,7 +114,10 @@ class LaunchRobot extends RobotBase {
         println("writing to robot-config.json")
         configString = newS
         configJson = it
-        configFile.writeAll(newS)
+
+        val writer = new PrintWriter(new FileWriter(configFile))
+        writer.println(configString)
+        writer.close()
       },
       coreTicks
     )
