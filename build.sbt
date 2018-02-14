@@ -34,7 +34,7 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform).crossType(CrossType.F
   scalacOptions ++= Seq("-target:jvm-1.8")
 )
 
-lazy val jvm = robot.jvm.enablePlugins(FRCPlugin).settings(
+lazy val jvm = robot.jvm.enablePlugins(FRCPluginJVM).settings(
   teamNumber := 846
 )
 
@@ -114,7 +114,8 @@ val crossCompileSettings = Seq(
   )
 )
 
-lazy val native = robot.native.settings(
+lazy val native = robot.native.enablePlugins(FRCPluginNative).settings(
+  teamNumber := 846,
   nativeMode := "debug",
   nativeGC := "boehm",
   crossCompileSettings
