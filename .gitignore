@@ -24,3 +24,4 @@ node_modules/
 .ensime
 .ensime_cache/
 cross-compile/
+project/CrossSettings.scala

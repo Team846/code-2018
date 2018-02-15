@@ -18,7 +18,7 @@ cd libunwind
 git checkout v1.2.1
 export NOCONFIGURE="TRUE"
 sh autogen.sh
-./configure CC=/usr/local/bin/arm-frc-linux-gnueabi-gcc --host=arm-frc-linux-gnueabi --prefix=$PWD
+./configure CC=arm-frc-linux-gnueabi-gcc --host=arm-frc-linux-gnueabi --prefix=$PWD
 make install
 
 cd ..
