@@ -103,10 +103,10 @@ class LaunchRobot extends RobotBase {
         props = CollectorRollersProperties(
           collectSpeed = Percent(50)
         )
+      ),
+      collectorClamp = CollectorClampConfig(
+        pneumaticPort = 1
       )
-    ),
-    collectorClamp = CollectorClampConfig(
-      pneumaticPort = 1
     )
   )
 
