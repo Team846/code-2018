@@ -1,0 +1,57 @@
+diff --git a/Makefile.direct b/Makefile.direct
+index c8bbf818..139cddbe 100644
+--- a/Makefile.direct
++++ b/Makefile.direct
+@@ -21,18 +21,18 @@ AS_ABI_FLAG=$(ABI_FLAG)
+ # ABI flag for assembler.  On HP/UX this is +A64 for 64 bit
+ # executables.
+ 
+-CC=cc $(ABI_FLAG)
++CC=/usr/local/bin/arm-frc-linux-gnueabi-gcc -pthread
+ 
+-CXX=g++ $(ABI_FLAG)
++CXX=/usr/local/bin/arm-frc-linux-gnueabi-g++ -pthread
+ # Needed only for "make c++", which adds the c++ interface.
+ 
+-AS=as $(AS_ABI_FLAG)
++AS=/usr/local/bin/arm-frc-linux-gnueabi-as
+ # The above doesn't work with gas, which doesn't run cpp.
+ # Define AS as `gcc -c -x assembler-with-cpp' instead.
+ # Under Irix 6, you have to specify the ABI (-o32, -n32, or -64)
+ # if you use something other than the default ABI on your machine.
+ 
+-LD=ld
++LD=/usr/local/bin/arm-frc-linux-gnueabi-ld
+ 
+ # Redefining srcdir allows object code for the nonPCR version of the collector
+ # to be generated in different directories.
+@@ -45,7 +45,8 @@ AO_SRC_DIR=$(srcdir)/libatomic_ops
+ CFLAGS_EXTRA=
+ CFLAGS= -O -I$(srcdir)/include -I$(AO_SRC_DIR)/src \
+   -DGC_ATOMIC_UNCOLLECTABLE -DNO_EXECUTE_PERMISSION -DALL_INTERIOR_POINTERS \
+-  $(CFLAGS_EXTRA)
++  $(CFLAGS_EXTRA) \
++  -DENABLE_DISCLAIM -DGC_THREADS -DPARALLEL_MARK -DTHREAD_LOCAL_ALLOC -DNO_HANDLE_FORK
+ 
+ # To build the collector with threads support, add to the above:
+ # -DGC_THREADS -DPARALLEL_MARK -DTHREAD_LOCAL_ALLOC
+@@ -65,7 +66,7 @@ CFLAGS= -O -I$(srcdir)/include -I$(AO_SRC_DIR)/src \
+ # part of the build process, i.e. on the build machine.  These will usually
+ # be the same as CC and CFLAGS, except in a cross-compilation environment.
+ # Note that HOSTCFLAGS should include any -D flags that affect thread support.
+-HOSTCC=$(CC)
++HOSTCC=gcc
+ HOSTCFLAGS=$(CFLAGS)
+ 
+ # For dynamic library builds, it may be necessary to add flags to generate
+@@ -78,8 +79,8 @@ HOSTCFLAGS=$(CFLAGS)
+ # influencing the collector configuration.
+ 
+ CXXFLAGS= $(CFLAGS)
+-AR= ar
+-RANLIB= ranlib
++AR=/usr/local/bin/arm-frc-linux-gnueabi-ar
++RANLIB=/usr/local/bin/arm-frc-linux-gnueabi-ranlib
+ 
+ 
+ OBJS= alloc.o reclaim.o allchblk.o misc.o mach_dep.o os_dep.o mark_rts.o \

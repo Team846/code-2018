@@ -34,13 +34,13 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform).crossType(CrossType.F
   scalacOptions ++= Seq("-target:jvm-1.8")
 )
 
-lazy val jvm = robot.jvm.enablePlugins(FRCPlugin).settings(
+lazy val jvm = robot.jvm.enablePlugins(FRCPluginJVM).settings(
   teamNumber := 846
 )
 
-val boehmFolder = file("/Users/shadaj/cross-compile/bdwgc")
-val libunwindFolder = file("/Users/shadaj/cross-compile/libunwind-1.2.1")
-val librtFolder = file("/Users/shadaj/cross-compile/re2")
+val boehmFolder = file("cross-compile/bdwgc")
+val libunwindFolder = file("cross-compile/libunwind")
+val librtFolder = file("cross-compile/re2")
 
 import scala.scalanative.sbtplugin.ScalaNativePluginInternal._
 import scala.scalanative.sbtplugin.Utilities._
@@ -78,7 +78,7 @@ val crossCompileSettings = Seq(
       (file("custom-c") ** "*.o").get.map(_.abs)) :+
       (libunwindFolder / "lib" / "libunwind.a").abs :+
       (libunwindFolder / "lib" / "libunwind-arm.a").abs :+
-      (librtFolder / "lib" / "libre2.a").abs :+
+      (librtFolder / "obj" / "libre2.a").abs :+
       (boehmFolder / "gc.a").abs
 
     val paths     = apppaths.map(_.abs) ++ opaths
@@ -98,8 +98,8 @@ val crossCompileSettings = Seq(
     "--sysroot=/usr/local/arm-frc-linux-gnueabi",
     s"-I${(libunwindFolder / "include").abs}", s"-I${(librtFolder / "include").abs}", s"-I${(boehmFolder / "include").abs}",
     "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0", "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0/arm-frc-linux-gnueabi",
-    "-I/Users/shadaj/external-dev/allwpilib/wpilibj/src/arm-linux-jni",
-    "-I/Users/shadaj/external-dev/allwpilib/wpilibj/src/arm-linux-jni/linux"
+    s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni").abs}",
+    s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni/linux").abs}"
   ),
   nativeLinkingOptions ++= Seq(
     "-lm", "-lc", "-lstdc++", "-lpthread", "-ldl", // system stuff,
@@ -108,13 +108,14 @@ val crossCompileSettings = Seq(
     "-l:libRoboRIO_FRC_ChipObject.so.18.0.0", "-l:libvisa.so", "-l:libFRC_NetworkCommunication.so.18.0.0",
     "-l:libNiFpga.so.17.0.0", "-l:libNiFpgaLv.so.17.0.0", "-l:libNiRioSrv.so.17.0.0",
 
-    "-L/Users/shadaj/wpilib/common/current/lib/linux/athena/shared",
-    "-L/Users/shadaj/wpilib/user/java/lib",
-    "-L/Users/shadaj/wpilib/cpp/current/reflib/linux/athena/shared"
+    s"-L${(baseDirectory.value / "../cross-compile/wpilib-core/lib/linux/athena/shared").abs}",
+    s"-L${(baseDirectory.value / "../cross-compile/phoenix/java/lib").abs}",
+    s"-L${(baseDirectory.value / "../cross-compile/wpilib-cpp/reflib/linux/athena/shared").abs}"
   )
 )
 
-lazy val native = robot.native.enablePlugins(ScalaNativePlugin).settings(
+lazy val native = robot.native.enablePlugins(ScalaNativePlugin, FRCPluginNative).settings(
+  teamNumber := 846,
   nativeMode := "debug",
   nativeGC := "boehm",
   crossCompileSettings
