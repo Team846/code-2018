@@ -107,9 +107,6 @@ class LaunchRobot extends RobotBase {
       collectorClamp = CollectorClampConfig(
         pneumaticPort = 1
       )
-    ),
-    collectorClamp = CollectorClampConfig(
-      pneumaticPort = 1
     )
   )
 
