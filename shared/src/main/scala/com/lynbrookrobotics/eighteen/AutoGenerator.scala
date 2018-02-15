@@ -19,10 +19,6 @@ import squants.time.Seconds
 class AutoGenerator(r: CoreRobot) {
   import r._
 
-  private val robotLength = Inches(35)
-
-  private val gearPegDistance = Inches(109)
-
   def printTask(message: String): FiniteTask = {
     new FiniteTask {
       override protected def onEnd(): Unit = {}
@@ -57,7 +53,6 @@ class AutoGenerator(r: CoreRobot) {
           Inches(220.300) + Feet(2)
         )
       ),
-      //postSwitchPoints,
       tolerance = Feet(1),
       maxTurnOutput = Percent(100),
       cruisingVelocity = FeetPerSecond(20),
@@ -128,7 +123,6 @@ class AutoGenerator(r: CoreRobot) {
                           collectorRollers: CollectorRollers, collectorClamp: CollectorClamp,
                           pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
     new FollowWayPointsWithPosition(
-      //driveForwardToScalePoints,
       Seq(
         Point(
           Inches(0) + Feet(2.5),
@@ -156,7 +150,6 @@ class AutoGenerator(r: CoreRobot) {
   def backOutAfterScale(drivetrain: Drivetrain,
                         pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
     new FollowWayPointsWithPosition(
-      //driveForwardToScalePoints,
       Seq(
         Point(
           Inches(50.3),
@@ -209,7 +202,6 @@ class AutoGenerator(r: CoreRobot) {
 
   def driveBackPostThirdCube(drivetrain: Drivetrain, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
     new FollowWayPointsWithPosition(
-      //driveBackToScalePoints,
       Seq(
         Point(
           Inches(55.8) + Feet(3),
@@ -256,54 +248,6 @@ class AutoGenerator(r: CoreRobot) {
   }
 
   val startingPose = Point(Inches(139.473), Inches(0))
-
-  def twoCubeAutoRelative(drivetrain: Drivetrain): FiniteTask = {
-    new FollowWayPoints(
-      Seq(
-        startingPose,
-        startingPose + Point(Feet(0), Feet(5))
-      ),
-      tolerance = Inches(6),
-      maxTurnOutput = Percent(100),
-      cruisingVelocity = FeetPerSecond(20),
-      targetTicksWithingTolerance = 10,
-      forwardBackwardMode = ForwardsOnly
-    )(drivetrain)
-  }
-
-  val switchWayPoints = Seq(
-    startingPose,
-    startingPose + Point(-Feet(2), Feet(6)),
-    startingPose + Point(-Feet(2), Feet(10))
-  )
-
-  val switchEnd = startingPose + Point(-Feet(2), Feet(10))
-  val postSwitchPoints = Seq(
-    switchEnd,
-    switchEnd + Point(Feet(0), -Feet(4)),
-    switchEnd + Point(-Feet(4), -Feet(4)),
-    switchEnd + Point(-Feet(4), Feet(1))
-  )
-
-  val driveBackEnd = switchEnd + Point(-Feet(4), Feet(1))
-  val cubePickupPoints = Seq(
-    driveBackEnd,
-    driveBackEnd + Point(Feet(2), -Feet(2))
-  )
-
-  val cubePickupEnd = driveBackEnd + Point(Feet(2), -Feet(2))
-  val driveBackToScalePoints = Seq(
-    cubePickupEnd,
-    cubePickupEnd + Point(-Feet(2), Feet(1)),
-    cubePickupEnd + Point(-Feet(4), Feet(1))
-  )
-
-  val driveBackToScaleEnd = cubePickupEnd + Point(-Feet(4), Feet(1))
-  val driveForwardToScalePoints = Seq(
-    driveBackToScaleEnd,
-    driveBackToScaleEnd + Point(Feet(2), Feet(6))
-  )
-
 
   def twoCubeAuto(drivetrain: Drivetrain, collectorRollers: CollectorRollers, collectorClamp: CollectorClamp): FiniteTask = {
     val relativeTurn = drivetrainHardware.turnPosition.relativize((init, curr) => {
@@ -436,7 +380,7 @@ class AutoGenerator(r: CoreRobot) {
       ),
       tolerance = Inches(6),
       maxTurnOutput = Percent(100),
-cruisingVelocity = FeetPerSecond(20),
+      cruisingVelocity = FeetPerSecond(20),
       targetTicksWithingTolerance = 10,
       forwardBackwardMode = ForwardsOnly
     )(drivetrain)
