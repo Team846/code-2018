@@ -3,4 +3,5 @@ branches:
   only:
     - master
 script:
+  - cp project/CrossSettings.template project/CrossSettings.scala
   - sbt robotJVM/assembly robotNative/compile
