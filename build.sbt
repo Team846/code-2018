@@ -10,13 +10,14 @@ resolvers in ThisBuild += "Funky-Repo" at "http://lynbrookrobotics.com/repo"
 resolvers in ThisBuild += "WPILib-Maven" at "http://lynbrookrobotics.com/wpilib-maven"
 resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/development"
 
-val potassiumVersion = "0.1.0-06fb8235"
-val wpiVersion = "2018.1.1"
+val potassiumVersion = "0.1.0-5f720a42"
+val wpiVersion = "2018.2.2"
 
 lazy val robot = crossProject(JVMPlatform, NativePlatform).crossType(CrossType.Full).in(file(".")).settings(
   libraryDependencies += "com.lynbrookrobotics" %%% "potassium-core" % potassiumVersion,
   libraryDependencies += "com.lynbrookrobotics" %%% "potassium-commons" % potassiumVersion,
-  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-frc" % potassiumVersion
+  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-frc" % potassiumVersion,
+  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-config" % potassiumVersion
 ).jvmSettings(
   scalaVersion := "2.12.4",
   libraryDependencies += "edu.wpi.first" % "wpilib" % wpiVersion,
@@ -33,7 +34,7 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform).crossType(CrossType.F
   scalacOptions ++= Seq("-target:jvm-1.8")
 )
 
-lazy val jvm = robot.jvm.enablePlugins(FRCPlugin).settings(
+lazy val jvm = robot.jvm.enablePlugins(FRCPluginJVM).settings(
   teamNumber := 846
 )
 
@@ -113,11 +114,9 @@ val crossCompileSettings = Seq(
   )
 )
 
-lazy val native = robot.native.settings(
+lazy val native = robot.native.enablePlugins(ScalaNativePlugin, FRCPluginNative).settings(
+  teamNumber := 846,
   nativeMode := "debug",
   nativeGC := "boehm",
   crossCompileSettings
 )
-
-// after copying, run:
-// rm -f FRCUserProgram; mv robotnative-out FRCUserProgram; . /etc/profile.d/natinst-path.sh; chown lvuser FRCUserProgram; setcap 'cap_sys_nice=pe' FRCUserProgram; chmod a+x FRCUserProgram; /usr/local/frc/bin/frcKillRobot.sh -t -r

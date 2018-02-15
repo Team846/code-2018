@@ -42,11 +42,6 @@ object ButtonMappings {
           !driverHardware.driverJoystick.getRawButton(2)).foreach(
         CollectorTasks.collectCube(collectorRollers, collectorClamp)
       )
-
-      // driverHardware.joystickStream.eventWhen(_ =>
-      //   driverHardware.operatorJoystick.getRawButton(1)).foreach(
-      //   CollectorTasks.purgeCubeOpen(collectorRollers, collectorClamp)
-      // )
     }
   }
 }

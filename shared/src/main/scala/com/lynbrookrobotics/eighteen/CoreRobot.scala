@@ -42,8 +42,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   private var autonomousRoutines = mutable.Map.empty[Int, () => ContinuousTask]
 
-  println("add auto")
-
   def addAutonomousRoutine(id: Int)(task:  => ContinuousTask): Unit = {
     if (autonomousRoutines.contains(id)) {
       println(s"WARNING, overriding autonomous routine $id")
