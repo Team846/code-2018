@@ -1,0 +1,39 @@
+diff --git a/Makefile b/Makefile
+index 1c04cb9..edff931 100644
+--- a/Makefile
++++ b/Makefile
+@@ -12,21 +12,21 @@
+ # CCPCRE=-I/usr/local/include -DUSEPCRE
+ # LDPCRE=-L/usr/local/lib -lpcre
+ 
+-CXX?=g++
++CXX=arm-frc-linux-gnueabi-g++
+ # can override
+ CXXFLAGS?=-O3 -g
+ LDFLAGS?=
+ # required
+ RE2_CXXFLAGS?=-std=c++11 -pthread -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -I. $(CCICU) $(CCPCRE)
+ RE2_LDFLAGS?=-pthread $(LDICU) $(LDPCRE)
+-AR?=ar
++AR=arm-frc-linux-gnueabi-ar
+ ARFLAGS?=rsc
+-NM?=nm
++NM=arm-frc-linux-gnueabi-nm
+ NMFLAGS?=-p
+ 
+ # Variables mandated by GNU, the arbiter of all good taste on the internet.
+ # http://www.gnu.org/prep/standards/standards.html
+-prefix=/usr/local
++prefix=.
+ exec_prefix=$(prefix)
+ includedir=$(prefix)/include
+ libdir=$(exec_prefix)/lib
+@@ -51,7 +51,7 @@ SONAME=0
+ # REBUILD_TABLES=1
+ 
+ # The SunOS linker does not support wildcards. :(
+-ifeq ($(shell uname),Darwin)
++ifeq ($(shell uname),foo)
+ SOEXT=dylib
+ SOEXTVER=$(SONAME).$(SOEXT)
+ SOEXTVER00=$(SONAME).0.0.$(SOEXT)
