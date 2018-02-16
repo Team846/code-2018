@@ -6,8 +6,7 @@ import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal.OpenLoop
 import com.lynbrookrobotics.potassium.streams.Stream
 import squants.Each
 
-class CubeLiftComp(coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardware)
-    extends Component[OffloadedSignal] {
+class CubeLiftComp(coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardware) extends Component[OffloadedSignal] {
   override def defaultController: Stream[OffloadedSignal] =
     coreTicks.mapToConstant(OpenLoop(Each(0)))
 

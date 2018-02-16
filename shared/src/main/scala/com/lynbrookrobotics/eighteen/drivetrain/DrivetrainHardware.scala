@@ -151,25 +151,22 @@ final case class DrivetrainHardware(
     )
   )
 
-  override val leftVelocity: Stream[Velocity] = rootDataStream.map(_.leftEncoderVelocity).map {
-    av =>
-      val x = wheelOverEncoderGears * Ratio(av * t, t)
-      (x.num / x.den) onRadius (wheelDiameter / 2)
+  override val leftVelocity: Stream[Velocity] = rootDataStream.map(_.leftEncoderVelocity).map { av =>
+    val x = wheelOverEncoderGears * Ratio(av * t, t)
+    (x.num / x.den) onRadius (wheelDiameter / 2)
   }
 
-  override val rightVelocity: Stream[Velocity] = rootDataStream.map(_.rightEncoderVelocity).map {
-    av =>
-      val x = wheelOverEncoderGears * Ratio(av * t, t)
-      (x.num / x.den) onRadius (wheelDiameter / 2)
+  override val rightVelocity: Stream[Velocity] = rootDataStream.map(_.rightEncoderVelocity).map { av =>
+    val x = wheelOverEncoderGears * Ratio(av * t, t)
+    (x.num / x.den) onRadius (wheelDiameter / 2)
   }
 
   override val leftPosition: Stream[Length] = rootDataStream.map(_.leftEncoderRotation).map { ar =>
     (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
   }
 
-  override val rightPosition: Stream[Length] = rootDataStream.map(_.rightEncoderRotation).map {
-    ar =>
-      (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
+  override val rightPosition: Stream[Length] = rootDataStream.map(_.rightEncoderRotation).map { ar =>
+    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
   }
 
   override lazy val turnVelocity: Stream[AngularVelocity] =

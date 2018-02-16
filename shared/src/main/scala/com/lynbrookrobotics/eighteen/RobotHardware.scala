@@ -23,10 +23,8 @@ object RobotHardware {
 
     RobotHardware(
       driver = driverHardware,
-      drivetrain =
-        if (drivetrain != null) DrivetrainHardware(drivetrain, coreTicks, driverHardware) else null,
-      collectorRollers =
-        if (collectorRollers != null) CollectorRollersHardware(collectorRollers) else null,
+      drivetrain = if (drivetrain != null) DrivetrainHardware(drivetrain, coreTicks, driverHardware) else null,
+      collectorRollers = if (collectorRollers != null) CollectorRollersHardware(collectorRollers) else null,
       collectorClamp = if (collectorClamp != null) CollectorClampHardware(collectorClamp) else null
     )
   }
