@@ -10,13 +10,12 @@ object ButtonMappings {
     for {
       collectorRollers <- collectorRollers
     } {
-      driverHardware.joystickStream
-        .eventWhen { _ =>
-          driverHardware.driverJoystick.getRawButton(1) &&
-            driverHardware.driverJoystick.getRawButton(2)
-        }.foreach(
-          CollectorTasks.collectCubeWithoutOpen(collectorRollers)
-        )
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.driverJoystick.getRawButton(1) &&
+        driverHardware.driverJoystick.getRawButton(2)
+      }.foreach(
+        CollectorTasks.collectCubeWithoutOpen(collectorRollers)
+      )
 
       driverHardware.joystickStream
         .eventWhen(_ => driverHardware.operatorJoystick.getRawButton(1))
@@ -28,26 +27,24 @@ object ButtonMappings {
     for {
       collectorClamp <- collectorClamp
     } {
-      driverHardware.joystickStream
-        .eventWhen { _ =>
-          !driverHardware.driverJoystick.getRawButton(1) &&
-            driverHardware.driverJoystick.getRawButton(2)
-        }.foreach(
-          new OpenCollector(collectorClamp)
-        )
+      driverHardware.joystickStream.eventWhen { _ =>
+        !driverHardware.driverJoystick.getRawButton(1) &&
+        driverHardware.driverJoystick.getRawButton(2)
+      }.foreach(
+        new OpenCollector(collectorClamp)
+      )
     }
 
     for {
       collectorRollers <- collectorRollers
       collectorClamp <- collectorClamp
     } {
-      driverHardware.joystickStream
-        .eventWhen { _ =>
-          driverHardware.driverJoystick.getRawButton(1) &&
-            !driverHardware.driverJoystick.getRawButton(2)
-        }.foreach(
-          CollectorTasks.collectCube(collectorRollers, collectorClamp)
-        )
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.driverJoystick.getRawButton(1) &&
+        !driverHardware.driverJoystick.getRawButton(2)
+      }.foreach(
+        CollectorTasks.collectCube(collectorRollers, collectorClamp)
+      )
     }
   }
 }
