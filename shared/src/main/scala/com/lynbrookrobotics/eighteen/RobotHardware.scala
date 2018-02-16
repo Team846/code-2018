@@ -36,7 +36,7 @@ object RobotHardware {
       driver = driverHardware,
       drivetrain = if (drivetrain != null) DrivetrainHardware(drivetrain, coreTicks, driverHardware) else null,
       forklift = if (forklift != null) ForkliftHardware(forklift) else null,
-      cubeLift = if (cubeLift != null) CubeLiftHardware(cubeLift) else null
+      cubeLift = if (cubeLift != null) CubeLiftHardware(cubeLift, coreTicks) else null
     )
   }
 }

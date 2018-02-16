@@ -15,7 +15,7 @@ case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[Unit], 
 }
 
 object CubeLiftHardware {
-  def apply(config: CubeLiftConfig)(implicit coreTicks: Stream[Unit]): CubeLiftHardware = {
+  def apply(config: CubeLiftConfig, coreTicks: Stream[Unit]): CubeLiftHardware = {
     CubeLiftHardware(
       new LazyTalon(
         t = new TalonSRX(config.ports.motorPort),
