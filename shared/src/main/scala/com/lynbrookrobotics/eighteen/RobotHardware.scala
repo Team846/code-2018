@@ -11,15 +11,17 @@ import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
 import com.lynbrookrobotics.potassium.streams.Stream
 
-case class RobotHardware(climberDeployment: DeploymentHardware,
-                         climberWinch: ClimberWinchHardware,
-                         collectorClamp: CollectorClampHardware,
-                         collectorPivot: CollectorPivotHardware,
-                         collectorRollers: CollectorRollersHardware,
-                         driver: DriverHardware,
-                         drivetrain: DrivetrainHardware,
-                         forklift: ForkliftHardware,
-                         cubeLift: CubeLiftHardware)
+final case class RobotHardware(
+  climberDeployment: DeploymentHardware,
+  climberWinch: ClimberWinchHardware,
+  collectorClamp: CollectorClampHardware,
+  collectorPivot: CollectorPivotHardware,
+  collectorRollers: CollectorRollersHardware,
+  driver: DriverHardware,
+  drivetrain: DrivetrainHardware,
+  forklift: ForkliftHardware,
+  cubeLift: CubeLiftHardware
+)
 
 object RobotHardware {
   def apply(robotConfig: RobotConfig, coreTicks: Stream[Unit]): RobotHardware = {
