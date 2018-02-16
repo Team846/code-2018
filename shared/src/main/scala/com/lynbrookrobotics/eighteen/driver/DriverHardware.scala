@@ -7,13 +7,19 @@ import edu.wpi.first.wpilibj.{DriverStation, Joystick}
 import squants.Dimensionless
 
 case class JoystickState(x: Dimensionless, y: Dimensionless)
-case class JoystickValues(driver: JoystickState, driverWheel: JoystickState, operator: JoystickState)
+case class JoystickValues(
+  driver: JoystickState,
+  driverWheel: JoystickState,
+  operator: JoystickState
+)
 
-case class DriverHardware(driverJoystick: Joystick,
-                          operatorJoystick: Joystick,
-                          driverWheel: Joystick,
-                          launchpad: Joystick,
-                          station: DriverStation) {
+case class DriverHardware(
+  driverJoystick: Joystick,
+  operatorJoystick: Joystick,
+  driverWheel: Joystick,
+  launchpad: Joystick,
+  station: DriverStation
+) {
   val (driverStationTicks, driverStationUpdate) = Stream.manual[Unit]
   val joystickStream: Stream[JoystickValues] = driverStationTicks.map { _ =>
     JoystickValues(
@@ -36,7 +42,7 @@ case class DriverHardware(driverJoystick: Joystick,
 }
 
 object DriverHardware {
-  def apply(config: DriverConfig): DriverHardware = {
+  def apply(config: DriverConfig): DriverHardware =
     DriverHardware(
       new Joystick(config.driverPort),
       new Joystick(config.operatorPort),
@@ -44,5 +50,4 @@ object DriverHardware {
       new Joystick(config.launchpadPort),
       DriverStation.getInstance()
     )
-  }
 }

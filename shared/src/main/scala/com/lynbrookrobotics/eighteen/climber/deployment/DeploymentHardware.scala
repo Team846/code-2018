@@ -5,10 +5,9 @@ import edu.wpi.first.wpilibj.Solenoid
 case class DeploymentHardware(solenoidLeft: Solenoid, solenoidRight: Solenoid)
 
 object DeploymentHardware {
-  def apply(config: DeploymentConfig): DeploymentHardware = {
+  def apply(config: DeploymentConfig): DeploymentHardware =
     DeploymentHardware(
       new Solenoid(config.solenoidLeftPort),
       new Solenoid(config.solenoidRightPort)
     )
-  }
 }

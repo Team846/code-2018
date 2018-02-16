@@ -8,10 +8,11 @@ trait DeploymentState
 case object DeploymentOn extends DeploymentState
 case object DeploymentOff extends DeploymentState
 
-class Deployment(val coreTicks: Stream[Unit]) (implicit hardware: DeploymentHardware) extends Component[DeploymentState] {
+class Deployment(val coreTicks: Stream[Unit])(implicit hardware: DeploymentHardware)
+    extends Component[DeploymentState] {
   override def defaultController: Stream[DeploymentState] = coreTicks.mapToConstant(DeploymentOff)
 
-  override def applySignal(signal: DeploymentState): Unit = {
+  override def applySignal(signal: DeploymentState): Unit =
     signal match {
       case DeploymentOn => {
         hardware.solenoidLeft.set(true)
@@ -22,5 +23,4 @@ class Deployment(val coreTicks: Stream[Unit]) (implicit hardware: DeploymentHard
         hardware.solenoidRight.set(false)
       }
     }
-  }
 }

@@ -12,18 +12,24 @@ import squants.{Dimensionless, Each, Time}
 import squants.space.{Inches, Length}
 import squants.time.Milliseconds
 
-case class CubeLiftHardware(talon: LazyTalon) (implicit coreTicks: Stream[Unit], props: CubeLiftProperties) extends LiftHardware {
+case class CubeLiftHardware(talon: LazyTalon)(
+  implicit coreTicks: Stream[Unit],
+  props: CubeLiftProperties
+) extends LiftHardware {
 
-  override def position: Stream[Length] = coreTicks.map( _=>
-    props.fromNative(Each(talon.t.getSelectedSensorPosition(talon.idx)))
-  )
+  override def position: Stream[Length] =
+    coreTicks.map(_ => props.fromNative(Each(talon.t.getSelectedSensorPosition(talon.idx))))
 }
 
 object CubeLiftHardware {
-  def apply(config: CubeLiftConfig)(implicit coreTicks: Stream[Unit]): CubeLiftHardware = {
+  def apply(config: CubeLiftConfig)(implicit coreTicks: Stream[Unit]): CubeLiftHardware =
     CubeLiftHardware(
-      new LazyTalon(new TalonSRX(config.ports.motorPort), idx = config.idx, timeout = config.timeout, -1, + 1)
+      new LazyTalon(
+        new TalonSRX(config.ports.motorPort),
+        idx = config.idx,
+        timeout = config.timeout,
+        -1,
+        +1
+      )
     )(coreTicks, config.props)
-  }
 }
-

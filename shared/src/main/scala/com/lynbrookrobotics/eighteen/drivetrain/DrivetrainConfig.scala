@@ -10,18 +10,20 @@ import squants.space.{Inches, Turns}
 
 case class DrivetrainConfig(props: DrivetrainProperties, ports: DrivetrainPorts, idx: Int)
 
-case class DrivetrainProperties(maxLeftVelocity: Velocity,
-                                maxRightVelocity: Velocity,
-                                leftVelocityGains: ForwardVelocityGains,
-                                rightVelocityGains: ForwardVelocityGains,
-                                forwardPositionGains: ForwardPositionGains,
-                                turnVelocityGains: TurnVelocityGains,
-                                turnPositionGains: TurnPositionGains,
-                                maxTurnVelocity: AngularVelocity,
-                                maxAcceleration: Acceleration,
-                                defaultLookAheadDistance: Length,
-                                blendExponent: Double,
-                                track: Length) extends OffloadedDriveProperties {
+case class DrivetrainProperties(
+  maxLeftVelocity: Velocity,
+  maxRightVelocity: Velocity,
+  leftVelocityGains: ForwardVelocityGains,
+  rightVelocityGains: ForwardVelocityGains,
+  forwardPositionGains: ForwardPositionGains,
+  turnVelocityGains: TurnVelocityGains,
+  turnPositionGains: TurnPositionGains,
+  maxTurnVelocity: AngularVelocity,
+  maxAcceleration: Acceleration,
+  defaultLookAheadDistance: Length,
+  blendExponent: Double,
+  track: Length
+) extends OffloadedDriveProperties {
   override val wheelDiameter: Length = Inches(4)
   override val wheelOverEncoderGears: Ratio[Angle, Angle] = Ratio(Turns(1), Turns(2))
   override val encoderAngleOverTicks: Ratio[Angle, Dimensionless] = Ratio(Turns(1), Each(4096))
@@ -30,5 +32,9 @@ case class DrivetrainProperties(maxLeftVelocity: Velocity,
   )
 }
 
-
-case class DrivetrainPorts(leftPort: Int, rightPort: Int, leftFollowerPort: Int, rightFollowerPort: Int)
+case class DrivetrainPorts(
+  leftPort: Int,
+  rightPort: Int,
+  leftFollowerPort: Int,
+  rightFollowerPort: Int
+)

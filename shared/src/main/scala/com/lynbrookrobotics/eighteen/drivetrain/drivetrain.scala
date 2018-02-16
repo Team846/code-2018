@@ -18,24 +18,27 @@ package object drivetrain extends OffloadedDrive { self =>
     h.right.applyCommand(s.right)
   }
 
-  override protected def controlMode(implicit hardware: Hardware, props: Properties) = {
+  override protected def controlMode(implicit hardware: Hardware, props: Properties) =
     if (hardware.driverHardware.station.isEnabled && hardware.driverHardware.station.isOperatorControl) {
       ArcadeControlsClosed(
-        hardware.driverHardware.joystickStream.map(v => -v.driver.y).map(s =>
-          Each(Math.copySign((s * s).toEach, s.toEach))),
-        hardware.driverHardware.joystickStream.map(v => v.driverWheel.x).map(s =>
-          Each(Math.copySign((s * s).toEach, s.toEach)))
+        hardware.driverHardware.joystickStream
+          .map(v => -v.driver.y)
+          .map(s => Each(Math.copySign((s * s).toEach, s.toEach))),
+        hardware.driverHardware.joystickStream
+          .map(v => v.driverWheel.x)
+          .map(s => Each(Math.copySign((s * s).toEach, s.toEach)))
       )
     } else {
       NoOperation
     }
-  }
 
   type Drivetrain = DrivetrainComp
 
-  class DrivetrainComp(coreTicks: Stream[Unit])(implicit hardware: Hardware,
-                   props: Signal[Properties],
-                   clock: Clock) extends Component[DriveSignal] {
+  class DrivetrainComp(coreTicks: Stream[Unit])(
+    implicit hardware: Hardware,
+    props: Signal[Properties],
+    clock: Clock
+  ) extends Component[DriveSignal] {
     override def defaultController: Stream[DriveSignal] = self.defaultController
 
     override def applySignal(signal: TwoSided[OffloadedSignal]) = output(hardware, signal)

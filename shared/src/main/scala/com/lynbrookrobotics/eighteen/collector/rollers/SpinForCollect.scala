@@ -3,15 +3,15 @@ package com.lynbrookrobotics.eighteen.collector.rollers
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.tasks.ContinuousTask
 
-class SpinForCollect(rollers: CollectorRollers)
-                    (implicit collectorRollersProps: Signal[CollectorRollersProperties]) extends ContinuousTask {
-  override protected def onStart(): Unit = {
-    rollers.setController(rollers.coreTicks.map(_ =>
-      (collectorRollersProps.get.collectSpeed, -collectorRollersProps.get.collectSpeed)
-    ))
-  }
+class SpinForCollect(rollers: CollectorRollers)(
+  implicit collectorRollersProps: Signal[CollectorRollersProperties]
+) extends ContinuousTask {
+  override protected def onStart(): Unit =
+    rollers.setController(
+      rollers.coreTicks
+        .map(_ => (collectorRollersProps.get.collectSpeed, -collectorRollersProps.get.collectSpeed))
+    )
 
-  override protected def onEnd(): Unit = {
+  override protected def onEnd(): Unit =
     rollers.resetToDefault()
-  }
 }

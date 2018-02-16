@@ -13,30 +13,37 @@ resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/ma
 val potassiumVersion = "0.1.0-cc17fccd"
 val wpiVersion = "2018.2.2"
 
-lazy val robot = crossProject(JVMPlatform, NativePlatform).crossType(CrossType.Full).in(file(".")).settings(
-  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-core" % potassiumVersion,
-  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-commons" % potassiumVersion,
-  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-frc" % potassiumVersion,
-  libraryDependencies += "com.lynbrookrobotics" %%% "potassium-config" % potassiumVersion
-).jvmSettings(
-  scalaVersion := "2.12.4",
-  libraryDependencies += "edu.wpi.first" % "wpilib" % wpiVersion,
-  libraryDependencies += "edu.wpi.first" % "cscore" % wpiVersion,
-  libraryDependencies += "edu.wpi.first" % "ntcore" % wpiVersion,
-  libraryDependencies += "edu.wpi.first" % "wpiutil" % wpiVersion,
-  libraryDependencies += "com.ctre" % "phoenix" % "5.1.3.1",
-  libraryDependencies += "org.opencv" % "opencv-java" % "3.2.0"
-).nativeSettings(
-  libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.0+2-e3944897",
-  libraryDependencies += "com.lynbrookrobotics" %%% "ntcore-scala-native" % "0.1.0+2-e3944897",
-  libraryDependencies += "com.lynbrookrobotics" %%% "phoenix-scala-native" % "0.1.0+2-e3944897",
-  scalaVersion := "2.11.12",
-  scalacOptions ++= Seq("-target:jvm-1.8")
-)
+lazy val robot = crossProject(JVMPlatform, NativePlatform)
+  .crossType(CrossType.Full)
+  .in(file("."))
+  .settings(
+    libraryDependencies += "com.lynbrookrobotics" %%% "potassium-core" % potassiumVersion,
+    libraryDependencies += "com.lynbrookrobotics" %%% "potassium-commons" % potassiumVersion,
+    libraryDependencies += "com.lynbrookrobotics" %%% "potassium-frc" % potassiumVersion,
+    libraryDependencies += "com.lynbrookrobotics" %%% "potassium-config" % potassiumVersion
+  )
+  .jvmSettings(
+    scalaVersion := "2.12.4",
+    libraryDependencies += "edu.wpi.first" % "wpilib" % wpiVersion,
+    libraryDependencies += "edu.wpi.first" % "cscore" % wpiVersion,
+    libraryDependencies += "edu.wpi.first" % "ntcore" % wpiVersion,
+    libraryDependencies += "edu.wpi.first" % "wpiutil" % wpiVersion,
+    libraryDependencies += "com.ctre" % "phoenix" % "5.1.3.1",
+    libraryDependencies += "org.opencv" % "opencv-java" % "3.2.0"
+  )
+  .nativeSettings(
+    libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.0+2-e3944897",
+    libraryDependencies += "com.lynbrookrobotics" %%% "ntcore-scala-native" % "0.1.0+2-e3944897",
+    libraryDependencies += "com.lynbrookrobotics" %%% "phoenix-scala-native" % "0.1.0+2-e3944897",
+    scalaVersion := "2.11.12",
+    scalacOptions ++= Seq("-target:jvm-1.8")
+  )
 
-lazy val jvm = robot.jvm.enablePlugins(FRCPluginJVM).settings(
-  teamNumber := 846
-)
+lazy val jvm = robot.jvm
+  .enablePlugins(FRCPluginJVM)
+  .settings(
+    teamNumber := 846
+  )
 
 val boehmFolder = file("cross-compile/bdwgc")
 val libunwindFolder = file("cross-compile/libunwind")
@@ -48,41 +55,41 @@ import scala.scalanative.sbtplugin.Utilities._
 val crossCompileSettings = Seq(
   // fork to link with gcc instead of clang
   nativeLinkLL in Compile := {
-    val linked      = (nativeLinkNIR in Compile).value
-    val logger      = streams.value.log
-    val apppaths    = (nativeCompileLL in Compile).value
-    val nativelib   = (nativeCompileLib in Compile).value
-    val cwd         = (nativeWorkdir in Compile).value
-    val target      = nativeTarget.value
-    val gc          = nativeGC.value
+    val linked = (nativeLinkNIR in Compile).value
+    val logger = streams.value.log
+    val apppaths = (nativeCompileLL in Compile).value
+    val nativelib = (nativeCompileLib in Compile).value
+    val cwd = (nativeWorkdir in Compile).value
+    val target = nativeTarget.value
+    val gc = nativeGC.value
     val linkingOpts = nativeLinkingOptions.value
-    val clangpp     = file("/usr/local/bin/arm-frc-linux-gnueabi-gcc")//nativeClangPP.value
-    val outpath     = (artifactPath in nativeLink in Compile).value
+    val clangpp = file("/usr/local/bin/arm-frc-linux-gnueabi-gcc") //nativeClangPP.value
+    val outpath = (artifactPath in nativeLink in Compile).value
 
     val links = {
-      val os   = target.split("-")(2)//Option(sys props "os.name").getOrElse("")
+      val os = target.split("-")(2) //Option(sys props "os.name").getOrElse("")
       val arch = target.split("-").head
       // we need re2 to link the re2 c wrapper (cre2.h)
       val librt = Seq.empty // we want to statically link librt
       val libunwind = Seq.empty //Seq("unwind", "unwind-" + arch) we want to statically link libunwind
 
       librt ++ libunwind ++ linked.links
-        .map(_.name)// ++ garbageCollector(gc).links
+        .map(_.name) // ++ garbageCollector(gc).links
     }
 
-    val linkopts  = links.map("-l" + _) ++ linkingOpts
+    val linkopts = links.map("-l" + _) ++ linkingOpts
     val targetopt = Seq("-target", target)
-    val flags     = Seq("-o", outpath.abs) ++ linkopts// ++ targetopt
+    val flags = Seq("-o", outpath.abs) ++ linkopts // ++ targetopt
     // statically link libunwind
-    val opaths    = ((nativelib ** "*.o").get.map(_.abs) ++
+    val opaths = ((nativelib ** "*.o").get.map(_.abs) ++
       (file("custom-c") ** "*.o").get.map(_.abs)) :+
       (libunwindFolder / "lib" / "libunwind.a").abs :+
       (libunwindFolder / "lib" / "libunwind-arm.a").abs :+
       (librtFolder / "obj" / "libre2.a").abs :+
       (boehmFolder / "gc.a").abs
 
-    val paths     = apppaths.map(_.abs) ++ opaths
-    val compile   = clangpp.abs +: (flags ++ paths)
+    val paths = apppaths.map(_.abs) ++ opaths
+    val compile = clangpp.abs +: (flags ++ paths)
 
     logger.time("Linking native code") {
       logger.running(compile)
@@ -93,33 +100,54 @@ val crossCompileSettings = Seq(
   },
   nativeTarget := "arm-frc-linux-gnueabi",
   nativeCompileOptions ++= Seq(
-    "-funwind-tables", "-target", "armv7a-frc-linux-gnueabi",
-    "-mfpu=neon", "-mfloat-abi=soft",
+    "-funwind-tables",
+    "-target",
+    "armv7a-frc-linux-gnueabi",
+    "-mfpu=neon",
+    "-mfloat-abi=soft",
     "--sysroot=/usr/local/arm-frc-linux-gnueabi",
-    s"-I${(libunwindFolder / "include").abs}", s"-I${(librtFolder / "include").abs}", s"-I${(boehmFolder / "include").abs}",
-    "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0", "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0/arm-frc-linux-gnueabi",
+    s"-I${(libunwindFolder / "include").abs}",
+    s"-I${(librtFolder / "include").abs}",
+    s"-I${(boehmFolder / "include").abs}",
+    "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0",
+    "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0/arm-frc-linux-gnueabi",
     s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni").abs}",
     s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni/linux").abs}"
   ),
   nativeLinkingOptions ++= Seq(
-    "-lm", "-lc", "-lstdc++", "-lpthread", "-ldl", // system stuff,
+    "-lm",
+    "-lc",
+    "-lstdc++",
+    "-lpthread",
+    "-ldl", // system stuff,
     // transitive dependencies
-    "-lwpilibJNI", "-lntcore", "-lCTRE_PhoenixCCI", "-lwpiHal", "-lwpiutil", "-l:libniriosession.so.17.0.0", "-l:libniriodevenum.so.17.0.0",
-    "-l:libRoboRIO_FRC_ChipObject.so.18.0.0", "-l:libvisa.so", "-l:libFRC_NetworkCommunication.so.18.0.0",
-    "-l:libNiFpga.so.17.0.0", "-l:libNiFpgaLv.so.17.0.0", "-l:libNiRioSrv.so.17.0.0",
-
+    "-lwpilibJNI",
+    "-lntcore",
+    "-lCTRE_PhoenixCCI",
+    "-lwpiHal",
+    "-lwpiutil",
+    "-l:libniriosession.so.17.0.0",
+    "-l:libniriodevenum.so.17.0.0",
+    "-l:libRoboRIO_FRC_ChipObject.so.18.0.0",
+    "-l:libvisa.so",
+    "-l:libFRC_NetworkCommunication.so.18.0.0",
+    "-l:libNiFpga.so.17.0.0",
+    "-l:libNiFpgaLv.so.17.0.0",
+    "-l:libNiRioSrv.so.17.0.0",
     s"-L${(baseDirectory.value / "../cross-compile/wpilib-core/lib/linux/athena/shared").abs}",
     s"-L${(baseDirectory.value / "../cross-compile/phoenix/java/lib").abs}",
     s"-L${(baseDirectory.value / "../cross-compile/wpilib-cpp/reflib/linux/athena/shared").abs}"
   )
 )
 
-lazy val native = robot.native.enablePlugins(ScalaNativePlugin, FRCPluginNative).settings(
-  teamNumber := 846,
-  nativeMode := "debug",
-  nativeGC := "boehm",
-  crossCompileSettings
-)
+lazy val native = robot.native
+  .enablePlugins(ScalaNativePlugin, FRCPluginNative)
+  .settings(
+    teamNumber := 846,
+    nativeMode := "debug",
+    nativeGC := "boehm",
+    crossCompileSettings
+  )
 
 // after copying, run:
 // rm -f FRCUserProgram; mv robotnative-out FRCUserProgram; . /etc/profile.d/natinst-path.sh; chown lvuser FRCUserProgram; setcap 'cap_sys_nice=pe' FRCUserProgram; chmod a+x FRCUserProgram; /usr/local/frc/bin/frcKillRobot.sh -t -r
