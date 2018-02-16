@@ -2,22 +2,21 @@ package com.lynbrookrobotics.eighteen
 
 import java.io.{File, FileWriter, PrintWriter}
 
+import com.lynbrookrobotics.eighteen.climber.ClimberWinchConfig
+import com.lynbrookrobotics.eighteen.climber.deployment.DeploymentConfig
+import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampConfig
+import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivotConfig
 import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollersConfig, CollectorRollersPorts, CollectorRollersProperties}
 import com.lynbrookrobotics.eighteen.driver.DriverConfig
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
+import com.lynbrookrobotics.eighteen.forklift.ForkliftConfig
+import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.control.PIDConfig
 import com.lynbrookrobotics.potassium.frc.WPIClock
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
-import GenericValue._
-import com.lynbrookrobotics.eighteen.climber.ClimberWinchConfig
-import com.lynbrookrobotics.eighteen.climber.deployment.DeploymentConfig
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollersConfig, CollectorRollersPorts, CollectorRollersProperties}
-import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampConfig
-import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivotConfig
-import squants.time.Seconds
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.hal.HAL
 import squants.Percent
@@ -45,6 +44,20 @@ class LaunchRobot extends RobotBase {
 
   implicit var configJson = configString.decodeOption[RobotConfig].getOrElse(
     RobotConfig(
+      climberDeployment = DeploymentConfig(
+        solenoidLeftPort = 0, solenoidRightPort = 0
+      ),
+      climberWinch = ClimberWinchConfig(
+        leftMotorPort = 0, middleMotorPort = 0, rightMotorPort = 0, climbingSpeed = Percent(30)
+      ),
+      collectorClamp = CollectorClampConfig(pneumaticPort = 0),
+      collectorPivot = CollectorPivotConfig(pneumaticPort = 0),
+      collectorRollers = CollectorRollersConfig(
+        ports = CollectorRollersPorts(
+          rollerLeftPort = 0, rollerRightPort = 0
+        ),
+        props = CollectorRollersProperties(Percent(30))
+      ),
       driver = DriverConfig(
         driverPort = 0,
         operatorPort = 1,
@@ -91,20 +104,20 @@ class LaunchRobot extends RobotBase {
           defaultLookAheadDistance = Feet(2.5),
           blendExponent = 0,
           track = Inches(21.75)
-        ),
-        idx = 0
-      ),
-      collectorRollers = CollectorRollersConfig(
-        ports = CollectorRollersPorts(
-          rollerLeftPort = 20,
-          rollerRightPort = 21
-        ),
-        props = CollectorRollersProperties(
-          collectSpeed = Percent(50)
         )
       ),
-      collectorClamp = CollectorClampConfig(
-        pneumaticPort = 1
+      forklift = ForkliftConfig(
+        solenoidLeftPort = 0, solenoidRightPort = 0
+      ),
+      cubeLift = CubeLiftConfig(
+        ports = CubeLiftPorts(
+          potentiometerPort = 0, motorPort = 0
+        ),
+        props = CubeLiftProperties(pidConfig = PIDConfig(
+          Percent(0) / Feet(5),
+          Percent(0) / (Feet(5) * Seconds(1)),
+          Percent(0) / FeetPerSecond(5)
+        ))
       )
     )
   )
