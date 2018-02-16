@@ -1,9 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
-import argonaut.Argonaut._
-import argonaut._
-import ArgonautShapeless._
-import com.lynbrookrobotics.potassium.config.SquantsPickling._
+import java.io.{File, FileWriter, PrintWriter}
+
 import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollersConfig, CollectorRollersPorts, CollectorRollersProperties}
 import com.lynbrookrobotics.eighteen.driver.DriverConfig
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
@@ -14,8 +12,11 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
 import GenericValue._
+import com.lynbrookrobotics.eighteen.climber.ClimberWinchConfig
+import com.lynbrookrobotics.eighteen.climber.deployment.DeploymentConfig
 import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollersConfig, CollectorRollersPorts, CollectorRollersProperties}
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampConfig
+import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivotConfig
 import squants.time.Seconds
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.hal.HAL
@@ -25,8 +26,6 @@ import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 
 import scala.io.Source
-import java.io.{File, FileWriter, PrintStream, PrintWriter}
-
 import scala.util.Try
 
 class LaunchRobot extends RobotBase {
@@ -40,9 +39,9 @@ class LaunchRobot extends RobotBase {
 
   val configFile = new File("/home/lvuser/robot-config.json")
 
-  var configString = Try (
+  var configString = Try(
     Source.fromFile(configFile).mkString
-    ).getOrElse("")
+  ).getOrElse("")
 
   implicit var configJson = configString.decodeOption[RobotConfig].getOrElse(
     RobotConfig(

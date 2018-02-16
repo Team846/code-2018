@@ -29,7 +29,7 @@ case class DrivetrainHardware(coreTicks: Stream[Unit],
                               rightFollowerSRX: TalonSRX,
                               gyro: DigitalGyro,
                               driverHardware: DriverHardware,
-                              props: DrivetrainProperties)(implicit clock: Clock) extends TwoSidedDriveHardware {
+                              props: DrivetrainProperties) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
   val escIdx = 0
@@ -155,7 +155,7 @@ case class DrivetrainHardware(coreTicks: Stream[Unit],
 
 object DrivetrainHardware {
   def apply(config: DrivetrainConfig, coreTicks: Stream[Unit],
-            driverHardware: DriverHardware)(implicit clock: Clock): DrivetrainHardware = {
+            driverHardware: DriverHardware): DrivetrainHardware = {
     new DrivetrainHardware(
       coreTicks,
       new TalonSRX(config.ports.leftPort),
