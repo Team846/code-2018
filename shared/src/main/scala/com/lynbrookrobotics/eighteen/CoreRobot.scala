@@ -1,18 +1,21 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
+import com.lynbrookrobotics.eighteen.climber.ClimberWinch
+import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
+import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
+import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComp
-import com.lynbrookrobotics.potassium.{Component, Signal}
+import com.lynbrookrobotics.eighteen.forklift.Forklift
+import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.tasks.ContinuousTask
-import squants.Each
+import com.lynbrookrobotics.potassium.{Component, Signal}
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])
                (implicit val config: Signal[RobotConfig], hardware: RobotHardware,
-                 val clock: Clock) {
+                val clock: Clock) {
   implicit val driverHardware: DriverHardware = hardware.driver
   private val ds = driverHardware.station
 
@@ -30,6 +33,31 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   implicit val collectorClampProps = config.map(_.collectorClamp)
   val collectorClamp: Option[CollectorClamp] =
     Option(hardware.collectorClamp).map(_ => new CollectorClamp(coreTicks))
+
+  implicit val collectorPivotHardware = hardware.collectorPivot
+  implicit val collectorPivotProps = config.map(_.collectorPivot)
+  val collectorPivot: Option[CollectorPivot] =
+    Option(hardware.collectorPivot).map(_ => new CollectorPivot(coreTicks))
+
+  implicit val climberDeploymentHardware = hardware.climberDeployment
+  implicit val climberDeploymentProps = config.map(_.climberDeployment)
+  val climberDeployment: Option[Deployment] =
+    Option(hardware.climberDeployment).map(_ => new Deployment(coreTicks))
+
+  implicit val climberWinchHardware = hardware.climberWinch
+  implicit val climberWinchProps = config.map(_.climberWinch)
+  val climberWinch: Option[ClimberWinch] =
+    Option(hardware.climberWinch).map(_ => new ClimberWinch(coreTicks))
+
+  implicit val forkliftHardware = hardware.forklift
+  implicit val forkliftProps = config.map(_.forklift)
+  val forklift: Option[Forklift] =
+    Option(hardware.forklift).map(_ => new Forklift(coreTicks))
+
+  implicit val cubeLiftHardware = hardware.cubeLift
+  implicit val cubeLiftProps = config.map(_.cubeLift)
+  val cubeLift: Option[CubeLiftComp] =
+    Option(hardware.cubeLift).map(_ => new CubeLiftComp(coreTicks))
 
   lazy val components: Seq[Component[_]] = Seq(
     drivetrain,
