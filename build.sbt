@@ -35,7 +35,8 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform).crossType(CrossType.F
 )
 
 lazy val jvm = robot.jvm.enablePlugins(FRCPluginJVM).settings(
-  teamNumber := 846
+  teamNumber := 846,
+  trackedFiles += "/home/lvuser/robot-config.json"
 )
 
 val boehmFolder = file("cross-compile/bdwgc")
@@ -116,6 +117,7 @@ val crossCompileSettings = Seq(
 
 lazy val native = robot.native.enablePlugins(ScalaNativePlugin, FRCPluginNative).settings(
   teamNumber := 846,
+  trackedFiles += "/home/lvuser/robot-config.json",
   nativeMode := "debug",
   nativeGC := "boehm",
   crossCompileSettings
