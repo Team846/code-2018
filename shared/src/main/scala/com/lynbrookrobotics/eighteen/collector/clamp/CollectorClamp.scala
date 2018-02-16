@@ -12,9 +12,10 @@ class CollectorClamp(val coreTicks: Stream[Unit])(implicit hardware: CollectorCl
     extends Component[CollectorClampState] {
   override def defaultController: Stream[CollectorClampState] = coreTicks.mapToConstant(ClosedClamp)
 
-  override def applySignal(signal: CollectorClampState): Unit =
+  override def applySignal(signal: CollectorClampState): Unit = {
     signal match {
       case ClosedClamp => hardware.solenoid.set(false)
       case OpenClamp   => hardware.solenoid.set(true)
     }
+  }
 }

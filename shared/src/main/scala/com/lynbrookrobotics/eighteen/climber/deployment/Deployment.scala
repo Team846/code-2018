@@ -12,7 +12,7 @@ class Deployment(val coreTicks: Stream[Unit])(implicit hardware: DeploymentHardw
     extends Component[DeploymentState] {
   override def defaultController: Stream[DeploymentState] = coreTicks.mapToConstant(DeploymentOff)
 
-  override def applySignal(signal: DeploymentState): Unit =
+  override def applySignal(signal: DeploymentState): Unit = {
     signal match {
       case DeploymentOn => {
         hardware.solenoidLeft.set(true)
@@ -23,4 +23,5 @@ class Deployment(val coreTicks: Stream[Unit])(implicit hardware: DeploymentHardw
         hardware.solenoidRight.set(false)
       }
     }
+  }
 }

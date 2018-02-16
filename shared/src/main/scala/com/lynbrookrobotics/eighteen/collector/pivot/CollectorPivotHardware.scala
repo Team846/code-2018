@@ -5,8 +5,9 @@ import edu.wpi.first.wpilibj.Solenoid
 final case class CollectorPivotHardware(solenoid: Solenoid)
 
 object CollectorPivotHardware {
-  def apply(config: CollectorPivotConfig): CollectorPivotHardware =
+  def apply(config: CollectorPivotConfig): CollectorPivotHardware = {
     CollectorPivotHardware(
       new Solenoid(config.pneumaticPort)
     )
+  }
 }

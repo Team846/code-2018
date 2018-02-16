@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.motorcontrol._
 import StatusFrameEnhanced._
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
-import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSidedDriveHardware
 import com.lynbrookrobotics.potassium.frc.{LazyTalon, TalonEncoder}
 import com.lynbrookrobotics.potassium.sensors.imu.{ADIS16448, DigitalGyro}
@@ -33,78 +32,55 @@ final case class DrivetrainHardware(
   gyro: DigitalGyro,
   driverHardware: DriverHardware,
   props: DrivetrainProperties
-)(implicit clock: Clock)
-    extends TwoSidedDriveHardware {
+) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
   val escIdx = 0
   val escTout = 0
 
   val left /*Back*/ =
-    new LazyTalon(
-      leftSRX,
-      escIdx,
-      escTout,
-      defaultPeakOutputReverse = -1.0,
-      defaultPeakOutputForward = 1.0
-    )
+    new LazyTalon(leftSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
   val right /*Back*/ =
-    new LazyTalon(
-      rightSRX,
-      escIdx,
-      escTout,
-      defaultPeakOutputReverse = -1.0,
-      defaultPeakOutputForward = 1.0
-    )
+    new LazyTalon(rightSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
 
   val leftFollower /*Front*/ =
-    new LazyTalon(
-      leftFollowerSRX,
-      escIdx,
-      escTout,
-      defaultPeakOutputReverse = -1.0,
-      defaultPeakOutputForward = 1.0
-    )
+    new LazyTalon(leftFollowerSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
 
   val rightFollower /*Front*/ =
-    new LazyTalon(
-      rightFollowerSRX,
-      escIdx,
-      escTout,
-      defaultPeakOutputReverse = -1.0,
-      defaultPeakOutputForward = 1.0
-    )
+    new LazyTalon(rightFollowerSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
 
-  Set(left, right, leftFollower, rightFollower).map(_.t).foreach { it =>
-    it.setNeutralMode(NeutralMode.Coast)
-    it.configOpenloopRamp(0, escTout)
-    it.configClosedloopRamp(0, escTout)
+  Set(left, right, leftFollower, rightFollower)
+    .map(_.t)
+    .foreach { it =>
+      it.setNeutralMode(NeutralMode.Coast)
+      it.configOpenloopRamp(0, escTout)
+      it.configClosedloopRamp(0, escTout)
 
-    it.configPeakOutputReverse(-1, escTout)
-    it.configNominalOutputReverse(0, escTout)
-    it.configNominalOutputForward(0, escTout)
-    it.configPeakOutputForward(1, escTout)
-    it.configNeutralDeadband(0.001 /*min*/, escTout)
+      it.configPeakOutputReverse(-1, escTout)
+      it.configNominalOutputReverse(0, escTout)
+      it.configNominalOutputForward(0, escTout)
+      it.configPeakOutputForward(1, escTout)
+      it.configNeutralDeadband(0.001 /*min*/, escTout)
 
-    it.configVoltageCompSaturation(11, escTout)
-    it.configVoltageMeasurementFilter(32, escTout)
-    it.enableVoltageCompensation(true)
+      it.configVoltageCompSaturation(11, escTout)
+      it.configVoltageMeasurementFilter(32, escTout)
+      it.enableVoltageCompensation(true)
 
-    it.configContinuousCurrentLimit(20, escTout)
-    it.configPeakCurrentDuration(0, escTout)
-    it.enableCurrentLimit(true)
+      it.configContinuousCurrentLimit(20, escTout)
+      it.configPeakCurrentDuration(0, escTout)
+      it.enableCurrentLimit(true)
 
-    Map(
-      Status_1_General -> 10,
-      Status_2_Feedback0 -> 20,
-      Status_12_Feedback1 -> 20,
-      Status_3_Quadrature -> 100,
-      Status_4_AinTempVbat -> 100
-    ).foreach {
-      case (frame, period) =>
-        it.setStatusFramePeriod(frame, period, escTout)
+      Map(
+        Status_1_General -> 10,
+        Status_2_Feedback0 -> 20,
+        Status_12_Feedback1 -> 20,
+        Status_3_Quadrature -> 100,
+        Status_4_AinTempVbat -> 100
+      ).foreach {
+        case (frame, period) =>
+          it.setStatusFramePeriod(frame, period, escTout)
+      }
     }
-  }
 
   leftFollower.t.follow(left.t)
   rightFollower.t.follow(right.t)
@@ -167,15 +143,12 @@ final case class DrivetrainHardware(
     (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
   }
 
-  override lazy val turnVelocity: Stream[AngularVelocity] =
-    rootDataStream.map(_.gyroVelocities).map(_.z)
+  override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
   override lazy val turnPosition: Stream[Angle] = turnVelocity.integral.preserve
 }
 
 object DrivetrainHardware {
-  def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware)(
-    implicit clock: Clock
-  ): DrivetrainHardware =
+  def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
     new DrivetrainHardware(
       coreTicks,
       new TalonSRX(config.ports.leftPort),
@@ -186,4 +159,5 @@ object DrivetrainHardware {
       driverHardware,
       config.props
     )
+  }
 }

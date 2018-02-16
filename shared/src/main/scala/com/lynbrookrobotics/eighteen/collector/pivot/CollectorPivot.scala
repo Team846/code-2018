@@ -13,9 +13,10 @@ class CollectorPivot(val coreTicks: Stream[Unit])(implicit hardware: CollectorCl
     extends Component[CollectorPivotState] {
   override def defaultController: Stream[CollectorPivotState] = coreTicks.mapToConstant(PivotDown)
 
-  override def applySignal(signal: CollectorPivotState): Unit =
+  override def applySignal(signal: CollectorPivotState): Unit = {
     signal match {
       case PivotUp   => hardware.solenoid.set(true)
       case PivotDown => hardware.solenoid.set(false)
     }
+  }
 }
