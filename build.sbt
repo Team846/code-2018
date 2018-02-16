@@ -49,44 +49,41 @@ import scala.scalanative.sbtplugin.Utilities._
 val crossCompileSettings = Seq(
   // fork to link with gcc instead of clang
   nativeLinkLL in Compile := {
-    val linked = (nativeLinkNIR in Compile).value
-    val logger = streams.value.log
-    val apppaths = (nativeCompileLL in Compile).value
-    val nativelib = (nativeCompileLib in Compile).value
-    val cwd = (nativeWorkdir in Compile).value
-    val target = nativeTarget.value
-    val gc = nativeGC.value
+    val linked      = (nativeLinkNIR in Compile).value
+    val logger      = streams.value.log
+    val apppaths    = (nativeCompileLL in Compile).value
+    val nativelib   = (nativeCompileLib in Compile).value
+    val cwd         = (nativeWorkdir in Compile).value
+    val target      = nativeTarget.value
+    val gc          = nativeGC.value
     val linkingOpts = nativeLinkingOptions.value
-    val clangpp = file("/usr/local/bin/arm-frc-linux-gnueabi-gcc")
-    //nativeClangPP.value
-    val outpath = (artifactPath in nativeLink in Compile).value
+    val clangpp     = file("/usr/local/bin/arm-frc-linux-gnueabi-gcc")//nativeClangPP.value
+    val outpath     = (artifactPath in nativeLink in Compile).value
 
     val links = {
-      val os = target.split("-")(2)
-      //Option(sys props "os.name").getOrElse("")
+      val os   = target.split("-")(2)//Option(sys props "os.name").getOrElse("")
       val arch = target.split("-").head
       // we need re2 to link the re2 c wrapper (cre2.h)
       val librt = Seq.empty // we want to statically link librt
       val libunwind = Seq.empty //Seq("unwind", "unwind-" + arch) we want to statically link libunwind
 
       librt ++ libunwind ++ linked.links
-        .map(_.name) // ++ garbageCollector(gc).links
+        .map(_.name)// ++ garbageCollector(gc).links
     }
 
-    val linkopts = links.map("-l" + _) ++ linkingOpts
+    val linkopts  = links.map("-l" + _) ++ linkingOpts
     val targetopt = Seq("-target", target)
-    val flags = Seq("-o", outpath.abs) ++ linkopts
-    // ++ targetopt
+    val flags     = Seq("-o", outpath.abs) ++ linkopts// ++ targetopt
     // statically link libunwind
-    val opaths = ((nativelib ** "*.o").get.map(_.abs) ++
+    val opaths    = ((nativelib ** "*.o").get.map(_.abs) ++
       (file("custom-c") ** "*.o").get.map(_.abs)) :+
       (libunwindFolder / "lib" / "libunwind.a").abs :+
       (libunwindFolder / "lib" / "libunwind-arm.a").abs :+
       (librtFolder / "obj" / "libre2.a").abs :+
       (boehmFolder / "gc.a").abs
 
-    val paths = apppaths.map(_.abs) ++ opaths
-    val compile = clangpp.abs +: (flags ++ paths)
+    val paths     = apppaths.map(_.abs) ++ opaths
+    val compile   = clangpp.abs +: (flags ++ paths)
 
     logger.time("Linking native code") {
       logger.running(compile)
