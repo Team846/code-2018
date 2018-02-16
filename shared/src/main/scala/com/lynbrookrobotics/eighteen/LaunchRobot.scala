@@ -61,21 +61,21 @@ class LaunchRobot extends RobotBase {
       ),
       drivetrain = DrivetrainConfig(
         ports = DrivetrainPorts(
-          leftPort = 50,
-          rightPort = 41,
-          leftFollowerPort = 51,
-          rightFollowerPort = 40
+          leftPort = 12,
+          rightPort = 11,
+          leftFollowerPort = 14,
+          rightFollowerPort = 13
         ),
         props = DrivetrainProperties(
           maxLeftVelocity = FeetPerSecond(18.8),
           maxRightVelocity = FeetPerSecond(19.25),
           leftVelocityGains = PIDConfig(
-            Ratio(Percent(40), FeetPerSecond(5)),
+            Ratio(Percent(0), FeetPerSecond(5)),
             Ratio(Percent(0), Feet(5)),
             Ratio(Percent(0), FeetPerSecondSquared(5))
           ),
           rightVelocityGains = PIDConfig(
-            Ratio(Percent(40), FeetPerSecond(5)),
+            Ratio(Percent(0), FeetPerSecond(5)),
             Ratio(Percent(0), Feet(5)),
             Ratio(Percent(0), FeetPerSecondSquared(5))
           ),
