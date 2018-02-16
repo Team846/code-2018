@@ -60,9 +60,14 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     Option(hardware.cubeLift).map(_ => new CubeLiftComp(coreTicks))
 
   lazy val components: Seq[Component[_]] = Seq(
-    drivetrain,
+    climberDeployment,
+    climberWinch,
+    collectorClamp,
+    collectorPivot,
     collectorRollers,
-    collectorClamp
+    drivetrain,
+    forklift,
+    cubeLift
   ).flatten
 
   // Register at the end so they are all run first
