@@ -44,7 +44,10 @@ lazy val jvm = robot.jvm
   .settings(
     teamNumber := 846,
     scalacOptions ++= Seq(
-      "-Ywarn-unused-import"
+      "-Ywarn-unused-import",
+      "-Ywarn-unused:locals",
+      "-Ywarn-unused:privates",
+      "-Ywarn-adapted-args"
     )
   )
 

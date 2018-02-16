@@ -14,7 +14,6 @@ class CoreRobot(
   val coreTicks: Stream[Unit]
 )(implicit val config: Signal[RobotConfig], hardware: RobotHardware, val clock: Clock) {
   implicit val driverHardware: DriverHardware = hardware.driver
-  private val ds = driverHardware.station
 
   implicit val drivetrainHardware = hardware.drivetrain
   implicit val drivetrainProps = config.map(_.drivetrain.props)
