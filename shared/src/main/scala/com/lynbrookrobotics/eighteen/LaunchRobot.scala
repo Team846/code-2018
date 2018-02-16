@@ -23,6 +23,10 @@ import squants.Percent
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
+import argonaut.Argonaut._
+import argonaut._
+import ArgonautShapeless._
+import com.lynbrookrobotics.potassium.config.SquantsPickling._
 
 import scala.io.Source
 import scala.util.Try
