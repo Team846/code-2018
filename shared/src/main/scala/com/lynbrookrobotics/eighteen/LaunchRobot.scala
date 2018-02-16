@@ -2,15 +2,8 @@ package com.lynbrookrobotics.eighteen
 
 import java.io.{File, FileWriter, PrintWriter}
 
-import com.lynbrookrobotics.eighteen.climber.ClimberWinchConfig
-import com.lynbrookrobotics.eighteen.climber.deployment.DeploymentConfig
-import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampConfig
-import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivotConfig
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollersConfig, CollectorRollersPorts, CollectorRollersProperties}
 import com.lynbrookrobotics.eighteen.driver.DriverConfig
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
-import com.lynbrookrobotics.eighteen.forklift.ForkliftConfig
-import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.control.PIDConfig
 import com.lynbrookrobotics.potassium.frc.WPIClock
@@ -46,65 +39,67 @@ class LaunchRobot extends RobotBase {
     Source.fromFile(configFile).mkString
   ).getOrElse("")
 
-  implicit var configJson = configString.decodeOption[RobotConfig].getOrElse(
-    RobotConfig(
-      climberDeployment = null,
-      climberWinch = null,
-      collectorClamp = null,
-      collectorPivot = null,
-      collectorRollers = null,
-      driver = DriverConfig(
-        driverPort = 0,
-        operatorPort = 1,
-        driverWheelPort = 2,
-        launchpadPort = -1
-      ),
-      drivetrain = DrivetrainConfig(
-        ports = DrivetrainPorts(
-          leftPort = 50,
-          rightPort = 41,
-          leftFollowerPort = 51,
-          rightFollowerPort = 40
+  implicit var configJson = configString
+    .decodeOption[RobotConfig]
+    .getOrElse(
+      RobotConfig(
+        climberDeployment = null,
+        climberWinch = null,
+        collectorClamp = null,
+        collectorPivot = null,
+        collectorRollers = null,
+        driver = DriverConfig(
+          driverPort = 0,
+          operatorPort = 1,
+          driverWheelPort = 2,
+          launchpadPort = -1
         ),
-        props = DrivetrainProperties(
-          maxLeftVelocity = FeetPerSecond(18.8),
-          maxRightVelocity = FeetPerSecond(19.25),
-          leftVelocityGains = PIDConfig(
-            Ratio(Percent(40), FeetPerSecond(5)),
-            Ratio(Percent(0), Feet(5)),
-            Ratio(Percent(0), FeetPerSecondSquared(5))
+        drivetrain = DrivetrainConfig(
+          ports = DrivetrainPorts(
+            leftPort = 50,
+            rightPort = 41,
+            leftFollowerPort = 51,
+            rightFollowerPort = 40
           ),
-          rightVelocityGains = PIDConfig(
-            Ratio(Percent(40), FeetPerSecond(5)),
-            Ratio(Percent(0), Feet(5)),
-            Ratio(Percent(0), FeetPerSecondSquared(5))
-          ),
-          forwardPositionGains = PIDConfig(
-            Percent(0) / Feet(5),
-            Percent(0) / (Feet(5) * Seconds(1)),
-            Percent(0) / FeetPerSecond(5)
-          ),
-          turnVelocityGains = PIDConfig(
-            Percent(0) / DegreesPerSecond(1),
-            Percent(0) / (DegreesPerSecond(1) * Seconds(1)),
-            Percent(0) / (toGenericValue(DegreesPerSecond(1)) / Seconds(1))
-          ),
-          turnPositionGains = PIDConfig(
-            Percent(0) / Degrees(1),
-            Percent(0) / (Degrees(1) * Seconds(1)),
-            Percent(0) / (Degrees(1) / Seconds(1))
-          ),
-          maxTurnVelocity = DegreesPerSecond(90),
-          maxAcceleration = FeetPerSecondSquared(0),
-          defaultLookAheadDistance = Feet(2.5),
-          blendExponent = 0,
-          track = Inches(21.75)
-        )
-      ),
-      forklift = null,
-      cubeLift = null
+          props = DrivetrainProperties(
+            maxLeftVelocity = FeetPerSecond(18.8),
+            maxRightVelocity = FeetPerSecond(19.25),
+            leftVelocityGains = PIDConfig(
+              Ratio(Percent(40), FeetPerSecond(5)),
+              Ratio(Percent(0), Feet(5)),
+              Ratio(Percent(0), FeetPerSecondSquared(5))
+            ),
+            rightVelocityGains = PIDConfig(
+              Ratio(Percent(40), FeetPerSecond(5)),
+              Ratio(Percent(0), Feet(5)),
+              Ratio(Percent(0), FeetPerSecondSquared(5))
+            ),
+            forwardPositionGains = PIDConfig(
+              Percent(0) / Feet(5),
+              Percent(0) / (Feet(5) * Seconds(1)),
+              Percent(0) / FeetPerSecond(5)
+            ),
+            turnVelocityGains = PIDConfig(
+              Percent(0) / DegreesPerSecond(1),
+              Percent(0) / (DegreesPerSecond(1) * Seconds(1)),
+              Percent(0) / (toGenericValue(DegreesPerSecond(1)) / Seconds(1))
+            ),
+            turnPositionGains = PIDConfig(
+              Percent(0) / Degrees(1),
+              Percent(0) / (Degrees(1) * Seconds(1)),
+              Percent(0) / (Degrees(1) / Seconds(1))
+            ),
+            maxTurnVelocity = DegreesPerSecond(90),
+            maxAcceleration = FeetPerSecondSquared(0),
+            defaultLookAheadDistance = Feet(2.5),
+            blendExponent = 0,
+            track = Inches(21.75)
+          )
+        ),
+        forklift = null,
+        cubeLift = null
+      )
     )
-  )
 
   implicit val configSig = Signal(configJson)
 
@@ -113,23 +108,26 @@ class LaunchRobot extends RobotBase {
   override def startCompetition(): Unit = {
     coreRobot = new CoreRobot(
       Signal(configString),
-      newS => newS.decodeOption[RobotConfig].foreach { it =>
-        println("writing to robot-config.json")
-        configString = newS
-        configJson = it
+      newS =>
+        newS.decodeOption[RobotConfig].foreach { it =>
+          println("writing to robot-config.json")
+          configString = newS
+          configJson = it
 
-        val writer = new PrintWriter(new FileWriter(configFile))
-        writer.println(configString)
-        writer.close()
+          val writer = new PrintWriter(new FileWriter(configFile))
+          writer.println(configString)
+          writer.close()
       },
       coreTicks
     )
 
     HAL.observeUserProgramStarting()
 
-    println("------------------------------------------\n" +
-      "Finished preloading and establishing connections. " +
-      "Wait 5 seconds to allow for sensor calibration\n")
+    println(
+      "------------------------------------------\n" +
+        "Finished preloading and establishing connections. " +
+        "Wait 5 seconds to allow for sensor calibration\n"
+    )
 
     while (true) {
       ds.waitForData()

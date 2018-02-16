@@ -7,11 +7,11 @@ import com.lynbrookrobotics.potassium.streams._
 import squants.Each
 import squants.space.Length
 
-case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[Unit], props: CubeLiftProperties) extends LiftHardware {
+final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[Unit], props: CubeLiftProperties)
+    extends LiftHardware {
 
-  override def position: Stream[Length] = coreTicks.map(_ =>
-    props.fromNative(Each(talon.t.getSelectedSensorPosition(talon.idx)))
-  )
+  override def position: Stream[Length] =
+    coreTicks.map(_ => props.fromNative(Each(talon.t.getSelectedSensorPosition(talon.idx))))
 }
 
 object CubeLiftHardware {
@@ -27,4 +27,3 @@ object CubeLiftHardware {
     )(coreTicks, config.props)
   }
 }
-

@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.forklift
 
 import edu.wpi.first.wpilibj.Solenoid
 
-case class ForkliftHardware(solenoidLeft: Solenoid, solenoidRight: Solenoid)
+final case class ForkliftHardware(solenoidLeft: Solenoid, solenoidRight: Solenoid)
 
 object ForkliftHardware {
   def apply(config: ForkliftConfig): ForkliftHardware = {
