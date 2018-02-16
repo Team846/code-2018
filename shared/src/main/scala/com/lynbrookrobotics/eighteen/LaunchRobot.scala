@@ -48,20 +48,11 @@ class LaunchRobot extends RobotBase {
 
   implicit var configJson = configString.decodeOption[RobotConfig].getOrElse(
     RobotConfig(
-      climberDeployment = DeploymentConfig(
-        solenoidLeftPort = 0, solenoidRightPort = 0
-      ),
-      climberWinch = ClimberWinchConfig(
-        leftMotorPort = 0, middleMotorPort = 0, rightMotorPort = 0, climbingSpeed = Percent(30)
-      ),
-      collectorClamp = CollectorClampConfig(pneumaticPort = 0),
-      collectorPivot = CollectorPivotConfig(pneumaticPort = 0),
-      collectorRollers = CollectorRollersConfig(
-        ports = CollectorRollersPorts(
-          rollerLeftPort = 0, rollerRightPort = 0
-        ),
-        props = CollectorRollersProperties(Percent(30))
-      ),
+      climberDeployment = null,
+      climberWinch = null,
+      collectorClamp = null,
+      collectorPivot = null,
+      collectorRollers = null,
       driver = DriverConfig(
         driverPort = 0,
         operatorPort = 1,
@@ -110,19 +101,8 @@ class LaunchRobot extends RobotBase {
           track = Inches(21.75)
         )
       ),
-      forklift = ForkliftConfig(
-        solenoidLeftPort = 0, solenoidRightPort = 0
-      ),
-      cubeLift = CubeLiftConfig(
-        ports = CubeLiftPorts(
-          potentiometerPort = 0, motorPort = 0
-        ),
-        props = CubeLiftProperties(pidConfig = PIDConfig(
-          Percent(0) / Feet(5),
-          Percent(0) / (Feet(5) * Seconds(1)),
-          Percent(0) / FeetPerSecond(5)
-        ))
-      )
+      forklift = null,
+      cubeLift = null
     )
   )
 
