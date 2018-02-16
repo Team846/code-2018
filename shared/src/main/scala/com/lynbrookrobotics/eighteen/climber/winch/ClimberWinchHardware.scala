@@ -2,7 +2,11 @@ package com.lynbrookrobotics.eighteen.climber
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 
-case class ClimberWinchHardware(leftMotor: TalonSRX, middleMotor: TalonSRX, rightMotor: TalonSRX)
+final case class ClimberWinchHardware(
+  leftMotor: TalonSRX,
+  middleMotor: TalonSRX,
+  rightMotor: TalonSRX
+)
 
 object ClimberWinchHardware {
   def apply(config: ClimberWinchConfig): ClimberWinchHardware =

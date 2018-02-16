@@ -25,7 +25,7 @@ import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 
 import scala.io.Source
-import java.io.{File, FileWriter, PrintStream, PrintWriter}
+import java.io.{File, FileWriter, PrintWriter}
 
 import scala.util.Try
 

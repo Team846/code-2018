@@ -16,7 +16,7 @@ import squants.motion.AngularVelocity
 import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Length, Velocity}
 
-case class DrivetrainData(
+final case class DrivetrainData(
   leftEncoderVelocity: AngularVelocity,
   rightEncoderVelocity: AngularVelocity,
   leftEncoderRotation: Angle,
@@ -24,7 +24,7 @@ case class DrivetrainData(
   gyroVelocities: Value3D[AngularVelocity]
 )
 
-case class DrivetrainHardware(
+final case class DrivetrainHardware(
   coreTicks: Stream[Unit],
   leftSRX: TalonSRX,
   rightSRX: TalonSRX,

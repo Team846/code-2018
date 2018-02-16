@@ -42,7 +42,10 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
 lazy val jvm = robot.jvm
   .enablePlugins(FRCPluginJVM)
   .settings(
-    teamNumber := 846
+    teamNumber := 846,
+    scalacOptions ++= Seq(
+      "-Ywarn-unused-import"
+    )
   )
 
 val boehmFolder = file("cross-compile/bdwgc")

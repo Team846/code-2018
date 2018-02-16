@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.climber
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.lynbrookrobotics.potassium.{streams, Component}
-import squants.{Dimensionless, Each, Percent}
+import squants.{Dimensionless, Each}
 
 class ClimberWinch(val coreTicks: streams.Stream[Unit])(implicit hardware: ClimberWinchHardware)
     extends Component[Dimensionless] {

@@ -7,7 +7,7 @@ import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.streams.Stream
 
-case class RobotHardware(
+final case class RobotHardware(
   driver: DriverHardware,
   drivetrain: DrivetrainHardware,
   collectorRollers: CollectorRollersHardware,

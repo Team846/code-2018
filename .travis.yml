@@ -3,5 +3,5 @@ branches:
   only:
     - master
 script:
+  - sbt robotJVM/assembly robotNative/compile robotJVM/scalafixTest
   - ./scalafmt --test
-  - sbt robotJVM/assembly robotNative/compile

@@ -8,9 +8,9 @@ import squants.{Acceleration, Angle, Dimensionless, Each, Length, Velocity}
 import squants.motion.AngularVelocity
 import squants.space.{Inches, Turns}
 
-case class DrivetrainConfig(props: DrivetrainProperties, ports: DrivetrainPorts, idx: Int)
+final case class DrivetrainConfig(props: DrivetrainProperties, ports: DrivetrainPorts, idx: Int)
 
-case class DrivetrainProperties(
+final case class DrivetrainProperties(
   maxLeftVelocity: Velocity,
   maxRightVelocity: Velocity,
   leftVelocityGains: ForwardVelocityGains,
@@ -32,7 +32,7 @@ case class DrivetrainProperties(
   )
 }
 
-case class DrivetrainPorts(
+final case class DrivetrainPorts(
   leftPort: Int,
   rightPort: Int,
   leftFollowerPort: Int,

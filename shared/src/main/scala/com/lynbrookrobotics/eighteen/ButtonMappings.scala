@@ -2,7 +2,6 @@ package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.OpenCollector
-import com.lynbrookrobotics.eighteen.collector.rollers.SpinForCollect
 
 object ButtonMappings {
   def setup(robot: CoreRobot): Unit = {

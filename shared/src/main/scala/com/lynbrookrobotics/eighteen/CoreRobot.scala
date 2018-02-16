@@ -7,8 +7,6 @@ import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComp
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.tasks.ContinuousTask
-import squants.Each
 
 class CoreRobot(
   configFileValue: Signal[String],

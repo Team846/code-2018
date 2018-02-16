@@ -10,3 +10,5 @@ addSbtPlugin("org.portable-scala" % "sbt-crossproject" % "0.3.0")
 addSbtPlugin(
   "org.scala-native" % "sbt-scala-native" % "0.3.7-arm-jni-threads" exclude ("org.scala-native", "sbt-crossproject")
 )
+
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.5.10")

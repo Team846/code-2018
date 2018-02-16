@@ -6,14 +6,14 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import edu.wpi.first.wpilibj.{DriverStation, Joystick}
 import squants.Dimensionless
 
-case class JoystickState(x: Dimensionless, y: Dimensionless)
-case class JoystickValues(
+final case class JoystickState(x: Dimensionless, y: Dimensionless)
+final case class JoystickValues(
   driver: JoystickState,
   driverWheel: JoystickState,
   operator: JoystickState
 )
 
-case class DriverHardware(
+final case class DriverHardware(
   driverJoystick: Joystick,
   operatorJoystick: Joystick,
   driverWheel: Joystick,

@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen.driver
 
-case class DriverConfig(
+final case class DriverConfig(
   driverPort: Int,
   operatorPort: Int,
   driverWheelPort: Int,
