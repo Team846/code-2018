@@ -309,11 +309,8 @@ class AutoGenerator(r: CoreRobot) {
         driveBackPostCube(drivetrain, xyPosition, relativeAngle)
           .then(printTask("end back driving"))
           .andUntilDone(
-            new WaitTask(Seconds(1))
-              .andUntilDone(
-                CollectorTasks.collectCubeWithoutOpen(collectorRollers)
-              )
-              .toContinuous
+            CollectorTasks.collectCubeWithoutOpen(collectorRollers)
+              .forDuration(Seconds(1)).toContinuous
           )
       )
       .then(
