@@ -27,40 +27,40 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 ) {
   implicit val driverHardware: DriverHardware = hardware.driver
 
-  implicit val drivetrainHardware = hardware.drivetrain
-  implicit val drivetrainProps = config.map(_.drivetrain.props)
+  implicit val drivetrainHardware = hardware.drivetrain.orNull
+  implicit val drivetrainProps = config.map(_.drivetrain.get.props)
   val drivetrain: Option[DrivetrainComponent] =
-    Option(hardware.drivetrain).map(_ => new DrivetrainComponent(coreTicks))
+    hardware.drivetrain.map(_ => new DrivetrainComponent(coreTicks))
 
-  implicit val collectorRollersHardware = hardware.collectorRollers
-  implicit val collectorRollersProps = config.map(_.collectorRollers.props)
+  implicit val collectorRollersHardware = hardware.collectorRollers.orNull
+  implicit val collectorRollersProps = config.map(_.collectorRollers.get.props)
   val collectorRollers: Option[CollectorRollers] =
-    Option(hardware.collectorRollers).map(_ => new CollectorRollers(coreTicks))
+    hardware.collectorRollers.map(_ => new CollectorRollers(coreTicks))
 
-  implicit val collectorClampHardware = hardware.collectorClamp
+  implicit val collectorClampHardware = hardware.collectorClamp.orNull
   val collectorClamp: Option[CollectorClamp] =
-    Option(hardware.collectorClamp).map(_ => new CollectorClamp(coreTicks))
+    hardware.collectorClamp.map(_ => new CollectorClamp(coreTicks))
 
-  implicit val collectorPivotHardware = hardware.collectorPivot
+  implicit val collectorPivotHardware = hardware.collectorPivot.orNull
   val collectorPivot: Option[CollectorPivot] =
-    Option(hardware.collectorPivot).map(_ => new CollectorPivot(coreTicks))
+    hardware.collectorPivot.map(_ => new CollectorPivot(coreTicks))
 
-  implicit val climberDeploymentHardware = hardware.climberDeployment
+  implicit val climberDeploymentHardware = hardware.climberDeployment.orNull
   val climberDeployment: Option[Deployment] =
-    Option(hardware.climberDeployment).map(_ => new Deployment(coreTicks))
+    hardware.climberDeployment.map(_ => new Deployment(coreTicks))
 
-  implicit val climberWinchHardware = hardware.climberWinch
+  implicit val climberWinchHardware = hardware.climberWinch.orNull
   val climberWinch: Option[ClimberWinch] =
-    Option(hardware.climberWinch).map(_ => new ClimberWinch(coreTicks))
+    hardware.climberWinch.map(_ => new ClimberWinch(coreTicks))
 
-  implicit val forkliftHardware = hardware.forklift
+  implicit val forkliftHardware = hardware.forklift.orNull
   val forklift: Option[Forklift] =
-    Option(hardware.forklift).map(_ => new Forklift(coreTicks))
+    hardware.forklift.map(_ => new Forklift(coreTicks))
 
-  implicit val cubeLiftHardware = hardware.cubeLift
-  implicit val cubeLiftProps = config.map(_.cubeLift.props)
+  implicit val cubeLiftHardware = hardware.cubeLift.orNull
+  implicit val cubeLiftProps = config.map(_.cubeLift.get.props)
   val cubeLift: Option[CubeLiftComp] =
-    Option(hardware.cubeLift).map(_ => new CubeLiftComp(coreTicks))
+    hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
 
   lazy val components: Seq[Component[_]] = Seq(
     climberDeployment,
@@ -121,7 +121,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   }
 
   driverHardware.isEnabled.onStart.foreach { () =>
-    if (drivetrain.isDefined) {
+    drivetrain.foreach { _ =>
       drivetrainHardware.gyro.endCalibration()
     }
   }

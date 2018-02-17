@@ -12,33 +12,33 @@ import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
 import com.lynbrookrobotics.potassium.streams.Stream
 
 final case class RobotHardware(
-  climberDeployment: DeploymentHardware,
-  climberWinch: ClimberWinchHardware,
-  collectorClamp: CollectorClampHardware,
-  collectorPivot: CollectorPivotHardware,
-  collectorRollers: CollectorRollersHardware,
+  climberDeployment: Option[DeploymentHardware],
+  climberWinch: Option[ClimberWinchHardware],
+  collectorClamp: Option[CollectorClampHardware],
+  collectorPivot: Option[CollectorPivotHardware],
+  collectorRollers: Option[CollectorRollersHardware],
   driver: DriverHardware,
-  drivetrain: DrivetrainHardware,
-  forklift: ForkliftHardware,
-  cubeLift: CubeLiftHardware
+  drivetrain: Option[DrivetrainHardware],
+  forklift: Option[ForkliftHardware],
+  cubeLift: Option[CubeLiftHardware]
 )
 
 object RobotHardware {
   def apply(robotConfig: RobotConfig, coreTicks: Stream[Unit]): RobotHardware = {
     import robotConfig._
 
-    val driverHardware = DriverHardware(driver) // drivetrain depends on this
+    val driverHardware = DriverHardware(robotConfig.driver.get) // drivetrain depends on this
 
     RobotHardware(
-      climberDeployment = if (climberDeployment != null) DeploymentHardware(climberDeployment) else null,
-      climberWinch = if (climberWinch != null) ClimberWinchHardware(climberWinch) else null,
-      collectorClamp = if (collectorClamp != null) CollectorClampHardware(collectorClamp) else null,
-      collectorPivot = if (collectorPivot != null) CollectorPivotHardware(collectorPivot) else null,
-      collectorRollers = if (collectorRollers != null) CollectorRollersHardware(collectorRollers) else null,
+      climberDeployment = climberDeployment.map(DeploymentHardware.apply),
+      climberWinch = climberWinch.map(ClimberWinchHardware.apply),
+      collectorClamp = collectorClamp.map(CollectorClampHardware.apply),
+      collectorPivot = collectorPivot.map(CollectorPivotHardware.apply),
+      collectorRollers = collectorRollers.map(CollectorRollersHardware.apply),
       driver = driverHardware,
-      drivetrain = if (drivetrain != null) DrivetrainHardware(drivetrain, coreTicks, driverHardware) else null,
-      forklift = if (forklift != null) ForkliftHardware(forklift) else null,
-      cubeLift = if (cubeLift != null) CubeLiftHardware(cubeLift, coreTicks) else null
+      drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
+      forklift = robotConfig.forklift.map(ForkliftHardware.apply),
+      cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks))
     )
   }
 }

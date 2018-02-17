@@ -11,13 +11,13 @@ import com.lynbrookrobotics.eighteen.forklift.ForkliftConfig
 import com.lynbrookrobotics.eighteen.lift.CubeLiftConfig
 
 final case class RobotConfig(
-  climberDeployment: DeploymentConfig,
-  climberWinch: ClimberWinchConfig,
-  collectorClamp: CollectorClampConfig,
-  collectorPivot: CollectorPivotConfig,
-  collectorRollers: CollectorRollersConfig,
-  driver: DriverConfig,
-  drivetrain: DrivetrainConfig,
-  forklift: ForkliftConfig,
-  cubeLift: CubeLiftConfig
+  climberDeployment: Option[DeploymentConfig],
+  climberWinch: Option[ClimberWinchConfig],
+  collectorClamp: Option[CollectorClampConfig],
+  collectorPivot: Option[CollectorPivotConfig],
+  collectorRollers: Option[CollectorRollersConfig],
+  driver: Option[DriverConfig],
+  drivetrain: Option[DrivetrainConfig],
+  forklift: Option[ForkliftConfig],
+  cubeLift: Option[CubeLiftConfig]
 )
