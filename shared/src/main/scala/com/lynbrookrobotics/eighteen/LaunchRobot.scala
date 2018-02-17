@@ -39,15 +39,17 @@ class LaunchRobot extends RobotBase {
     Source.fromFile(configFile).mkString
   ).getOrElse("")
 
+  implicit def vToOption[T](v: T): Option[T] = Some(v)
+
   implicit var configJson = configString
     .decodeOption[RobotConfig]
     .getOrElse(
       RobotConfig(
-        climberDeployment = null,
-        climberWinch = null,
-        collectorClamp = null,
-        collectorPivot = null,
-        collectorRollers = null,
+        climberDeployment = None,
+        climberWinch = None,
+        collectorClamp = None,
+        collectorPivot = None,
+        collectorRollers = None,
         driver = DriverConfig(
           driverPort = 0,
           operatorPort = 1,
@@ -96,8 +98,8 @@ class LaunchRobot extends RobotBase {
             track = Inches(21.75)
           )
         ),
-        forklift = null,
-        cubeLift = null
+        forklift = None,
+        cubeLift = None
       )
     )
 
