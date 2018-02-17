@@ -75,7 +75,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   private var autonomousRoutines = mutable.Map.empty[Int, () => ContinuousTask]
 
-  def addAutonomousRoutine(id: Int)(task:  => ContinuousTask): Unit = {
+  def addAutonomousRoutine(id: Int)(task: => ContinuousTask): Unit = {
     if (autonomousRoutines.contains(id)) {
       println(s"WARNING, overriding autonomous routine $id")
     }
@@ -107,10 +107,13 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     val autoID = Math.round(ent.getDouble(0)).toInt
     println(s"autoid: $autoID")
 
-    autonomousRoutines.getOrElse(autoID, {
-      println(s"ERROR: autonomous routine $autoID not found")
-      () => FiniteTask.empty.toContinuous
-    }).apply()
+    autonomousRoutines
+      .getOrElse(autoID, {
+        println(s"ERROR: autonomous routine $autoID not found")
+        () =>
+          FiniteTask.empty.toContinuous
+      })
+      .apply()
   })
 
   // Register at the end so they are all run first

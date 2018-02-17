@@ -30,10 +30,13 @@ class AutoGenerator(r: CoreRobot) {
     }
   }
 
-  def driveBackPostSwitch(drivetrain: Drivetrain,
-                          collectorRollers: CollectorRollers, collectorClamp: CollectorClamp,
-                          pose: Stream[Point],
-                          relativeAngle: Stream[Angle]): FiniteTask = {
+  def driveBackPostSwitch(
+    drivetrain: Drivetrain,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    pose: Stream[Point],
+    relativeAngle: Stream[Angle]
+  ): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -67,9 +70,13 @@ class AutoGenerator(r: CoreRobot) {
     )
   }
 
-  def pickupCube(drivetrain: Drivetrain,
-                 collectorRollers: CollectorRollers, collectorClamp: CollectorClamp,
-                 position: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def pickupCube(
+    drivetrain: Drivetrain,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    position: Stream[Point],
+    relativeAngle: Stream[Angle]
+  ): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -119,9 +126,13 @@ class AutoGenerator(r: CoreRobot) {
     )(drivetrain)
   }
 
-  def driveToScaleForward(drivetrain: Drivetrain,
-                          collectorRollers: CollectorRollers, collectorClamp: CollectorClamp,
-                          pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def driveToScaleForward(
+    drivetrain: Drivetrain,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    pose: Stream[Point],
+    relativeAngle: Stream[Angle]
+  ): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -147,8 +158,7 @@ class AutoGenerator(r: CoreRobot) {
     )
   }
 
-  def backOutAfterScale(drivetrain: Drivetrain,
-                        pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def backOutAfterScale(drivetrain: Drivetrain, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -170,9 +180,13 @@ class AutoGenerator(r: CoreRobot) {
     )(drivetrain)
   }
 
-  def pickupThirdCube(drivetrain: Drivetrain,
-                 collectorRollers: CollectorRollers, collectorClamp: CollectorClamp,
-                 position: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def pickupThirdCube(
+    drivetrain: Drivetrain,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    position: Stream[Point],
+    relativeAngle: Stream[Angle]
+  ): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -249,20 +263,29 @@ class AutoGenerator(r: CoreRobot) {
 
   val startingPose = Point(Inches(139.473), Inches(0))
 
-  def twoCubeAuto(drivetrain: Drivetrain, collectorRollers: CollectorRollers, collectorClamp: CollectorClamp): FiniteTask = {
+  def twoCubeAuto(
+    drivetrain: Drivetrain,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp
+  ): FiniteTask = {
     val relativeTurn = drivetrainHardware.turnPosition.relativize((init, curr) => {
       curr - init
     })
 
-    val xyPosition = XYPosition.circularTracking(
-      relativeTurn.map(compassToTrigonometric),
-      drivetrainHardware.forwardPosition
-    ).map(p =>
-      Point(
-        p.x + startingPose.x,
-        p.y + startingPose.y
+    val xyPosition = XYPosition
+      .circularTracking(
+        relativeTurn.map(compassToTrigonometric),
+        drivetrainHardware.forwardPosition
       )
-    ).withCheck(println).preserve
+      .map(
+        p =>
+          Point(
+            p.x + startingPose.x,
+            p.y + startingPose.y
+        )
+      )
+      .withCheck(println)
+      .preserve
 
     new FollowWayPointsWithPosition(
       Seq(
@@ -283,34 +306,53 @@ class AutoGenerator(r: CoreRobot) {
       forwardBackwardMode = ForwardsOnly,
       position = xyPosition,
       turnPosition = relativeTurn
-    )(drivetrain).then(printTask("ended switch")).then(
-      driveBackPostSwitch(
-        drivetrain, collectorRollers, collectorClamp,
-        xyPosition, relativeTurn
-      ).then(printTask("ended post switch"))
-    ).then(
-      pickupCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(printTask("end cube pickup"))
-    ).then(
-      driveBackPostCube(drivetrain, xyPosition, relativeTurn).then(printTask("end back driving"))
-    ).then(
-      driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(printTask("ended everything!"))
-    )
+    )(drivetrain)
+      .then(printTask("ended switch"))
+      .then(
+        driveBackPostSwitch(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          xyPosition,
+          relativeTurn
+        ).then(printTask("ended post switch"))
+      )
+      .then(
+        pickupCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
+          .then(printTask("end cube pickup"))
+      )
+      .then(
+        driveBackPostCube(drivetrain, xyPosition, relativeTurn).then(printTask("end back driving"))
+      )
+      .then(
+        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
+          .then(printTask("ended everything!"))
+      )
   }
 
-  def threeCubeAuto(drivetrain: Drivetrain, collectorRollers: CollectorRollers, collectorClamp: CollectorClamp): FiniteTask = {
+  def threeCubeAuto(
+    drivetrain: Drivetrain,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp
+  ): FiniteTask = {
     val relativeTurn = drivetrainHardware.turnPosition.relativize((init, curr) => {
       curr - init
     })
 
-    val xyPosition = XYPosition.circularTracking(
-      relativeTurn.map(compassToTrigonometric),
-      drivetrainHardware.forwardPosition
-    ).map(p =>
-      Point(
-        p.x + startingPose.x,
-        p.y + startingPose.y
+    val xyPosition = XYPosition
+      .circularTracking(
+        relativeTurn.map(compassToTrigonometric),
+        drivetrainHardware.forwardPosition
       )
-    ).withCheck(println).preserve
+      .map(
+        p =>
+          Point(
+            p.x + startingPose.x,
+            p.y + startingPose.y
+        )
+      )
+      .withCheck(println)
+      .preserve
 
     new FollowWayPointsWithPosition(
       Seq(
@@ -331,34 +373,60 @@ class AutoGenerator(r: CoreRobot) {
       forwardBackwardMode = ForwardsOnly,
       position = xyPosition,
       turnPosition = relativeTurn
-    )(drivetrain).then(printTask("ended switch")).then(
-      driveBackPostSwitch(
-        drivetrain, collectorRollers, collectorClamp,
-        xyPosition, relativeTurn
-      ).then(printTask("ended post switch"))
-    ).then(
-      pickupCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(printTask("end cube pickup"))
-    ).then(
-      driveBackPostCube(drivetrain, xyPosition, relativeTurn).then(printTask("end back driving")).andUntilDone(
-        new WaitTask(Seconds(1)).andUntilDone(
-          CollectorTasks.collectCubeWithoutOpen(collectorRollers)
-        ).toContinuous
+    )(drivetrain)
+      .then(printTask("ended switch"))
+      .then(
+        driveBackPostSwitch(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          xyPosition,
+          relativeTurn
+        ).then(printTask("ended post switch"))
       )
-    ).then(
-      driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(printTask("ended scale drop!"))
-    ).then(
-      backOutAfterScale(drivetrain, xyPosition, relativeTurn).then(printTask("ended back out!"))
-    ).then(
-      pickupThirdCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(printTask("picked up third"))
-    ).then(
-      driveBackPostThirdCube(drivetrain, xyPosition, relativeTurn).then(printTask("picked up third")).andUntilDone(
-        new WaitTask(Seconds(1)).andUntilDone(
-          CollectorTasks.collectCubeWithoutOpen(collectorRollers)
-        ).toContinuous
+      .then(
+        pickupCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(
+          printTask("end cube pickup")
+        )
       )
-    ).then(
-      driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(printTask("ended scale drop and done!"))
-    )
+      .then(
+        driveBackPostCube(drivetrain, xyPosition, relativeTurn)
+          .then(printTask("end back driving"))
+          .andUntilDone(
+            new WaitTask(Seconds(1))
+              .andUntilDone(
+                CollectorTasks.collectCubeWithoutOpen(collectorRollers)
+              )
+              .toContinuous
+          )
+      )
+      .then(
+        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(
+          printTask("ended scale drop!")
+        )
+      )
+      .then(
+        backOutAfterScale(drivetrain, xyPosition, relativeTurn).then(printTask("ended back out!"))
+      )
+      .then(
+        pickupThirdCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
+          .then(printTask("picked up third"))
+      )
+      .then(
+        driveBackPostThirdCube(drivetrain, xyPosition, relativeTurn)
+          .then(printTask("picked up third"))
+          .andUntilDone(
+            new WaitTask(Seconds(1))
+              .andUntilDone(
+                CollectorTasks.collectCubeWithoutOpen(collectorRollers)
+              )
+              .toContinuous
+          )
+      )
+      .then(
+        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
+          .then(printTask("ended scale drop and done!"))
+      )
   }
 
   def sameSideScaleAuto(drivetrain: Drivetrain): FiniteTask = {
