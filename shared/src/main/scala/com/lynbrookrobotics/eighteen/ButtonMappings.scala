@@ -108,10 +108,19 @@ object ButtonMappings {
 
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightThree)
-      }.foreach( // right 3 —lift go collect height
+      }.foreach( // right 3 — lift go collect height
         new cubeLift.positionTasks.WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
         )(lift).toContinuous
+      )
+
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightSix)
+      }.foreach( // right 6 & joystick — lift manual control
+        new cubeLift.LiftManualControl(
+          driverHardware.joystickStream
+            .map(-_.operator.y)
+        )(lift)
       )
     }
 
