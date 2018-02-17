@@ -72,11 +72,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     cubeLift
   ).flatten
 
-  private var autonomousRoutines = mutable.Map.empty[Int, () => ContinuousTask]
+  private val autonomousRoutines = mutable.Map.empty[Int, () => ContinuousTask]
 
   def addAutonomousRoutine(id: Int)(task: => ContinuousTask): Unit = {
     if (autonomousRoutines.contains(id)) {
-      println(s"WARNING, overriding autonomous routine $id")
+      println(s"WARNING: overriding autonomous routine $id")
     }
 
     autonomousRoutines(id) = () => task
@@ -98,13 +98,12 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     }
   }
 
-  val inst = NetworkTableInstance.getDefault()
-  val tab = inst.getTable("/SmartDashboard")
-  val ent = tab.getEntry("DB/Slider 0")
+  private val inst = NetworkTableInstance.getDefault()
+  private val tab = inst.getTable("/SmartDashboard")
+  private val ent = tab.getEntry("DB/Slider 0")
 
   driverHardware.isAutonomousEnabled.foreach(Signal {
     val autoID = Math.round(ent.getDouble(0)).toInt
-    println(s"autoid: $autoID")
 
     autonomousRoutines
       .getOrElse(autoID, {
