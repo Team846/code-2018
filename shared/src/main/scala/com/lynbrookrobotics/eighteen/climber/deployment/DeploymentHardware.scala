@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.climber.deployment
 
 import edu.wpi.first.wpilibj.Solenoid
 
-case class DeploymentHardware(solenoidLeft: Solenoid, solenoidRight: Solenoid)
+final case class DeploymentHardware(solenoidLeft: Solenoid, solenoidRight: Solenoid)
 
 object DeploymentHardware {
   def apply(config: DeploymentConfig): DeploymentHardware = {

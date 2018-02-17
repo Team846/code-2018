@@ -3,7 +3,6 @@ package com.lynbrookrobotics.eighteen.drivetrain
 import com.ctre.phoenix.motorcontrol.can.{TalonSRX, VictorSPX}
 import com.ctre.phoenix.motorcontrol._
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
-import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSidedDriveHardware
 import com.lynbrookrobotics.potassium.frc.{LazyTalon, TalonEncoder}
 import com.lynbrookrobotics.potassium.sensors.imu.{ADIS16448, DigitalGyro}
@@ -15,33 +14,33 @@ import squants.motion.AngularVelocity
 import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Length, Velocity}
 
-case class DrivetrainData(leftEncoderVelocity: AngularVelocity,
-                          rightEncoderVelocity: AngularVelocity,
-                          leftEncoderRotation: Angle,
-                          rightEncoderRotation: Angle,
-                          gyroVelocities: Value3D[AngularVelocity])
+final case class DrivetrainData(
+  leftEncoderVelocity: AngularVelocity,
+  rightEncoderVelocity: AngularVelocity,
+  leftEncoderRotation: Angle,
+  rightEncoderRotation: Angle,
+  gyroVelocities: Value3D[AngularVelocity]
+)
 
-case class DrivetrainHardware(coreTicks: Stream[Unit],
-                              leftSRX: TalonSRX,
-                              rightSRX: TalonSRX,
-                              leftFollowerSRX: VictorSPX,
-                              rightFollowerSRX: VictorSPX,
-                              gyro: DigitalGyro,
-                              driverHardware: DriverHardware,
-                              props: DrivetrainProperties) extends TwoSidedDriveHardware {
+final case class DrivetrainHardware(
+  coreTicks: Stream[Unit],
+  leftSRX: TalonSRX,
+  rightSRX: TalonSRX,
+  leftFollowerSRX: VictorSPX,
+  rightFollowerSRX: VictorSPX,
+  gyro: DigitalGyro,
+  driverHardware: DriverHardware,
+  props: DrivetrainProperties
+) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
   val escIdx = 0
   val escTout = 0
 
-  val left /*Back*/ = new LazyTalon(leftSRX, escIdx, escTout,
-    defaultPeakOutputReverse = -1.0,
-    defaultPeakOutputForward = 1.0
-  )
-  val right /*Back*/ = new LazyTalon(rightSRX, escIdx, escTout,
-    defaultPeakOutputReverse = -1.0,
-    defaultPeakOutputForward = 1.0
-  )
+  val left /*Back*/ =
+    new LazyTalon(leftSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
+  val right /*Back*/ =
+    new LazyTalon(rightSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
 
   import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced._
 
@@ -55,13 +54,13 @@ case class DrivetrainHardware(coreTicks: Stream[Unit],
       it.configNominalOutputReverse(0, escTout)
       it.configNominalOutputForward(0, escTout)
       it.configPeakOutputForward(1, escTout)
-      it.configNeutralDeadband(0.001 /*min*/ , escTout)
+      it.configNeutralDeadband(0.001 /*min*/, escTout)
 
       it.configVoltageCompSaturation(11, escTout)
       it.configVoltageMeasurementFilter(32, escTout)
       it.enableVoltageCompensation(true)
 
-      it.configContinuousCurrentLimit(20, escTout)
+      it.configContinuousCurrentLimit(30, escTout)
       it.configPeakCurrentDuration(0, escTout)
       it.enableCurrentLimit(true)
 
@@ -71,8 +70,9 @@ case class DrivetrainHardware(coreTicks: Stream[Unit],
         Status_12_Feedback1 -> 20,
         Status_3_Quadrature -> 100,
         Status_4_AinTempVbat -> 100
-      ).foreach { case (frame, period) =>
-        it.setStatusFramePeriod(frame, period, escTout)
+      ).foreach {
+        case (frame, period) =>
+          it.setStatusFramePeriod(frame, period, escTout)
       }
     }
 
@@ -127,10 +127,8 @@ case class DrivetrainHardware(coreTicks: Stream[Unit],
     DrivetrainData(
       leftEncoder.getAngularVelocity,
       rightEncoder.getAngularVelocity,
-
       leftEncoder.getAngle,
       rightEncoder.getAngle,
-
       gyro.getVelocities
     )
   )
@@ -158,8 +156,7 @@ case class DrivetrainHardware(coreTicks: Stream[Unit],
 }
 
 object DrivetrainHardware {
-  def apply(config: DrivetrainConfig, coreTicks: Stream[Unit],
-            driverHardware: DriverHardware): DrivetrainHardware = {
+  def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
     new DrivetrainHardware(
       coreTicks,
       new TalonSRX(config.ports.leftPort),
