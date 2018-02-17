@@ -8,7 +8,8 @@ trait DeploymentState
 case object DeploymentOn extends DeploymentState
 case object DeploymentOff extends DeploymentState
 
-class Deployment(val coreTicks: Stream[Unit]) (implicit hardware: DeploymentHardware) extends Component[DeploymentState] {
+class Deployment(val coreTicks: Stream[Unit])(implicit hardware: DeploymentHardware)
+    extends Component[DeploymentState] {
   override def defaultController: Stream[DeploymentState] = coreTicks.mapToConstant(DeploymentOff)
 
   override def applySignal(signal: DeploymentState): Unit = {
