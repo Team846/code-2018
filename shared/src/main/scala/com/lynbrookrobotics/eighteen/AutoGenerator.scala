@@ -4,7 +4,7 @@ import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainComp => Drivetrain}
+import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.{BackwardsOnly, ForwardsOnly}
@@ -30,7 +30,7 @@ class AutoGenerator(r: CoreRobot) {
   }
 
   def driveBackPostSwitch(
-    drivetrain: Drivetrain,
+    drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
     pose: Stream[Point],
@@ -70,7 +70,7 @@ class AutoGenerator(r: CoreRobot) {
   }
 
   def pickupCube(
-    drivetrain: Drivetrain,
+    drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
     position: Stream[Point],
@@ -99,7 +99,7 @@ class AutoGenerator(r: CoreRobot) {
     )
   }
 
-  def driveBackPostCube(drivetrain: Drivetrain, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def driveBackPostCube(drivetrain: DrivetrainComponent, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -126,7 +126,7 @@ class AutoGenerator(r: CoreRobot) {
   }
 
   def driveToScaleForward(
-    drivetrain: Drivetrain,
+    drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
     pose: Stream[Point],
@@ -157,7 +157,7 @@ class AutoGenerator(r: CoreRobot) {
     )
   }
 
-  def backOutAfterScale(drivetrain: Drivetrain, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def backOutAfterScale(drivetrain: DrivetrainComponent, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -180,7 +180,7 @@ class AutoGenerator(r: CoreRobot) {
   }
 
   def pickupThirdCube(
-    drivetrain: Drivetrain,
+    drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
     position: Stream[Point],
@@ -213,7 +213,7 @@ class AutoGenerator(r: CoreRobot) {
     )
   }
 
-  def driveBackPostThirdCube(drivetrain: Drivetrain, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def driveBackPostThirdCube(drivetrain: DrivetrainComponent, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -239,7 +239,7 @@ class AutoGenerator(r: CoreRobot) {
     )(drivetrain)
   }
 
-  def centerSwitch(drivetrain: Drivetrain): FiniteTask = {
+  def centerSwitch(drivetrain: DrivetrainComponent): FiniteTask = {
     new FollowWayPoints(
       Seq(
         Point.origin,
@@ -263,7 +263,7 @@ class AutoGenerator(r: CoreRobot) {
   val startingPose = Point(Inches(139.473), Inches(0))
 
   def twoCubeAutoWithPosition(
-    drivetrain: Drivetrain,
+    drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
     xyPosition: Stream[Point],
@@ -322,7 +322,7 @@ class AutoGenerator(r: CoreRobot) {
   }
 
   def twoCubeAuto(
-    drivetrain: Drivetrain,
+    drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp
   ): FiniteTask = {
@@ -354,7 +354,7 @@ class AutoGenerator(r: CoreRobot) {
   }
 
   def threeCubeAuto(
-    drivetrain: Drivetrain,
+    drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp
   ): FiniteTask = {
@@ -400,7 +400,7 @@ class AutoGenerator(r: CoreRobot) {
       )
   }
 
-  def sameSideScaleAuto(drivetrain: Drivetrain): FiniteTask = {
+  def sameSideScaleAuto(drivetrain: DrivetrainComponent): FiniteTask = {
     new FollowWayPoints(
       Seq(
         Point.origin,
