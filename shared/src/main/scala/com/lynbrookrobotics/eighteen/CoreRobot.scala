@@ -9,15 +9,16 @@ import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.forklift.Forklift
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
+import com.lynbrookrobotics.funkydashboard.{FunkyDashboard, JsonEditor, TimeSeriesNumeric}
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.streams.Stream
-
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import edu.wpi.first.networktables.NetworkTableInstance
 
 import scala.collection.mutable
-
 import com.lynbrookrobotics.potassium.{Component, Signal}
+
+import scala.util.Try
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])(
   implicit val config: Signal[RobotConfig],
@@ -130,4 +131,49 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   }
 
   ButtonMappings.setup(this)
+
+  val dashboard = Try {
+    val dashboard = new FunkyDashboard(100, 8080)
+    dashboard.start()
+    dashboard
+  }
+
+  dashboard.failed.foreach(_.printStackTrace())
+
+  dashboard.foreach { board =>
+    import CoreRobot.ToTimeSeriesNumeric
+
+    board
+      .datasetGroup("Config")
+      .addDataset(
+        new JsonEditor("Robot Config")(
+          configFileValue.get,
+          updateConfigFile
+        )
+      )
+
+    drivetrain.foreach { d =>
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(drivetrainHardware.leftVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Left Ground Velocity"))
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(
+          drivetrainHardware.rightVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Right Ground Velocity")
+        )
+    }
+  }
+}
+
+object CoreRobot {
+  implicit class ToTimeSeriesNumeric[T](val stream: Stream[T]) extends AnyVal {
+    def toTimeSeriesNumeric(name: String)(implicit ev: T => Double): TimeSeriesNumeric = {
+      var lastValue: Double = 0.0
+      new TimeSeriesNumeric(name)(lastValue) {
+        val cancel = stream.foreach { v =>
+          lastValue = v
+        }
+      }
+    }
+  }
 }
