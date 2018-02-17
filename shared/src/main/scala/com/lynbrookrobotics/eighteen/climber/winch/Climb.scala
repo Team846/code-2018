@@ -1,11 +1,12 @@
-package com.lynbrookrobotics.eighteen.climber
+package com.lynbrookrobotics.eighteen.climber.winch
 
+import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.tasks.ContinuousTask
-import com.lynbrookrobotics.potassium.streams.Stream
 
-class Climb(climberWinch: ClimberWinch)(implicit climberWinchConfig: Stream[ClimberWinchConfig])
-    extends ContinuousTask {
-  override protected def onStart(): Unit = climberWinch.setController(climberWinchConfig.map(_.climbingSpeed))
+class Climb(climberWinch: ClimberWinch)(implicit climberWinchProps: Signal[ClimberWinchProps]) extends ContinuousTask {
+  override protected def onStart(): Unit = climberWinch.setController(
+    climberWinch.coreTicks.map(_ => climberWinchProps.get.climbingSpeed)
+  )
 
   override protected def onEnd(): Unit = climberWinch.resetToDefault()
 }

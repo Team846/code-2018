@@ -1,4 +1,4 @@
-package com.lynbrookrobotics.eighteen.climber
+package com.lynbrookrobotics.eighteen.climber.winch
 
 import com.ctre.phoenix.motorcontrol.ControlMode
 import com.lynbrookrobotics.potassium.{streams, Component}

@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.climber.ClimberWinch
 import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
+import com.lynbrookrobotics.eighteen.climber.winch.ClimberWinch
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
@@ -13,11 +13,10 @@ import com.lynbrookrobotics.funkydashboard.{FunkyDashboard, JsonEditor, TimeSeri
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
+import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.networktables.NetworkTableInstance
 
 import scala.collection.mutable
-import com.lynbrookrobotics.potassium.{Component, Signal}
-
 import scala.util.Try
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])(
@@ -50,6 +49,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     hardware.climberDeployment.map(_ => new Deployment(coreTicks))
 
   implicit val climberWinchHardware = hardware.climberWinch.orNull
+  implicit val climberWinchProps = config.map(_.climberWinch.get.props)
   val climberWinch: Option[ClimberWinch] =
     hardware.climberWinch.map(_ => new ClimberWinch(coreTicks))
 
@@ -59,7 +59,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   implicit val cubeLiftHardware = hardware.cubeLift.orNull
   implicit val cubeLiftProps = config.map(_.cubeLift.get.props)
-  val cubeLift: Option[CubeLiftComp] =
+  val cubeLiftComp: Option[CubeLiftComp] =
     hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
 
   lazy val components: Seq[Component[_]] = Seq(
@@ -70,7 +70,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     collectorRollers,
     drivetrain,
     forklift,
-    cubeLift
+    cubeLiftComp
   ).flatten
 
   private val autonomousRoutines = mutable.Map.empty[Int, () => ContinuousTask]
@@ -89,13 +89,14 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     drivetrain <- drivetrain
     collectorRollers <- collectorRollers
     collectorClamp <- collectorClamp
+    collectorPivot <- collectorPivot
   } {
     addAutonomousRoutine(1) {
-      generator.twoCubeAuto(drivetrain, collectorRollers, collectorClamp).toContinuous
+      generator.twoCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot).toContinuous
     }
 
     addAutonomousRoutine(2) {
-      generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp).toContinuous
+      generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot).toContinuous
     }
   }
 
@@ -166,14 +167,16 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 }
 
 object CoreRobot {
+
   implicit class ToTimeSeriesNumeric[T](val stream: Stream[T]) extends AnyVal {
     def toTimeSeriesNumeric(name: String)(implicit ev: T => Double): TimeSeriesNumeric = {
       var lastValue: Double = 0.0
       new TimeSeriesNumeric(name)(lastValue) {
-        val cancel = stream.foreach { v =>
+        stream.foreach { v =>
           lastValue = v
         }
       }
     }
   }
+
 }
