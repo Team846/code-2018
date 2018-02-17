@@ -110,5 +110,9 @@ object ButtonMappings {
         CollectorTasks.purgeCube(rollers)
       )
     }
+
+    if(cubeLiftComp.isEmpty) {
+      // todo Impl different mappings
+    }
   }
 }
