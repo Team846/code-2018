@@ -389,10 +389,9 @@ class AutoGenerator(r: CoreRobot) {
         driveBackPostThirdCube(drivetrain, xyPosition, relativeTurn)
           .then(printTask("picked up third"))
           .andUntilDone(
-            new WaitTask(Seconds(1))
-              .andUntilDone(
-                CollectorTasks.collectCubeWithoutOpen(collectorRollers)
-              )
+            CollectorTasks
+              .collectCubeWithoutOpen(collectorRollers)
+              .forDuration(Seconds(1))
               .toContinuous
           )
       )
