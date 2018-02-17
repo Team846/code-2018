@@ -6,7 +6,7 @@ import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
-import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComp
+import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.forklift.Forklift
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.clock.Clock
@@ -28,8 +28,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   implicit val drivetrainHardware = hardware.drivetrain
   implicit val drivetrainProps = config.map(_.drivetrain.props)
-  val drivetrain: Option[DrivetrainComp] =
-    Option(hardware.drivetrain).map(_ => new DrivetrainComp(coreTicks))
+  val drivetrain: Option[DrivetrainComponent] =
+    Option(hardware.drivetrain).map(_ => new DrivetrainComponent(coreTicks))
 
   implicit val collectorRollersHardware = hardware.collectorRollers
   implicit val collectorRollersProps = config.map(_.collectorRollers.props)
