@@ -31,6 +31,20 @@ object ButtonMappings {
       )
     }
 
+    if(cubeLiftComp.isEmpty) {
+      for {
+        rollers <- collectorRollers
+        clamp <- collectorClamp
+        pivot <- collectorPivot
+      } {
+        driverHardware.joystickStream.eventWhen { _ =>
+          driverHardware.driverJoystick.getRawButton(Trigger) && !driverHardware.driverJoystick.getRawButton(TriggerBottom)
+        }.foreach( // trigger — rip lift, collect cube
+          CollectorTasks.collectCube(rollers, clamp, pivot)
+        )
+      }
+    }
+
     for {
       clamp <- collectorClamp
     } {
@@ -109,10 +123,6 @@ object ButtonMappings {
       }.foreach( // trigger — eject cube
         CollectorTasks.purgeCube(rollers)
       )
-    }
-
-    if(cubeLiftComp.isEmpty) {
-      // todo Impl different mappings
     }
   }
 }
