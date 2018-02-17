@@ -10,10 +10,10 @@ import squants.motion.Velocity
 import squants.space.Length
 
 final case class CubeLiftProperties(
-  pidConfig: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless],
-  potentiometerConversion: Ratio[ElectricPotential, Length],
-  adc: Ratio[Dimensionless, ElectricPotential],
-  bottom: ElectricPotential
+                                     pidConfig: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless],
+                                     voltageOverHeight: Ratio[ElectricPotential, Length],
+                                     talonOverVoltage: Ratio[Dimensionless, ElectricPotential],
+                                     voltageAtBottom: ElectricPotential
 ) extends OffloadedLiftProperties {
   override def positionGains: PIDConfig[
     Length,
@@ -25,12 +25,12 @@ final case class CubeLiftProperties(
   ] = pidConfig
 
   override val escConfig: EscConfig[Length] = EscConfig(
-    ticksPerUnit = adc * potentiometerConversion
+    ticksPerUnit = talonOverVoltage * voltageOverHeight
   )
 
   override def toNative(height: Length): Dimensionless =
-    adc * (potentiometerConversion * height + bottom)
+    talonOverVoltage * (voltageOverHeight * height + voltageAtBottom)
 
   override def fromNative(native: Dimensionless): Length =
-    potentiometerConversion.recip * (adc.recip * native - bottom)
+    voltageOverHeight.recip * (talonOverVoltage.recip * native - voltageAtBottom)
 }
