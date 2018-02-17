@@ -99,7 +99,11 @@ class AutoGenerator(r: CoreRobot) {
     )
   }
 
-  def driveBackPostCube(drivetrain: DrivetrainComponent, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def driveBackPostCube(
+    drivetrain: DrivetrainComponent,
+    pose: Stream[Point],
+    relativeAngle: Stream[Angle]
+  ): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -157,7 +161,11 @@ class AutoGenerator(r: CoreRobot) {
     )
   }
 
-  def backOutAfterScale(drivetrain: DrivetrainComponent, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def backOutAfterScale(
+    drivetrain: DrivetrainComponent,
+    pose: Stream[Point],
+    relativeAngle: Stream[Angle]
+  ): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
@@ -213,7 +221,11 @@ class AutoGenerator(r: CoreRobot) {
     )
   }
 
-  def driveBackPostThirdCube(drivetrain: DrivetrainComponent, pose: Stream[Point], relativeAngle: Stream[Angle]): FiniteTask = {
+  def driveBackPostThirdCube(
+    drivetrain: DrivetrainComponent,
+    pose: Stream[Point],
+    relativeAngle: Stream[Angle]
+  ): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
         Point(
