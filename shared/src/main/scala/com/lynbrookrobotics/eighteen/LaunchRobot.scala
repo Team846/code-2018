@@ -14,6 +14,7 @@ import scala.io.Source
 import scala.util.Try
 
 class LaunchRobot extends RobotBase {
+
   implicit val clock = WPIClock
 
   private var coreRobot: CoreRobot = null
@@ -64,6 +65,7 @@ class LaunchRobot extends RobotBase {
 
     HAL.observeUserProgramStarting()
 
+    println("before calib?")
     println(
       "------------------------------------------\n" +
         "Finished preloading and establishing connections. " +

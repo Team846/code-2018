@@ -10,7 +10,7 @@ resolvers in ThisBuild += "Funky-Repo" at "http://lynbrookrobotics.com/repo"
 resolvers in ThisBuild += "WPILib-Maven" at "http://lynbrookrobotics.com/wpilib-maven"
 resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/development"
 
-val potassiumVersion = "0.1.0-fc6457a8"
+val potassiumVersion = "0.1.0-cf5cf882"
 val wpiVersion = "2018.2.2"
 
 lazy val robot = crossProject(JVMPlatform, NativePlatform)
@@ -152,5 +152,6 @@ lazy val native = robot.native
     teamNumber := 846,
     nativeMode := "debug",
     nativeGC := "boehm",
+    nativeMode := "release",
     crossCompileSettings
   )

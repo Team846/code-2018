@@ -43,6 +43,16 @@ final case class DrivetrainHardware(
   val right /*Back*/ =
     new LazyTalon(rightSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
 
+  left.t.enableCurrentLimit(true)
+  left.t.configContinuousCurrentLimit(20, 0)
+  left.t.configPeakCurrentDuration(0, 0)
+
+
+  right.t.enableCurrentLimit(true)
+  right.t.configContinuousCurrentLimit(20, 0)
+  right.t.configPeakCurrentDuration(0, 0)
+
+
   leftFollowerSRX.follow(left.t)
   rightFollowerSRX.follow(right.t)
 
@@ -110,12 +120,17 @@ object DrivetrainHardware {
       coreTicks,
       new TalonSRX(config.ports.leftPort),
       new TalonSRX(config.ports.rightPort),
+<<<<<<< HEAD
       new VictorSPX(config.ports.leftFollowerPort),
       if (config.ports.practiceSpeedControllers) {
         new TalonSRX(config.ports.rightFollowerPort)
       } else {
         new VictorSPX(config.ports.rightFollowerPort)
       },
+=======
+      new /*VictorSPX*/TalonSRX(config.ports.leftFollowerPort),
+      new /*VictorSPX*/TalonSRX(config.ports.rightFollowerPort),
+>>>>>>> Add 3 cube autos starting from the side
       new ADIS16448(new SPI(SPI.Port.kMXP), null),
       driverHardware,
       config.props

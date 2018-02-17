@@ -1,0 +1,234 @@
+{
+  "cubeLift": null,
+  "forklift": null,
+  "climberDeployment": null,
+  "drivetrain": {
+    "ports": {
+      "rightFollowerPort": 40,
+      "leftFollowerPort": 51,
+      "rightPort": 41,
+      "leftPort": 50
+    },
+    "props": {
+      "maxLeftVelocity": [
+        21.9,
+        "FeetPerSecond"
+      ],
+      "turnVelocityGains": {
+        "kd": {
+          "den": [
+            360,
+            "DegreesPerSecond / s"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "ki": {
+          "den": [
+            0.017453292519943295,
+            "Radians"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "kp": {
+          "den": [
+            360,
+            "DegreesPerSecond"
+          ],
+          "num": [
+            50,
+            "Percent"
+          ]
+        }
+      },
+      "defaultLookAheadDistance": [
+        2.5,
+        "Feet"
+      ],
+      "maxAcceleration": [
+        5,
+        "FeetPerSecondSquared"
+      ],
+      "maxRightVelocity": [
+        23.1,
+        "FeetPerSecond"
+      ],
+      "track": [
+        21.75,
+        "Inches"
+      ],
+      "rightVelocityGains": {
+        "kd": {
+          "den": [
+            5,
+            "FeetPerSecondSquared"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "ki": {
+          "den": [
+            5,
+            "Feet"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "kp": {
+          "den": [
+            5,
+            "FeetPerSecond"
+          ],
+          "num": [
+            30,
+            "Percent"
+          ]
+        }
+      },
+      "turnPositionGains": {
+        "kd": {
+          "den": [
+            0.017453292519943295,
+            "RadiansPerSecond"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "ki": {
+          "den": [
+            1,
+            "Degrees * s"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "kp": {
+          "den": [
+            1,
+            "Degrees"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        }
+      },
+      "blendExponent": 0,
+      "maxTurnVelocity": [
+        90,
+        "DegreesPerSecond"
+      ],
+      "leftVelocityGains": {
+        "kd": {
+          "den": [
+            5,
+            "FeetPerSecondSquared"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "ki": {
+          "den": [
+            5,
+            "Feet"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "kp": {
+          "den": [
+            5,
+            "FeetPerSecond"
+          ],
+          "num": [
+            30,
+            "Percent"
+          ]
+        }
+      },
+      "forwardPositionGains": {
+        "kd": {
+          "den": [
+            5,
+            "FeetPerSecond"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "ki": {
+          "den": [
+            5,
+            "Feet * s"
+          ],
+          "num": [
+            0,
+            "Percent"
+          ]
+        },
+        "kp": {
+          "den": [
+            50,
+            "Feet"
+          ],
+          "num": [
+            1,
+            "Percent"
+          ]
+        }
+      }
+    }
+  },
+  "driver": {
+    "launchpadPort": -1,
+    "driverWheelPort": 2,
+    "operatorPort": 1,
+    "driverPort": 0
+  },
+  "collectorClamp": {
+    "ports": {
+      "pneumaticPort": 1,
+      "proximityPort": 0
+    },
+    "props": {
+      "cubeGraspThreshold": [
+        1.2,
+        "Volts"
+      ]
+    }
+  },
+  "collectorPivot": {
+    "pneumaticPort": 2
+  },
+  "collectorRollers": {
+    "ports": {
+      "rollerLeftPort": 20,
+      "rollerRightPort": 21
+    },
+    "props": {
+      "collectSpeed": [
+        50,
+        "Percent"
+      ]
+    }
+  },
+  "climberWinch": null
+}

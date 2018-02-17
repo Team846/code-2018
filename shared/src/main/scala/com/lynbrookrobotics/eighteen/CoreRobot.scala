@@ -1,5 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
+import com.lynbrookrobotics.eighteen.auto.{AutoGenerator, FullAutoGenerator}
 import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
 import com.lynbrookrobotics.eighteen.climber.winch.ClimberWinch
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
@@ -12,9 +13,16 @@ import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.funkydashboard.{FunkyDashboard, JsonEditor, TimeSeriesNumeric}
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.streams.Stream
+import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
+import com.lynbrookrobotics.eighteen.drivetrain.UnicycleControllers._
+import com.lynbrookrobotics.eighteen.drivetrain.UnicycleControllers
+import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
+import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.UnicycleSignal
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.networktables.NetworkTableInstance
+import squants.{Each, Percent}
+import squants.space.{Degrees, Feet, Inches}
 
 import scala.collection.mutable
 import scala.util.Try
@@ -83,20 +91,90 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     autonomousRoutines(id) = () => task
   }
 
-  val generator = new AutoGenerator(this)
-
+  println("hi?")
+  val generator = new FullAutoGenerator(this)
   for {
     drivetrain <- drivetrain
     collectorRollers <- collectorRollers
     collectorClamp <- collectorClamp
     collectorPivot <- collectorPivot
+    cubeLiftComp <- cubeLiftComp
   } {
     addAutonomousRoutine(1) {
-      generator.twoCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot).toContinuous
+      generator.twoCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).toContinuous
     }
 
     addAutonomousRoutine(2) {
-      generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot).toContinuous
+      generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).toContinuous
+    }
+  }
+
+
+  println(" before adding ")
+  for {
+    drivetrain <- drivetrain
+  } {
+    addAutonomousRoutine(3) {
+      generator.SameSideSwitchAndScale.scaleSwitch3Cube(
+        drivetrain,
+        null,
+        null,
+        null,
+        null/*collectorRollers,
+        collectorClamp,
+        collectorPivot*/).toContinuous
+    }
+
+    addAutonomousRoutine(4) {
+      generator.SameSideSwitchOppositeScale.scaleSwitch3CubeAuto(
+        drivetrain,
+        null,
+        null,
+        null,
+        null
+        /*collectorRollers,
+        collectorClamp,
+        collectorPivot*/).toContinuous
+    }
+
+    addAutonomousRoutine(5) {
+      generator.OppositeSideSwitchSameSideScale.scaleSwitch3CubeAuto(
+        drivetrain,
+        null,
+        null,
+        null,
+        null
+        /*collectorRollers,
+        collectorClamp*/).toContinuous
+    }
+
+    addAutonomousRoutine(6) {
+      generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
+        drivetrain,
+        null,
+        null,
+        null,
+        null
+        /*collectorRollers,
+        collectorClamp*/).toContinuous
+    }
+
+    println("adding?")
+    import generator._
+    addAutonomousRoutine(7) {
+      printTask("before drive ").then(new DriveDistanceStraight(
+        Feet(10),
+        Inches(10),
+        Degrees(10),
+        Percent(50)
+      )(drivetrain)).then(printTask("ended driving straight")).toContinuous
+    }
+
+    addAutonomousRoutine(8) {
+      new RotateToAngle(
+        Degrees(-10),
+        Degrees(5)
+      )(drivetrain).toContinuous
     }
   }
 
@@ -142,6 +220,18 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   dashboard.failed.foreach(_.printStackTrace())
 
   dashboard.foreach { board =>
+    val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
+      curr - init
+    })
+
+    val pose = XYPosition
+      .circularTracking(
+        relativeAngle.map(compassToTrigonometric),
+        drivetrainHardware.forwardPosition
+      ).map(
+      p => p + generator.sideStartingPose
+    ).preserve
+
     import CoreRobot.ToTimeSeriesNumeric
 
     board
@@ -153,15 +243,68 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         )
       )
 
+
+
     drivetrain.foreach { d =>
+      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
+        curr - init
+      })
+
+      val pose = XYPosition
+        .circularTracking(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardPosition
+        ).map(
+        p => p + generator.sideStartingPose
+      ).preserve
       board
         .datasetGroup("Drivetrain/Velocity")
-        .addDataset(drivetrainHardware.leftVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Left Ground Velocity"))
+        .addDataset(pose.map(_.x.toFeet).toTimeSeriesNumeric("x"))
+
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(pose.map(_.y.toFeet).toTimeSeriesNumeric("y"))
+
+
+
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(drivetrainHardware.leftVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("forward Velocity"))
       board
         .datasetGroup("Drivetrain/Velocity")
         .addDataset(
-          drivetrainHardware.rightVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Right Ground Velocity")
+          drivetrainHardware.rightVelocity.derivative.map(_.toFeetPerSecondSquared).toTimeSeriesNumeric("forward acceleration"))
+
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(
+          drivetrainHardware.forwardPosition.map(_ => drivetrainHardware.right.t.getMotorOutputPercent).toTimeSeriesNumeric("Right output")
         )
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(
+          drivetrainHardware.forwardPosition.map(_ => drivetrainHardware.left.t.getMotorOutputPercent).toTimeSeriesNumeric("Left output")
+        )
+
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(
+          drivetrainHardware.leftVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Left velocity"))
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(
+          drivetrainHardware.rightVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Right velocity"))
+
+      board
+        .datasetGroup("Drivetrain/Position")
+        .addDataset(drivetrainHardware.leftPosition.map(_.toFeet).toTimeSeriesNumeric("Left Ground position"))
+      board
+        .datasetGroup("Drivetrain/Position")
+        .addDataset(drivetrainHardware.rightPosition.map(_.toFeet).toTimeSeriesNumeric("Right Ground position"))
+
+      board
+          .datasetGroup("Drivetrain/Gyro")
+          .addDataset(drivetrainHardware.turnPosition.map(_.toDegrees).toTimeSeriesNumeric("angular position"))
 
     }
 

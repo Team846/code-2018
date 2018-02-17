@@ -177,8 +177,25 @@ object ButtonMappings {
       rollers <- collectorRollers
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightFour)
+        driverHardware.driverJoystick.getRawButton(Trigger)
       }.foreach( // right 4 & joystick — manually control rollers
+        new RollersManualControl(
+          rollers.coreTicks.mapToConstant(-collectorRollersProps.get.collectSpeed)
+        )(rollers)
+      )
+
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(TriggerRight)
+      }.foreach(
+        new RollersManualControl(
+          rollers.coreTicks.mapToConstant(collectorRollersProps.get.collectSpeed)
+        )(rollers)
+      )
+
+
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightFour)
+      }.foreach( // right trigger — lift to scale height
         new RollersManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(rollers.coreTicks)
         )(rollers)
