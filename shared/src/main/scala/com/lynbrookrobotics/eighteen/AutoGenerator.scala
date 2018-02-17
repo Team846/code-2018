@@ -375,7 +375,6 @@ class AutoGenerator(r: CoreRobot) {
             p.y + startingPose.y
         )
       )
-      .withCheck(println)
       .preserve
 
     twoCubeAutoWithPosition(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
