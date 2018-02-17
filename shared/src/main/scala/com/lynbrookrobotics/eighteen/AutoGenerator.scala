@@ -263,6 +263,66 @@ class AutoGenerator(r: CoreRobot) {
 
   val startingPose = Point(Inches(139.473), Inches(0))
 
+  def twoCubeAutoWithPosition(
+    drivetrain: Drivetrain,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    xyPosition: Stream[Point],
+    relativeAngle: Stream[Angle]
+  ): FiniteTask = {
+    new FollowWayPointsWithPosition(
+      Seq(
+        startingPose,
+        Point(
+          Inches(72.313),
+          Inches(97.786) - Feet(2) - Feet(1)
+        ),
+        Point( // become straight and move 32" forward
+          Inches(72.313),
+          Inches(140.188) - Feet(2) - Feet(1)
+        )
+      ),
+      tolerance = Feet(1),
+      maxTurnOutput = Percent(100),
+      cruisingVelocity = FeetPerSecond(20),
+      targetTicksWithingTolerance = 1,
+      forwardBackwardMode = ForwardsOnly,
+      position = xyPosition,
+      turnPosition = relativeAngle
+    )(drivetrain)
+      .then(printTask("ended switch"))
+      .then(
+        driveBackPostSwitch(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          xyPosition,
+          relativeAngle
+        ).then(printTask("ended post switch"))
+      )
+      .then(
+        pickupCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeAngle).then(
+          printTask("end cube pickup")
+        )
+      )
+      .then(
+        driveBackPostCube(drivetrain, xyPosition, relativeAngle)
+          .then(printTask("end back driving"))
+          .andUntilDone(
+            new WaitTask(Seconds(1))
+              .andUntilDone(
+                CollectorTasks.collectCubeWithoutOpen(collectorRollers)
+              )
+              .toContinuous
+          )
+      )
+      .then(
+        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeAngle).then(
+          printTask("ended scale drop!")
+        )
+      )
+  }
+
   def twoCubeAuto(
     drivetrain: Drivetrain,
     collectorRollers: CollectorRollers,
@@ -284,50 +344,15 @@ class AutoGenerator(r: CoreRobot) {
             p.y + startingPose.y
         )
       )
-      .withCheck(println)
       .preserve
 
-    new FollowWayPointsWithPosition(
-      Seq(
-        startingPose,
-        Point(
-          Inches(72.313),
-          Inches(97.786) - Feet(2) - Feet(1)
-        ),
-        Point( // become straight and move 32" forward
-          Inches(72.313),
-          Inches(140.188) - Feet(2) - Feet(1)
-        )
-      ),
-      tolerance = Feet(1),
-      maxTurnOutput = Percent(100),
-      cruisingVelocity = FeetPerSecond(20),
-      targetTicksWithingTolerance = 1,
-      forwardBackwardMode = ForwardsOnly,
-      position = xyPosition,
-      turnPosition = relativeTurn
-    )(drivetrain)
-      .then(printTask("ended switch"))
-      .then(
-        driveBackPostSwitch(
-          drivetrain,
-          collectorRollers,
-          collectorClamp,
-          xyPosition,
-          relativeTurn
-        ).then(printTask("ended post switch"))
-      )
-      .then(
-        pickupCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
-          .then(printTask("end cube pickup"))
-      )
-      .then(
-        driveBackPostCube(drivetrain, xyPosition, relativeTurn).then(printTask("end back driving"))
-      )
-      .then(
-        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
-          .then(printTask("ended everything!"))
-      )
+    twoCubeAutoWithPosition(
+      drivetrain,
+      collectorRollers,
+      collectorClamp,
+      xyPosition,
+      relativeTurn
+    )
   }
 
   def threeCubeAuto(
@@ -354,57 +379,7 @@ class AutoGenerator(r: CoreRobot) {
       .withCheck(println)
       .preserve
 
-    new FollowWayPointsWithPosition(
-      Seq(
-        startingPose,
-        Point(
-          Inches(72.313),
-          Inches(97.786) - Feet(2) - Feet(1)
-        ),
-        Point( // become straight and move 32" forward
-          Inches(72.313),
-          Inches(140.188) - Feet(2) - Feet(1)
-        )
-      ),
-      tolerance = Feet(1),
-      maxTurnOutput = Percent(100),
-      cruisingVelocity = FeetPerSecond(20),
-      targetTicksWithingTolerance = 1,
-      forwardBackwardMode = ForwardsOnly,
-      position = xyPosition,
-      turnPosition = relativeTurn
-    )(drivetrain)
-      .then(printTask("ended switch"))
-      .then(
-        driveBackPostSwitch(
-          drivetrain,
-          collectorRollers,
-          collectorClamp,
-          xyPosition,
-          relativeTurn
-        ).then(printTask("ended post switch"))
-      )
-      .then(
-        pickupCube(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(
-          printTask("end cube pickup")
-        )
-      )
-      .then(
-        driveBackPostCube(drivetrain, xyPosition, relativeTurn)
-          .then(printTask("end back driving"))
-          .andUntilDone(
-            new WaitTask(Seconds(1))
-              .andUntilDone(
-                CollectorTasks.collectCubeWithoutOpen(collectorRollers)
-              )
-              .toContinuous
-          )
-      )
-      .then(
-        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn).then(
-          printTask("ended scale drop!")
-        )
-      )
+    twoCubeAutoWithPosition(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
       .then(
         backOutAfterScale(drivetrain, xyPosition, relativeTurn).then(printTask("ended back out!"))
       )
