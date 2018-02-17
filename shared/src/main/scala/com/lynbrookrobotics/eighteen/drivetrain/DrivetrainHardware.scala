@@ -66,7 +66,7 @@ final case class DrivetrainHardware(
       it.configVoltageMeasurementFilter(32, escTout)
       it.enableVoltageCompensation(true)
 
-      it.configContinuousCurrentLimit(20, escTout)
+      it.configContinuousCurrentLimit(30, escTout)
       it.configPeakCurrentDuration(0, escTout)
       it.enableCurrentLimit(true)
 
