@@ -1,3 +1,3 @@
 package com.lynbrookrobotics.eighteen.collector.pivot
 
-case class CollectorPivotConfig(pneumaticPort: Int)
+final case class CollectorPivotConfig(pneumaticPort: Int)
