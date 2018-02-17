@@ -71,12 +71,12 @@ class AutoGenerator(r: CoreRobot) {
   }
 
   def pickupCube(
-                  drivetrain: DrivetrainComponent,
-                  collectorRollers: CollectorRollers,
-                  collectorClamp: CollectorClamp,
-                  collectorPivot: CollectorPivot,
-                  position: Stream[Point],
-                  relativeAngle: Stream[Angle]
+    drivetrain: DrivetrainComponent,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    collectorPivot: CollectorPivot,
+    position: Stream[Point],
+    relativeAngle: Stream[Angle]
   ): FiniteTask = {
     new FollowWayPointsWithPosition(
       Seq(
@@ -220,7 +220,7 @@ class AutoGenerator(r: CoreRobot) {
       position = position,
       turnPosition = relativeAngle
     )(drivetrain).andUntilDone(
-      CollectorTasks.collectCube(collectorRollers, collectorClamp,collectorPivot)
+      CollectorTasks.collectCube(collectorRollers, collectorClamp, collectorPivot)
     )
   }
 
@@ -281,7 +281,7 @@ class AutoGenerator(r: CoreRobot) {
     drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
-    collectorPivot:CollectorPivot,
+    collectorPivot: CollectorPivot,
     xyPosition: Stream[Point],
     relativeAngle: Stream[Angle]
   ): FiniteTask = {
@@ -341,7 +341,7 @@ class AutoGenerator(r: CoreRobot) {
     drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
-    collectorPivot:CollectorPivot
+    collectorPivot: CollectorPivot
   ): FiniteTask = {
     val relativeTurn = drivetrainHardware.turnPosition.relativize((init, curr) => {
       curr - init
@@ -375,7 +375,7 @@ class AutoGenerator(r: CoreRobot) {
     drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
-    collectorPivot:CollectorPivot
+    collectorPivot: CollectorPivot
   ): FiniteTask = {
     val relativeTurn = drivetrainHardware.turnPosition.relativize((init, curr) => {
       curr - init

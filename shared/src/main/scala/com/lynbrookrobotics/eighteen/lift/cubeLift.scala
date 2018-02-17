@@ -15,9 +15,8 @@ package object cubeLift extends OffloadedLift {
   override type Comp = CubeLiftComp
   override type LiftSignal = OffloadedSignal
 
-  class LiftManualControl(target: Stream[Dimensionless])
-                         (lift: Comp)
-                         (implicit props: Signal[Properties]) extends ContinuousTask() {
+  class LiftManualControl(target: Stream[Dimensionless])(lift: Comp)(implicit props: Signal[Properties])
+      extends ContinuousTask() {
     override protected def onStart(): Unit = lift.setController(
       target
         .map(_ / props.get.maxManualControlOutput)

@@ -21,7 +21,9 @@ object ButtonMappings {
       pivot <- collectorPivot
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(Trigger) && !driverHardware.driverJoystick.getRawButton(TriggerBottom)
+        driverHardware.driverJoystick.getRawButton(Trigger) && !driverHardware.driverJoystick.getRawButton(
+          TriggerBottom
+        )
       }.foreach( // trigger — lift go down, collect cube
         new cubeLift.positionTasks.WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
@@ -31,14 +33,16 @@ object ButtonMappings {
       )
     }
 
-    if(cubeLiftComp.isEmpty) {
+    if (cubeLiftComp.isEmpty) {
       for {
         rollers <- collectorRollers
         clamp <- collectorClamp
         pivot <- collectorPivot
       } {
         driverHardware.joystickStream.eventWhen { _ =>
-          driverHardware.driverJoystick.getRawButton(Trigger) && !driverHardware.driverJoystick.getRawButton(TriggerBottom)
+          driverHardware.driverJoystick.getRawButton(Trigger) && !driverHardware.driverJoystick.getRawButton(
+            TriggerBottom
+          )
         }.foreach( // trigger — rip lift, collect cube
           CollectorTasks.collectCube(rollers, clamp, pivot)
         )
@@ -49,7 +53,9 @@ object ButtonMappings {
       clamp <- collectorClamp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(TriggerBottom) && !driverHardware.driverJoystick.getRawButton(Trigger)
+        driverHardware.driverJoystick.getRawButton(TriggerBottom) && !driverHardware.driverJoystick.getRawButton(
+          Trigger
+        )
       }.foreach( // bottom trigger — open collector
         new OpenCollector(clamp)
       )
@@ -59,7 +65,9 @@ object ButtonMappings {
       rollers <- collectorRollers
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(TriggerBottom) && !driverHardware.driverJoystick.getRawButton(Trigger)
+        driverHardware.driverJoystick.getRawButton(TriggerBottom) && !driverHardware.driverJoystick.getRawButton(
+          Trigger
+        )
       }.foreach( // trigger + bottom trigger — suck in cube (no open)
         CollectorTasks.collectCubeWithoutOpen(rollers)
       )
