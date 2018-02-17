@@ -11,6 +11,12 @@ import com.lynbrookrobotics.eighteen.forklift.Forklift
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.streams.Stream
+
+import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
+import edu.wpi.first.networktables.NetworkTableInstance
+
+import scala.collection.mutable
+
 import com.lynbrookrobotics.potassium.{Component, Signal}
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])(
@@ -65,6 +71,48 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     forklift,
     cubeLift
   ).flatten
+
+  private val autonomousRoutines = mutable.Map.empty[Int, () => ContinuousTask]
+
+  def addAutonomousRoutine(id: Int)(task: => ContinuousTask): Unit = {
+    if (autonomousRoutines.contains(id)) {
+      println(s"WARNING: overriding autonomous routine $id")
+    }
+
+    autonomousRoutines(id) = () => task
+  }
+
+  val generator = new AutoGenerator(this)
+
+  for {
+    drivetrain <- drivetrain
+    collectorRollers <- collectorRollers
+    collectorClamp <- collectorClamp
+  } {
+    addAutonomousRoutine(1) {
+      generator.twoCubeAuto(drivetrain, collectorRollers, collectorClamp).toContinuous
+    }
+
+    addAutonomousRoutine(2) {
+      generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp).toContinuous
+    }
+  }
+
+  private val inst = NetworkTableInstance.getDefault()
+  private val tab = inst.getTable("/SmartDashboard")
+  private val ent = tab.getEntry("DB/Slider 0")
+
+  driverHardware.isAutonomousEnabled.foreach(Signal {
+    val autoID = Math.round(ent.getDouble(0)).toInt
+
+    autonomousRoutines
+      .getOrElse(autoID, {
+        println(s"ERROR: autonomous routine $autoID not found")
+        () =>
+          FiniteTask.empty.toContinuous
+      })
+      .apply()
+  })
 
   // Register at the end so they are all run first
   driverHardware.isTeleopEnabled.onStart.foreach { () =>

@@ -10,7 +10,7 @@ resolvers in ThisBuild += "Funky-Repo" at "http://lynbrookrobotics.com/repo"
 resolvers in ThisBuild += "WPILib-Maven" at "http://lynbrookrobotics.com/wpilib-maven"
 resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/development"
 
-val potassiumVersion = "0.1.0-cc17fccd"
+val potassiumVersion = "0.1.0-fc6457a8"
 val wpiVersion = "2018.2.2"
 
 lazy val robot = crossProject(JVMPlatform, NativePlatform)
@@ -32,9 +32,9 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
     libraryDependencies += "org.opencv" % "opencv-java" % "3.2.0"
   )
   .nativeSettings(
-    libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.0+2-e3944897",
-    libraryDependencies += "com.lynbrookrobotics" %%% "ntcore-scala-native" % "0.1.0+2-e3944897",
-    libraryDependencies += "com.lynbrookrobotics" %%% "phoenix-scala-native" % "0.1.0+2-e3944897",
+    libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.0+4-f5af12c9",
+    libraryDependencies += "com.lynbrookrobotics" %%% "ntcore-scala-native" % "0.1.0+4-f5af12c9",
+    libraryDependencies += "com.lynbrookrobotics" %%% "phoenix-scala-native" % "0.1.0+4-f5af12c9",
     scalaVersion := "2.11.12",
     scalacOptions ++= Seq("-target:jvm-1.8")
   )
@@ -153,6 +153,3 @@ lazy val native = robot.native
     nativeGC := "boehm",
     crossCompileSettings
   )
-
-// after copying, run:
-// rm -f FRCUserProgram; mv robotnative-out FRCUserProgram; . /etc/profile.d/natinst-path.sh; chown lvuser FRCUserProgram; setcap 'cap_sys_nice=pe' FRCUserProgram; chmod a+x FRCUserProgram; /usr/local/frc/bin/frcKillRobot.sh -t -r
