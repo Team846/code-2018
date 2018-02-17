@@ -17,7 +17,8 @@ final case class CubeLiftProperties(
   collectHeight: Length,
   switchHeight: Length,
   scaleHeight: Length,
-  switchTolerance: Length
+  switchTolerance: Length,
+  maxManualControlOutput: Dimensionless
 ) extends OffloadedLiftProperties {
   override def positionGains: PIDConfig[
     Length,
