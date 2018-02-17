@@ -14,7 +14,6 @@ import com.lynbrookrobotics.potassium.streams.Stream
 
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import edu.wpi.first.networktables.NetworkTableInstance
-import squants.Each
 
 import scala.collection.mutable
 

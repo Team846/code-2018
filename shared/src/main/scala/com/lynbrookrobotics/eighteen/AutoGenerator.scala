@@ -1,12 +1,11 @@
 package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
-import com.lynbrookrobotics.eighteen.collector.clamp.{CollectorClamp, OpenCollector}
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, CollectorRollersProperties}
+import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
+import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainComp => Drivetrain}
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
-import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.{BackwardsOnly, ForwardsOnly}
 import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
