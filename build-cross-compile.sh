@@ -37,14 +37,14 @@ cd ..
 mkdir wpilib-cpp
 cd wpilib-cpp
 curl http://first.wpi.edu/FRC/roborio/release/eclipse/plugins/edu.wpi.first.wpilib.plugins.cpp_2018.2.2.jar | bsdtar -xf-
-tar -xf resources/cpp.zip
+bsdtar -xf resources/cpp.zip
 cd ..
 
 
 mkdir wpilib-core
 cd wpilib-core
 curl http://first.wpi.edu/FRC/roborio/release/eclipse/plugins/edu.wpi.first.wpilib.plugins.core_2018.2.2.jar | bsdtar -xf-
-tar -xf resources/common.zip
+bsdtar -xf resources/common.zip
 cd ..
 
 mkdir phoenix
