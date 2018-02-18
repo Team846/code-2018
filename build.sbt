@@ -80,7 +80,7 @@ val crossCompileSettings = Seq(
       val libunwind = Seq.empty //Seq("unwind", "unwind-" + arch) we want to statically link libunwind
 
       librt ++ libunwind ++ linked.links.map(_.name) // ++ garbageCollector(gc).links
-    }
+    }.filterNot(_ == "re2")
 
     val linkopts = links.map("-l" + _) ++ linkingOpts
     val targetopt = Seq("-target", target)
