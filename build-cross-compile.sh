@@ -26,7 +26,7 @@ git clone https://github.com/google/re2.git
 cd re2
 git checkout 2018-02-01
 git apply ../../re2-cross.patch
-make obj/libre2.a
+make install
 cd ..
 
 git clone https://github.com/wpilibsuite/allwpilib.git
@@ -39,7 +39,6 @@ cd wpilib-cpp
 curl http://first.wpi.edu/FRC/roborio/release/eclipse/plugins/edu.wpi.first.wpilib.plugins.cpp_2018.2.2.jar | bsdtar -xf-
 bsdtar -xf resources/cpp.zip
 cd ..
-
 
 mkdir wpilib-core
 cd wpilib-core

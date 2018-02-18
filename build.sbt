@@ -90,7 +90,7 @@ val crossCompileSettings = Seq(
       (file("custom-c") ** "*.o").get.map(_.abs)) :+
       (libunwindFolder / "lib" / "libunwind.a").abs :+
       (libunwindFolder / "lib" / "libunwind-arm.a").abs :+
-      (librtFolder / "obj" / "libre2.a").abs :+
+      (librtFolder / "lib" / "libre2.a").abs :+
       (boehmFolder / "gc.a").abs
 
     val paths = apppaths.map(_.abs) ++ opaths
