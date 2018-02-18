@@ -5,8 +5,7 @@ import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.commons.lift.offloaded.OffloadedLift
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, WrapperTask}
-import squants.space.Length
+import com.lynbrookrobotics.potassium.tasks.ContinuousTask
 import squants.{Dimensionless, Each}
 
 package object cubeLift extends OffloadedLift {

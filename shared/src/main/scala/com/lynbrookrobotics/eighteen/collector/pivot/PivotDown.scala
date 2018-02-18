@@ -1,6 +1,5 @@
 package com.lynbrookrobotics.eighteen.collector.pivot
 
-import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.ContinuousTask
 
 class PivotDown(pivot: CollectorPivot) extends ContinuousTask {
