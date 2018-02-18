@@ -9,7 +9,7 @@ import com.lynbrookrobotics.eighteen.collector.pivot.PivotDown
 import com.lynbrookrobotics.eighteen.collector.rollers.RollersManualControl
 import com.lynbrookrobotics.eighteen.cubeLift.LiftManualControl
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
-import com.lynbrookrobotics.eighteen.forklift.ForkliftDown
+import com.lynbrookrobotics.eighteen.forklift.MoveForkliftDown
 
 // https://team846.slab.com/posts/button-mappings-625f4bf7
 object ButtonMappings {
@@ -130,7 +130,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftTwo)
       }.foreach( // left 2 — deploy forklift
-        new ForkliftDown(forklift)
+        new MoveForkliftDown(forklift)
       )
     }
 

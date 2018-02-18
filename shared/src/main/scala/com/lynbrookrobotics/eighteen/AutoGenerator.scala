@@ -34,6 +34,7 @@ class AutoGenerator(r: CoreRobot) {
     drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
+    collectorPivot: CollectorPivot,
     pose: Stream[Point],
     relativeAngle: Stream[Angle]
   ): FiniteTask = {
@@ -65,7 +66,7 @@ class AutoGenerator(r: CoreRobot) {
       turnPosition = relativeAngle
     )(drivetrain).and(
       new WaitTask(Seconds(2)).andUntilDone(
-        CollectorTasks.purgeCube(collectorRollers)
+        CollectorTasks.purgeCube(collectorRollers, collectorPivot)
       )
     )
   }
@@ -135,6 +136,7 @@ class AutoGenerator(r: CoreRobot) {
     drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
     collectorClamp: CollectorClamp,
+    collectorPivot: CollectorPivot,
     pose: Stream[Point],
     relativeAngle: Stream[Angle]
   ): FiniteTask = {
@@ -158,7 +160,7 @@ class AutoGenerator(r: CoreRobot) {
       turnPosition = relativeAngle
     )(drivetrain).then(
       new WaitTask(Seconds(0.25)).andUntilDone(
-        CollectorTasks.purgeCube(collectorRollers)
+        CollectorTasks.purgeCube(collectorRollers, collectorPivot)
       )
     )
   }
@@ -311,6 +313,7 @@ class AutoGenerator(r: CoreRobot) {
           drivetrain,
           collectorRollers,
           collectorClamp,
+          collectorPivot,
           xyPosition,
           relativeAngle
         ).then(printTask("ended post switch"))
@@ -325,13 +328,13 @@ class AutoGenerator(r: CoreRobot) {
           .then(printTask("end back driving"))
           .andUntilDone(
             CollectorTasks
-              .collectCubeWithoutOpen(collectorRollers)
+              .collectCubeWithoutOpen(collectorRollers, collectorPivot)
               .forDuration(Seconds(1))
               .toContinuous
           )
       )
       .then(
-        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeAngle).then(
+        driveToScaleForward(drivetrain, collectorRollers, collectorClamp,collectorPivot, xyPosition, relativeAngle).then(
           printTask("ended scale drop!")
         )
       )
@@ -408,13 +411,13 @@ class AutoGenerator(r: CoreRobot) {
           .then(printTask("picked up third"))
           .andUntilDone(
             CollectorTasks
-              .collectCubeWithoutOpen(collectorRollers)
+              .collectCubeWithoutOpen(collectorRollers, collectorPivot)
               .forDuration(Seconds(1))
               .toContinuous
           )
       )
       .then(
-        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, xyPosition, relativeTurn)
+        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, collectorPivot, xyPosition, relativeTurn)
           .then(printTask("ended scale drop and done!"))
       )
   }
