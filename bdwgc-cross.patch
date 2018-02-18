@@ -7,21 +7,21 @@ index c8bbf818..139cddbe 100644
  # executables.
  
 -CC=cc $(ABI_FLAG)
-+CC=/usr/local/bin/arm-frc-linux-gnueabi-gcc -pthread
++CC=arm-frc-linux-gnueabi-gcc -pthread
  
 -CXX=g++ $(ABI_FLAG)
-+CXX=/usr/local/bin/arm-frc-linux-gnueabi-g++ -pthread
++CXX=arm-frc-linux-gnueabi-g++ -pthread
  # Needed only for "make c++", which adds the c++ interface.
  
 -AS=as $(AS_ABI_FLAG)
-+AS=/usr/local/bin/arm-frc-linux-gnueabi-as
++AS=arm-frc-linux-gnueabi-as
  # The above doesn't work with gas, which doesn't run cpp.
  # Define AS as `gcc -c -x assembler-with-cpp' instead.
  # Under Irix 6, you have to specify the ABI (-o32, -n32, or -64)
  # if you use something other than the default ABI on your machine.
  
 -LD=ld
-+LD=/usr/local/bin/arm-frc-linux-gnueabi-ld
++LD=arm-frc-linux-gnueabi-ld
  
  # Redefining srcdir allows object code for the nonPCR version of the collector
  # to be generated in different directories.
@@ -50,8 +50,8 @@ index c8bbf818..139cddbe 100644
  CXXFLAGS= $(CFLAGS)
 -AR= ar
 -RANLIB= ranlib
-+AR=/usr/local/bin/arm-frc-linux-gnueabi-ar
-+RANLIB=/usr/local/bin/arm-frc-linux-gnueabi-ranlib
++AR=arm-frc-linux-gnueabi-ar
++RANLIB=arm-frc-linux-gnueabi-ranlib
  
  
  OBJS= alloc.o reclaim.o allchblk.o misc.o mach_dep.o os_dep.o mark_rts.o \

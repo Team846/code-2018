@@ -70,7 +70,7 @@ val crossCompileSettings = Seq(
     val target = nativeTarget.value
     val gc = nativeGC.value
     val linkingOpts = nativeLinkingOptions.value
-    val clangpp = file("/usr/local/bin/arm-frc-linux-gnueabi-gcc") //nativeClangPP.value
+    //val clangpp = nativeClangPP.value
     val outpath = (artifactPath in nativeLink in Compile).value
 
     val links = {
@@ -81,7 +81,7 @@ val crossCompileSettings = Seq(
       val libunwind = Seq.empty //Seq("unwind", "unwind-" + arch) we want to statically link libunwind
 
       librt ++ libunwind ++ linked.links.map(_.name) // ++ garbageCollector(gc).links
-    }
+    }.filterNot(_ == "re2")
 
     val linkopts = links.map("-l" + _) ++ linkingOpts
     val targetopt = Seq("-target", target)
@@ -91,11 +91,11 @@ val crossCompileSettings = Seq(
       (file("custom-c") ** "*.o").get.map(_.abs)) :+
       (libunwindFolder / "lib" / "libunwind.a").abs :+
       (libunwindFolder / "lib" / "libunwind-arm.a").abs :+
-      (librtFolder / "obj" / "libre2.a").abs :+
+      (librtFolder / "lib" / "libre2.a").abs :+
       (boehmFolder / "gc.a").abs
 
     val paths = apppaths.map(_.abs) ++ opaths
-    val compile = clangpp.abs +: (flags ++ paths)
+    val compile = "arm-frc-linux-gnueabi-gcc" +: (flags ++ paths)
 
     logger.time("Linking native code") {
       logger.running(compile)
@@ -111,12 +111,12 @@ val crossCompileSettings = Seq(
     "armv7a-frc-linux-gnueabi",
     "-mfpu=neon",
     "-mfloat-abi=soft",
-    "--sysroot=/usr/local/arm-frc-linux-gnueabi",
+    s"--sysroot=${CrossSettings.toolchainPath.abs}",
     s"-I${(libunwindFolder / "include").abs}",
     s"-I${(librtFolder / "include").abs}",
     s"-I${(boehmFolder / "include").abs}",
-    "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0",
-    "-I/usr/local/arm-frc-linux-gnueabi/include/c++/5.5.0/arm-frc-linux-gnueabi",
+    s"-I${CrossSettings.toolchainPath.abs}/include/c++/5.5.0",
+    s"-I${CrossSettings.toolchainPath.abs}/include/c++/5.5.0/arm-frc-linux-gnueabi",
     s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni").abs}",
     s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni/linux").abs}"
   ),
