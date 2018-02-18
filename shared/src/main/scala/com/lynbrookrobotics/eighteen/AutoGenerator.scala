@@ -334,9 +334,10 @@ class AutoGenerator(r: CoreRobot) {
           )
       )
       .then(
-        driveToScaleForward(drivetrain, collectorRollers, collectorClamp,collectorPivot, xyPosition, relativeAngle).then(
-          printTask("ended scale drop!")
-        )
+        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, collectorPivot, xyPosition, relativeAngle)
+          .then(
+            printTask("ended scale drop!")
+          )
       )
   }
 
