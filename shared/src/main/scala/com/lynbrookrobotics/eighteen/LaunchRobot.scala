@@ -39,15 +39,17 @@ class LaunchRobot extends RobotBase {
     Source.fromFile(configFile).mkString
   ).getOrElse("")
 
+  implicit def vToOption[T](v: T): Option[T] = Some(v)
+
   implicit var configJson = configString
     .decodeOption[RobotConfig]
     .getOrElse(
       RobotConfig(
-        climberDeployment = null,
-        climberWinch = null,
-        collectorClamp = null,
-        collectorPivot = null,
-        collectorRollers = null,
+        climberDeployment = None,
+        climberWinch = None,
+        collectorClamp = None,
+        collectorPivot = None,
+        collectorRollers = None,
         driver = DriverConfig(
           driverPort = 0,
           operatorPort = 1,
@@ -56,21 +58,21 @@ class LaunchRobot extends RobotBase {
         ),
         drivetrain = DrivetrainConfig(
           ports = DrivetrainPorts(
-            leftPort = 50,
-            rightPort = 41,
-            leftFollowerPort = 51,
-            rightFollowerPort = 40
+            leftPort = 12,
+            rightPort = 11,
+            leftFollowerPort = 14,
+            rightFollowerPort = 13
           ),
           props = DrivetrainProperties(
             maxLeftVelocity = FeetPerSecond(18.8),
             maxRightVelocity = FeetPerSecond(19.25),
             leftVelocityGains = PIDConfig(
-              Ratio(Percent(40), FeetPerSecond(5)),
+              Ratio(Percent(0), FeetPerSecond(5)),
               Ratio(Percent(0), Feet(5)),
               Ratio(Percent(0), FeetPerSecondSquared(5))
             ),
             rightVelocityGains = PIDConfig(
-              Ratio(Percent(40), FeetPerSecond(5)),
+              Ratio(Percent(0), FeetPerSecond(5)),
               Ratio(Percent(0), Feet(5)),
               Ratio(Percent(0), FeetPerSecondSquared(5))
             ),
@@ -96,8 +98,8 @@ class LaunchRobot extends RobotBase {
             track = Inches(21.75)
           )
         ),
-        forklift = null,
-        cubeLift = null
+        forklift = None,
+        cubeLift = None
       )
     )
 
