@@ -36,19 +36,19 @@ cd ..
 
 mkdir wpilib-cpp
 cd wpilib-cpp
-curl http://first.wpi.edu/FRC/roborio/release/eclipse/plugins/edu.wpi.first.wpilib.plugins.cpp_2018.2.2.jar | tar -x
+curl http://first.wpi.edu/FRC/roborio/release/eclipse/plugins/edu.wpi.first.wpilib.plugins.cpp_2018.2.2.jar | bsdtar -xf-
 tar -xf resources/cpp.zip
 cd ..
 
 
 mkdir wpilib-core
 cd wpilib-core
-curl http://first.wpi.edu/FRC/roborio/release/eclipse/plugins/edu.wpi.first.wpilib.plugins.core_2018.2.2.jar | tar -x
+curl http://first.wpi.edu/FRC/roborio/release/eclipse/plugins/edu.wpi.first.wpilib.plugins.core_2018.2.2.jar | bsdtar -xf-
 tar -xf resources/common.zip
 cd ..
 
 mkdir phoenix
 cd phoenix
-curl http://www.ctr-electronics.com//downloads/lib/CTRE_Phoenix_FRCLibs_NON-WINDOWS_v5.2.1.1.zip | tar -x
+curl http://www.ctr-electronics.com//downloads/lib/CTRE_Phoenix_FRCLibs_NON-WINDOWS_v5.2.1.1.zip | bsdtar -xf-
 
 cd ..
