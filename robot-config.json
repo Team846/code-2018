@@ -1,5 +1,87 @@
 {
-  "cubeLift" : null,
+  "cubeLift" : {
+    "props" : {
+      "scaleHeight" : [
+        30.0,
+        "Inches"
+      ],
+      "pidConfig" : {
+        "kd" : {
+          "den" : [
+            5.0,
+            "FeetPerSecond"
+          ],
+          "num" : [
+            0.0,
+            "Percent"
+          ]
+        },
+        "ki" : {
+          "den" : [
+            5.0,
+            "Feet * s"
+          ],
+          "num" : [
+            0.0,
+            "Percent"
+          ]
+        },
+        "kp" : {
+          "den" : [
+            5.0,
+            "Feet"
+          ],
+          "num" : [
+            0.0,
+            "Percent"
+          ]
+        }
+      },
+      "collectHeight" : [
+        10.0,
+        "Inches"
+      ],
+      "voltageAtBottom" : [
+        1.0,
+        "Volts"
+      ],
+      "switchTolerance" : [
+        2.0,
+        "Inches"
+      ],
+      "switchHeight" : [
+        20.0,
+        "Inches"
+      ],
+      "voltageOverHeight" : {
+        "den" : [
+          42.0,
+          "Inches"
+        ],
+        "num" : [
+          2.5,
+          "Volts"
+        ]
+      },
+      "maxMotorOutput" : [
+        20.0,
+        "Percent"
+      ],
+      "talonOverVoltage" : {
+        "den" : [
+          3.3,
+          "Volts"
+        ],
+        "num" : [
+          1023.0,
+          "Each"
+        ]
+      }
+    },
+    "ports" : {
+      "motorPort" : 20
+    }
+  },
   "forklift" : null,
   "climberDeployment" : null,
   "drivetrain" : {

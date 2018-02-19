@@ -153,7 +153,7 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(RightFive)
       }.foreach( // right 5 & joystick — manually control lift
         new LiftManualControl(
-          driverHardware.joystickStream.map(-_.operator.y)
+          driverHardware.joystickStream.map(-_.operator.y).syncTo(lift.coreTicks)
         )(lift)
       )
     }
