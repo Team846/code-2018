@@ -10,6 +10,8 @@ import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
 import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
 import com.lynbrookrobotics.potassium.streams.Stream
+import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
+import squants.time.Seconds
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],
@@ -20,7 +22,8 @@ final case class RobotHardware(
   driver: DriverHardware,
   drivetrain: Option[DrivetrainHardware],
   forklift: Option[ForkliftHardware],
-  cubeLift: Option[CubeLiftHardware]
+  cubeLift: Option[CubeLiftHardware],
+  camera: Option[LimeLightHardware]
 )
 
 object RobotHardware {
@@ -38,7 +41,8 @@ object RobotHardware {
       driver = driverHardware,
       drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
-      cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks))
+      cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
+      camera = Some(new LimeLightHardware(Seconds(10)))
     )
   }
 }
