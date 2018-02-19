@@ -41,9 +41,7 @@ class LaunchRobot extends RobotBase {
 
   implicit def vToOption[T](v: T): Option[T] = Some(v)
 
-  implicit var configJson = configString
-    .decodeOption[RobotConfig]
-    .getOrElse(
+  implicit var configJson = (
       RobotConfig(
         climberDeployment = None,
         climberWinch = None,
@@ -58,10 +56,10 @@ class LaunchRobot extends RobotBase {
         ),
         drivetrain = DrivetrainConfig(
           ports = DrivetrainPorts(
-            leftPort = 12,
-            rightPort = 11,
-            leftFollowerPort = 14,
-            rightFollowerPort = 13
+            leftPort = 50,
+            rightPort = 41,
+            leftFollowerPort = 51,
+            rightFollowerPort = 40
           ),
           props = DrivetrainProperties(
             maxLeftVelocity = FeetPerSecond(18.8),

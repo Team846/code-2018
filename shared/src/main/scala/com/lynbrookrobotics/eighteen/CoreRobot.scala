@@ -1,5 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
+import com.lynbrookrobotics.eighteen.camera.CameraHardware
 import com.lynbrookrobotics.eighteen.climber.ClimberWinch
 import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
@@ -17,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTableInstance
 
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
+import squants.space.Meters
 
 import scala.util.Try
 
@@ -62,6 +64,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   val cubeLift: Option[CubeLiftComp] =
     hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
 
+  val cameraHardware = new CameraHardware
+
   lazy val components: Seq[Component[_]] = Seq(
     climberDeployment,
     climberWinch,
@@ -96,6 +100,10 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
     addAutonomousRoutine(2) {
       generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp).toContinuous
+    }
+
+    addAutonomousRoutine(3) {
+      generator.visionCubePickup(drivetrain, cameraHardware, Meters(1)).toContinuous
     }
   }
 
