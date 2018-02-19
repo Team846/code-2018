@@ -6,17 +6,17 @@ import com.lynbrookrobotics.potassium.streams.Stream
 
 trait CollectorPivotState
 
-case object PivotUp extends CollectorPivotState
-case object PivotDown extends CollectorPivotState
+case object PivotUpState extends CollectorPivotState
+case object PivotDownState extends CollectorPivotState
 
 class CollectorPivot(val coreTicks: Stream[Unit])(implicit hardware: CollectorClampHardware)
     extends Component[CollectorPivotState] {
-  override def defaultController: Stream[CollectorPivotState] = coreTicks.mapToConstant(PivotDown)
+  override def defaultController: Stream[CollectorPivotState] = coreTicks.mapToConstant(PivotDownState)
 
   override def applySignal(signal: CollectorPivotState): Unit = {
     signal match {
-      case PivotUp   => hardware.solenoid.set(true)
-      case PivotDown => hardware.solenoid.set(false)
+      case PivotUpState   => hardware.solenoid.set(true)
+      case PivotDownState => hardware.solenoid.set(false)
     }
   }
 }
