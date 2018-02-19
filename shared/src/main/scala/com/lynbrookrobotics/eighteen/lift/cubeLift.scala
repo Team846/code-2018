@@ -18,8 +18,7 @@ package object cubeLift extends OffloadedLift {
       extends ContinuousTask() {
     override protected def onStart(): Unit = lift.setController(
       target
-        .map(_ / props.get.maxManualControlOutput)
-        .map(Each(_))
+        .map(_ * props.get.maxManualControlOutput)
         .map(openLoopToLiftSignal)
     )
 
