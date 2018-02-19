@@ -10,18 +10,18 @@ import squants.motion.Velocity
 import squants.space.Length
 
 final case class CubeLiftProperties(
-                                     pidConfig: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless],
-                                     voltageOverHeight: Ratio[ElectricPotential, Length],
-                                     talonOverVoltage: Ratio[Dimensionless, ElectricPotential],
-                                     voltageAtBottom: ElectricPotential,
-                                     collectHeight: Length,
-                                     switchHeight: Length,
-                                     scaleHeight: Length,
-                                     switchTolerance: Length,
-                                     maxMotorOutput: Dimensionless,
-                                     maxHeight: Length,
-                                     minHeight: Length
-                                   ) extends OffloadedLiftProperties {
+  pidConfig: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless],
+  voltageOverHeight: Ratio[ElectricPotential, Length],
+  talonOverVoltage: Ratio[Dimensionless, ElectricPotential],
+  voltageAtBottom: ElectricPotential,
+  collectHeight: Length,
+  switchHeight: Length,
+  scaleHeight: Length,
+  switchTolerance: Length,
+  maxMotorOutput: Dimensionless,
+  maxHeight: Length,
+  minHeight: Length
+) extends OffloadedLiftProperties {
   override def positionGains: PIDConfig[
     Length,
     Length,
@@ -29,7 +29,7 @@ final case class CubeLiftProperties(
     Velocity,
     GenericIntegral[Length],
     Dimensionless
-    ] = pidConfig
+  ] = pidConfig
 
   override val escConfig: EscConfig[Length] = EscConfig(
     ticksPerUnit = talonOverVoltage * voltageOverHeight

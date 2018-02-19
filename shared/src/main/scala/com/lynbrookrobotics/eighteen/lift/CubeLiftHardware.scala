@@ -11,7 +11,7 @@ import squants.space.Length
 import squants.{Dimensionless, Each}
 
 final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[Unit], props: CubeLiftProperties)
-  extends LiftHardware {
+    extends LiftHardware {
 
   import props._
 

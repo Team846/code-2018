@@ -35,8 +35,9 @@ object TalonManager {
       Status_12_Feedback1 -> 20,
       Status_3_Quadrature -> 100,
       Status_4_AinTempVbat -> 100
-    ).foreach { case (frame, period) =>
-      it.setStatusFramePeriod(frame, period, escTout)
+    ).foreach {
+      case (frame, period) =>
+        it.setStatusFramePeriod(frame, period, escTout)
     }
 
     it.setStatusFramePeriod(Status_1_General, 5, escTout)
@@ -47,8 +48,8 @@ object TalonManager {
   }
 
   def configSlave(t: BaseMotorController): Unit = {
-    StatusFrame.values().foreach {
-      it => t.setStatusFramePeriod(it, 1000, escTout)
+    StatusFrame.values().foreach { it =>
+      t.setStatusFramePeriod(it, 1000, escTout)
     }
   }
 }

@@ -117,7 +117,9 @@ class LaunchRobot extends RobotBase {
             switchHeight = Inches(20),
             scaleHeight = Inches(30),
             switchTolerance = Inches(2),
-            maxMotorOutput = Percent(20)
+            maxMotorOutput = Percent(20),
+            maxHeight = Inches(30),
+            minHeight = Inches(15)
           )
         )
       )

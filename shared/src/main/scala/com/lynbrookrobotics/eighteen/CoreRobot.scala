@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
 import com.lynbrookrobotics.eighteen.climber.winch.ClimberWinch
+import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
@@ -15,8 +15,11 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.networktables.NetworkTableInstance
+import   com.lynbrookrobotics.funkydashboard.TimeSeriesNumeric
 
 import scala.collection.mutable
+import com.lynbrookrobotics.potassium.{Component, Signal}
+
 import scala.util.Try
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])(
@@ -176,7 +179,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
       board
         .datasetGroup("CubeLift/Position")
-        .addDataset(cubeLiftHardware.nativeReading.toTimeSeriesNumeric("Talon Native Position"))
+        .addDataset(cubeLiftHardware.nativeReading.map(_.toEach).toTimeSeriesNumeric("Talon Native Position"))
     }
   }
 }

@@ -16,23 +16,23 @@ import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Length, Velocity}
 
 final case class DrivetrainData(
-                                 leftEncoderVelocity: AngularVelocity,
-                                 rightEncoderVelocity: AngularVelocity,
-                                 leftEncoderRotation: Angle,
-                                 rightEncoderRotation: Angle,
-                                 gyroVelocities: Value3D[AngularVelocity]
-                               )
+  leftEncoderVelocity: AngularVelocity,
+  rightEncoderVelocity: AngularVelocity,
+  leftEncoderRotation: Angle,
+  rightEncoderRotation: Angle,
+  gyroVelocities: Value3D[AngularVelocity]
+)
 
 final case class DrivetrainHardware(
-                                     coreTicks: Stream[Unit],
-                                     leftSRX: TalonSRX,
-                                     rightSRX: TalonSRX,
-                                     leftFollowerSRX: VictorSPX,
-                                     rightFollowerSRX: VictorSPX,
-                                     gyro: DigitalGyro,
-                                     driverHardware: DriverHardware,
-                                     props: DrivetrainProperties
-                                   ) extends TwoSidedDriveHardware {
+  coreTicks: Stream[Unit],
+  leftSRX: TalonSRX,
+  rightSRX: TalonSRX,
+  leftFollowerSRX: VictorSPX,
+  rightFollowerSRX: VictorSPX,
+  gyro: DigitalGyro,
+  driverHardware: DriverHardware,
+  props: DrivetrainProperties
+) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
   val escIdx = 0
