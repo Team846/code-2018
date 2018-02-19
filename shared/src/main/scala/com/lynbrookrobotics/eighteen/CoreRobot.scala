@@ -107,6 +107,14 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     }
   }
 
+  for {
+    drivetrain <- drivetrain
+  } {
+    addAutonomousRoutine(1) {
+      generator.visionCubePickup(drivetrain, cameraHardware, Meters(1)).toContinuous
+    }
+  }
+
   private val inst = NetworkTableInstance.getDefault()
   private val tab = inst.getTable("/SmartDashboard")
   private val ent = tab.getEntry("DB/Slider 0")
