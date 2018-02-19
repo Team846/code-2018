@@ -452,5 +452,5 @@ class AutoGenerator(r: CoreRobot) {
                                         Percent(20),
                                         Percent(20),
                                         minDistance)
-  }
+  }.then(printTask("done camera tracking"))
 }

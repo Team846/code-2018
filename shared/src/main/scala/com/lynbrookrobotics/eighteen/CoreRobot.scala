@@ -64,7 +64,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   val cubeLift: Option[CubeLiftComp] =
     hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
 
-  val cameraHardware = new CameraHardware
+
 
   lazy val components: Seq[Component[_]] = Seq(
     climberDeployment,
@@ -103,7 +103,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     }
 
     addAutonomousRoutine(3) {
-      generator.visionCubePickup(drivetrain, cameraHardware, Meters(1)).toContinuous
+      generator.visionCubePickup(drivetrain, hardware.camera.get, Meters(1)).toContinuous
     }
   }
 
@@ -111,7 +111,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     drivetrain <- drivetrain
   } {
     addAutonomousRoutine(1) {
-      generator.visionCubePickup(drivetrain, cameraHardware, Meters(1)).toContinuous
+      generator.visionCubePickup(drivetrain, hardware.camera.get, Meters(1)).toContinuous
     }
   }
 

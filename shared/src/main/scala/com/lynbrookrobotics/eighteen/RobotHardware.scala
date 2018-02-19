@@ -1,5 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
+import com.lynbrookrobotics.eighteen.camera.CameraHardware
 import com.lynbrookrobotics.eighteen.climber.ClimberWinchHardware
 import com.lynbrookrobotics.eighteen.climber.deployment.DeploymentHardware
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampHardware
@@ -20,7 +21,8 @@ final case class RobotHardware(
   driver: DriverHardware,
   drivetrain: Option[DrivetrainHardware],
   forklift: Option[ForkliftHardware],
-  cubeLift: Option[CubeLiftHardware]
+  cubeLift: Option[CubeLiftHardware],
+  camera: Option[CameraHardware]
 )
 
 object RobotHardware {
@@ -38,7 +40,8 @@ object RobotHardware {
       driver = driverHardware,
       drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
-      cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks))
+      cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
+      camera = Some(new CameraHardware)
     )
   }
 }
