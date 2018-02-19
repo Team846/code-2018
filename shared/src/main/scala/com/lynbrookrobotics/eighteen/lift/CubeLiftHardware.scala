@@ -30,7 +30,7 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
   val nativeReading: Stream[Dimensionless] =
     coreTicks.map(_ => Each(talon.t.getSelectedSensorPosition(0)))
 
-  override def position: Stream[Length] =
+  val position: Stream[Length] =
     nativeReading.map(props.fromNative)
 
   private val sensors = talon.t.getSensorCollection

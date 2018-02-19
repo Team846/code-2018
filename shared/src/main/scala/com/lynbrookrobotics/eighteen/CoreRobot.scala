@@ -169,12 +169,14 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("CubeLift/Position")
         .addDataset(cubeLiftHardware.potVoltage.map(_.toVolts).toTimeSeriesNumeric("Potentiometer Voltage"))
-    }
 
-    cubeLiftComp.foreach { l =>
       board
         .datasetGroup("CubeLift/Position")
         .addDataset(cubeLiftHardware.position.map(_.toFeet).toTimeSeriesNumeric("Lift Position"))
+
+      board
+        .datasetGroup("CubeLift/Position")
+        .addDataset(cubeLiftHardware.nativeReading.toTimeSeriesNumeric("Talon Native Position"))
     }
   }
 }
