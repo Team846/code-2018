@@ -2,8 +2,10 @@ package com.lynbrookrobotics.eighteen
 
 import java.io.{File, FileWriter, PrintWriter}
 
+import argonaut.Argonaut._
 import com.lynbrookrobotics.eighteen.driver.DriverConfig
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
+import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.control.PIDConfig
 import com.lynbrookrobotics.potassium.frc.WPIClock
@@ -12,14 +14,11 @@ import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.hal.HAL
-import squants.Percent
+import squants.electro.Volts
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
-import argonaut.Argonaut._
-import argonaut._
-import ArgonautShapeless._
-import com.lynbrookrobotics.potassium.config.SquantsPickling._
+import squants.{Each, Percent}
 
 import scala.io.Source
 import scala.util.Try
@@ -99,7 +98,24 @@ class LaunchRobot extends RobotBase {
           )
         ),
         forklift = None,
-        cubeLift = None
+        cubeLift = CubeLiftConfig(
+          ports = CubeLiftPorts(20),
+          props = CubeLiftProperties(
+            pidConfig = PIDConfig(
+              Percent(0) / Feet(5),
+              Percent(0) / (Feet(5) * Seconds(1)),
+              Percent(0) / FeetPerSecond(5)
+            ),
+            voltageOverHeight = Ratio(Volts(2.5), Inches(42)),
+            talonOverVoltage = Ratio(Each(1023), Volts(3.3)),
+            voltageAtBottom = Volts(1),
+            collectHeight = Inches(10),
+            switchHeight = Inches(20),
+            scaleHeight = Inches(30),
+            switchTolerance = Inches(2),
+            maxMotorOutput = Percent(20)
+          )
+        )
       )
     )
 
@@ -119,7 +135,7 @@ class LaunchRobot extends RobotBase {
           val writer = new PrintWriter(new FileWriter(configFile))
           writer.println(configString)
           writer.close()
-      },
+        },
       coreTicks
     )
 

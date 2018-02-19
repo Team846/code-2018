@@ -8,7 +8,10 @@ import squants.Each
 import squants.space.Length
 
 final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[Unit], props: CubeLiftProperties)
-    extends LiftHardware {
+  extends LiftHardware {
+
+  talon.t.configPeakOutputForward(props.maxMotorOutput.toEach, 0)
+  talon.t.configPeakOutputReverse(-props.maxMotorOutput.toEach, 0)
 
   override def position: Stream[Length] =
     coreTicks.map(_ => props.fromNative(Each(talon.t.getSelectedSensorPosition(talon.idx))))

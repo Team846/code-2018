@@ -163,6 +163,12 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
           drivetrainHardware.rightVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Right Ground Velocity")
         )
     }
+
+    cubeLiftComp.foreach { l =>
+      board
+        .datasetGroup("CubeLift/Position")
+        .addDataset(cubeLiftHardware.position.map(_.toFeet).toTimeSeriesNumeric("Lift Position"))
+    }
   }
 }
 
