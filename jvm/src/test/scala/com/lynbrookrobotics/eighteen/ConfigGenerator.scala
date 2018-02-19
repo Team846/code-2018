@@ -84,7 +84,7 @@ object ConfigGenerator extends App {
           ),
           voltageOverHeight = Ratio(Volts(2.5), Inches(42)),
           talonOverVoltage = Each(1023) / Volts(3.3),
-          voltageAtBottom = Volts(1),
+          voltageAtBottom = Volts(2.94),
           collectHeight = Inches(10),
           switchHeight = Inches(20),
           scaleHeight = Inches(30),

@@ -1,292 +1,292 @@
 {
-  "cubeLift" : {
-    "props" : {
-      "scaleHeight" : [
-        30.0,
+  "cubeLift": {
+    "props": {
+      "scaleHeight": [
+        30,
         "Inches"
       ],
-      "pidConfig" : {
-        "kd" : {
-          "den" : [
-            5.0,
+      "pidConfig": {
+        "kd": {
+          "den": [
+            5,
             "FeetPerSecond"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "ki" : {
-          "den" : [
-            5.0,
+        "ki": {
+          "den": [
+            5,
             "Feet * s"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "kp" : {
-          "den" : [
-            5.0,
+        "kp": {
+          "den": [
+            5,
             "Feet"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         }
       },
-      "collectHeight" : [
-        10.0,
+      "collectHeight": [
+        10,
         "Inches"
       ],
-      "voltageAtBottom" : [
-        1.0,
+      "voltageAtBottom": [
+        2.94,
         "Volts"
       ],
-      "switchTolerance" : [
-        2.0,
+      "switchTolerance": [
+        2,
         "Inches"
       ],
-      "switchHeight" : [
-        20.0,
+      "switchHeight": [
+        20,
         "Inches"
       ],
-      "voltageOverHeight" : {
-        "den" : [
-          42.0,
+      "voltageOverHeight": {
+        "den": [
+          42,
           "Inches"
         ],
-        "num" : [
+        "num": [
           2.5,
           "Volts"
         ]
       },
-      "maxMotorOutput" : [
-        20.0,
+      "maxMotorOutput": [
+        20,
         "Percent"
       ],
-      "talonOverVoltage" : {
-        "den" : [
+      "talonOverVoltage": {
+        "den": [
           3.3,
           "Volts"
         ],
-        "num" : [
-          1023.0,
+        "num": [
+          1023,
           "Each"
         ]
       }
     },
-    "ports" : {
-      "motorPort" : 20
+    "ports": {
+      "motorPort": 20
     }
   },
-  "forklift" : null,
-  "climberDeployment" : null,
-  "drivetrain" : {
-    "ports" : {
-      "rightFollowerPort" : 13,
-      "leftFollowerPort" : 14,
-      "rightPort" : 11,
-      "leftPort" : 12
+  "forklift": null,
+  "climberDeployment": null,
+  "drivetrain": {
+    "ports": {
+      "rightFollowerPort": 13,
+      "leftFollowerPort": 14,
+      "rightPort": 11,
+      "leftPort": 12
     },
-    "props" : {
-      "maxLeftVelocity" : [
+    "props": {
+      "maxLeftVelocity": [
         18.8,
         "FeetPerSecond"
       ],
-      "turnVelocityGains" : {
-        "kd" : {
-          "den" : [
-            1.0,
+      "turnVelocityGains": {
+        "kd": {
+          "den": [
+            1,
             "DegreesPerSecond / s"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "ki" : {
-          "den" : [
+        "ki": {
+          "den": [
             0.017453292519943295,
             "Radians"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "kp" : {
-          "den" : [
-            1.0,
+        "kp": {
+          "den": [
+            1,
             "DegreesPerSecond"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         }
       },
-      "defaultLookAheadDistance" : [
+      "defaultLookAheadDistance": [
         2.5,
         "Feet"
       ],
-      "maxAcceleration" : [
-        0.0,
+      "maxAcceleration": [
+        0,
         "FeetPerSecondSquared"
       ],
-      "maxRightVelocity" : [
+      "maxRightVelocity": [
         19.25,
         "FeetPerSecond"
       ],
-      "track" : [
+      "track": [
         21.75,
         "Inches"
       ],
-      "rightVelocityGains" : {
-        "kd" : {
-          "den" : [
-            5.0,
+      "rightVelocityGains": {
+        "kd": {
+          "den": [
+            5,
             "FeetPerSecondSquared"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "ki" : {
-          "den" : [
-            5.0,
+        "ki": {
+          "den": [
+            5,
             "Feet"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "kp" : {
-          "den" : [
-            5.0,
+        "kp": {
+          "den": [
+            5,
             "FeetPerSecond"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         }
       },
-      "turnPositionGains" : {
-        "kd" : {
-          "den" : [
+      "turnPositionGains": {
+        "kd": {
+          "den": [
             0.017453292519943295,
             "RadiansPerSecond"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "ki" : {
-          "den" : [
-            1.0,
+        "ki": {
+          "den": [
+            1,
             "Degrees * s"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "kp" : {
-          "den" : [
-            1.0,
+        "kp": {
+          "den": [
+            1,
             "Degrees"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         }
       },
-      "blendExponent" : 0.0,
-      "maxTurnVelocity" : [
-        90.0,
+      "blendExponent": 0,
+      "maxTurnVelocity": [
+        90,
         "DegreesPerSecond"
       ],
-      "leftVelocityGains" : {
-        "kd" : {
-          "den" : [
-            5.0,
+      "leftVelocityGains": {
+        "kd": {
+          "den": [
+            5,
             "FeetPerSecondSquared"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "ki" : {
-          "den" : [
-            5.0,
+        "ki": {
+          "den": [
+            5,
             "Feet"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "kp" : {
-          "den" : [
-            5.0,
+        "kp": {
+          "den": [
+            5,
             "FeetPerSecond"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         }
       },
-      "forwardPositionGains" : {
-        "kd" : {
-          "den" : [
-            5.0,
+      "forwardPositionGains": {
+        "kd": {
+          "den": [
+            5,
             "FeetPerSecond"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "ki" : {
-          "den" : [
-            5.0,
+        "ki": {
+          "den": [
+            5,
             "Feet * s"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         },
-        "kp" : {
-          "den" : [
-            5.0,
+        "kp": {
+          "den": [
+            5,
             "Feet"
           ],
-          "num" : [
-            0.0,
+          "num": [
+            0,
             "Percent"
           ]
         }
       }
     }
   },
-  "driver" : {
-    "launchpadPort" : -1,
-    "driverWheelPort" : 2,
-    "operatorPort" : 1,
-    "driverPort" : 0
+  "driver": {
+    "launchpadPort": -1,
+    "driverWheelPort": 2,
+    "operatorPort": 1,
+    "driverPort": 0
   },
-  "collectorClamp" : null,
-  "collectorPivot" : null,
-  "collectorRollers" : null,
-  "climberWinch" : null
+  "collectorClamp": null,
+  "collectorPivot": null,
+  "collectorRollers": null,
+  "climberWinch": null
 }
