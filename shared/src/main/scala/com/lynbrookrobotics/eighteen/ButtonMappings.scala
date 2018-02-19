@@ -67,16 +67,16 @@ object ButtonMappings {
       lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightOne)
-      }.foreach( // right 1 — lift to collect height
+        driverHardware.operatorJoystick.getRawButton(TriggerBottom)
+      }.foreach( // bottom trigger — lift to collect height
         new WhileAbovePosition(
-          coreTicks.map(_ => cubeLiftProps.get.scaleHeight)
+          coreTicks.map(_ => cubeLiftProps.get.collectHeight)
         )(lift).toContinuous
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightTwo)
-      }.foreach( // right 2 — lift to switch height
+        driverHardware.operatorJoystick.getRawButton(TriggerLeft)
+      }.foreach( // left trigger — lift to switch height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.switchHeight),
           cubeLiftProps.get.switchTolerance
@@ -84,10 +84,10 @@ object ButtonMappings {
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightThree)
-      }.foreach( // right 3 — lift to scale height
+        driverHardware.operatorJoystick.getRawButton(TriggerRight)
+      }.foreach( // right trigger — lift to scale height
         new WhileBelowPosition(
-          coreTicks.map(_ => cubeLiftProps.get.collectHeight)
+          coreTicks.map(_ => cubeLiftProps.get.scaleHeight)
         )(lift).toContinuous
       )
     }
@@ -100,17 +100,6 @@ object ButtonMappings {
         driverHardware.driverJoystick.getRawButton(Trigger)
       }.foreach( // trigger — pivot down, spin rollers out
         CollectorTasks.purgeCube(rollers, pivot)
-      )
-    }
-
-    for {
-      clamp <- collectorClamp
-      pivot <- collectorPivot
-    } {
-      driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(TriggerBottom)
-      }.foreach( // bottom trigger — open clamp, pivot down
-        new OpenCollector(clamp) and new PivotDown(pivot)
       )
     }
 
@@ -131,6 +120,17 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(LeftTwo)
       }.foreach( // left 2 — deploy forklift
         new MoveForkliftDown(forklift)
+      )
+    }
+
+    for {
+      clamp <- collectorClamp
+      pivot <- collectorPivot
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.driverJoystick.getRawButton(LeftThree)
+      }.foreach( // left 3 — open clamp, pivot down
+        new OpenCollector(clamp) and new PivotDown(pivot)
       )
     }
 
