@@ -9,7 +9,7 @@ import squants.{Dimensionless, Each}
 import squants.space.Length
 
 final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[Unit], props: CubeLiftProperties)
-  extends LiftHardware {
+    extends LiftHardware {
 
   talon.t.configPeakOutputForward(props.maxMotorOutput.toEach, 0)
   talon.t.configPeakOutputReverse(-props.maxMotorOutput.toEach, 0)

@@ -6,7 +6,7 @@ import com.lynbrookrobotics.potassium.commons.lift.offloaded.OffloadedLift
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.ContinuousTask
-import squants.{Dimensionless, Each}
+import squants.Dimensionless
 
 package object cubeLift extends OffloadedLift {
   override type Properties = CubeLiftProperties

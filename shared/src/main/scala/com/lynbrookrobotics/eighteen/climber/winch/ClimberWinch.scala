@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen.climber.winch
 
 import com.ctre.phoenix.motorcontrol.ControlMode
-import com.lynbrookrobotics.potassium.{streams, Component}
+import com.lynbrookrobotics.potassium.Component
 import squants.{Dimensionless, Each, Percent}
 import com.lynbrookrobotics.potassium.streams._
 

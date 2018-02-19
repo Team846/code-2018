@@ -139,7 +139,7 @@ class LaunchRobot extends RobotBase {
           val writer = new PrintWriter(new FileWriter(configFile))
           writer.println(configString)
           writer.close()
-        },
+      },
       coreTicks
     )
 
