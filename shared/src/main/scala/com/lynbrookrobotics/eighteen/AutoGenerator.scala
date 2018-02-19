@@ -1,5 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
+import com.lynbrookrobotics.eighteen.camera.CameraHardware
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
@@ -7,13 +8,17 @@ import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
+import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.{BackwardsOnly, ForwardsOnly}
+import com.lynbrookrobotics.potassium.frc.WPIClock
 import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
 import com.lynbrookrobotics.potassium.units.Point
+import com.lynbrookrobotics.potassium.vision.VisionTargetTracking
+import com.lynbrookrobotics.potassium.vision.limelight.LimelightNetwork
 import squants.motion.FeetPerSecond
 import squants.{Angle, Percent}
-import squants.space.{Feet, Inches}
+import squants.space.{Degrees, Feet, Inches, Length}
 import squants.time.Seconds
 
 class AutoGenerator(r: CoreRobot) {
@@ -446,5 +451,17 @@ class AutoGenerator(r: CoreRobot) {
       targetTicksWithingTolerance = 10,
       forwardBackwardMode = ForwardsOnly
     )(drivetrain)
+  }
+
+  def visionCubePickup (drivetrain: DrivetrainComponent,
+                        camera: CameraHardware,
+                        minDistance: Length): FiniteTask = {
+
+    new DriveToTargetWithConstantSpeed(drivetrain,
+                                        camera.distanceToTarget,
+                                        camera.angleToTarget,
+                                        Percent(20),
+                                        Percent(20),
+                                        minDistance)
   }
 }

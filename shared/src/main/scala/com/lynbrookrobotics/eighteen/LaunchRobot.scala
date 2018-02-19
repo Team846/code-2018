@@ -48,6 +48,8 @@ class LaunchRobot extends RobotBase {
     .getOrElse {
       println("ERROR DEFAULTING CONFIG")
       configString = ""
+
+  implicit var configJson = (
       RobotConfig(
         climberDeployment = None,
         climberWinch = None,
@@ -62,10 +64,10 @@ class LaunchRobot extends RobotBase {
         ),
         drivetrain = DrivetrainConfig(
           ports = DrivetrainPorts(
-            leftPort = 12,
-            rightPort = 11,
-            leftFollowerPort = 14,
-            rightFollowerPort = 13
+            leftPort = 50,
+            rightPort = 41,
+            leftFollowerPort = 51,
+            rightFollowerPort = 40
           ),
           props = DrivetrainProperties(
             maxLeftVelocity = FeetPerSecond(18.8),
