@@ -85,10 +85,11 @@ sudo apt-add-repository ppa:wpilib/toolchain
 sudo apt update 
 sudo apt install frc-toolchain
 ~~~
-**Install autoconf and bsdtar**
+**Install autoconf and bsdtar and libtool**
 ~~~
 sudo apt install autoconf
 sudo apt install bsdtar
+sudo apt install libtool
 ~~~
 
 Now, switch to a browser, and find a direct link to IntelliJ IDEA. At the moment,
