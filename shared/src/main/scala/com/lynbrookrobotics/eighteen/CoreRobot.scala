@@ -168,7 +168,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     cubeLiftComp.foreach { l =>
       board
         .datasetGroup("CubeLift/Position")
-        .addDataset(cubeLiftHardware.voltage.map(_.toVolts).toTimeSeriesNumeric("Potentiometer Voltage"))
+        .addDataset(cubeLiftHardware.potVoltage.map(_.toVolts).toTimeSeriesNumeric("Potentiometer Voltage"))
     }
 
     cubeLiftComp.foreach { l =>
