@@ -13,7 +13,14 @@ final case class CubeLiftProperties(
   pidConfig: PIDConfig[Length, Length, GenericValue[Length], Velocity, GenericIntegral[Length], Dimensionless],
   voltageOverHeight: Ratio[ElectricPotential, Length],
   talonOverVoltage: Ratio[Dimensionless, ElectricPotential],
-  voltageAtBottom: ElectricPotential
+  voltageAtBottom: ElectricPotential,
+  collectHeight: Length,
+  switchHeight: Length,
+  scaleHeight: Length,
+  switchTolerance: Length,
+  maxMotorOutput: Dimensionless,
+  maxHeight: Length,
+  minHeight: Length
 ) extends OffloadedLiftProperties {
   override def positionGains: PIDConfig[
     Length,

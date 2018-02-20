@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.eighteen.climber.deployment.DeploymentConfig
-import com.lynbrookrobotics.eighteen.climber.ClimberWinchConfig
+import com.lynbrookrobotics.eighteen.climber.winch.ClimberWinchConfig
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollersConfig
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampConfig
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivotConfig

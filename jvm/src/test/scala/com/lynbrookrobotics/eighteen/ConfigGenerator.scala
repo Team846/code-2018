@@ -3,17 +3,18 @@ package com.lynbrookrobotics.eighteen
 import com.lynbrookrobotics.eighteen.driver.DriverConfig
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
 import com.lynbrookrobotics.potassium.control.PIDConfig
-import squants.Percent
+import squants.{Each, Percent}
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
-
 import argonaut.Argonaut._
 import argonaut._
 import ArgonautShapeless._
+import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.config.SquantsPickling._
+import squants.electro.Volts
 
 object ConfigGenerator extends App {
   implicit def vToOption[T](v: T): Option[T] = Some(v)
@@ -73,7 +74,26 @@ object ConfigGenerator extends App {
         )
       ),
       forklift = None,
-      cubeLift = None
+      cubeLift = CubeLiftConfig(
+        ports = CubeLiftPorts(20),
+        props = CubeLiftProperties(
+          pidConfig = PIDConfig(
+            Percent(0) / Feet(5),
+            Percent(0) / (Feet(5) * Seconds(1)),
+            Percent(0) / FeetPerSecond(5)
+          ),
+          voltageOverHeight = Ratio(Volts(2.5), Inches(42)),
+          talonOverVoltage = Each(1023) / Volts(3.3),
+          voltageAtBottom = Volts(2.94),
+          collectHeight = Inches(10),
+          switchHeight = Inches(20),
+          scaleHeight = Inches(30),
+          switchTolerance = Inches(2),
+          maxMotorOutput = Percent(20),
+          maxHeight = Inches(35),
+          minHeight = Inches(10)
+        )
+      )
     ).jencode.spaces2
   )
 }

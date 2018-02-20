@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.climber.ClimberWinchHardware
 import com.lynbrookrobotics.eighteen.climber.deployment.DeploymentHardware
+import com.lynbrookrobotics.eighteen.climber.winch.ClimberWinchHardware
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampHardware
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivotHardware
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollersHardware
@@ -32,7 +32,7 @@ object RobotHardware {
     RobotHardware(
       climberDeployment = climberDeployment.map(DeploymentHardware.apply),
       climberWinch = climberWinch.map(ClimberWinchHardware.apply),
-      collectorClamp = collectorClamp.map(CollectorClampHardware.apply),
+      collectorClamp = collectorClamp.map(CollectorClampHardware.apply(_, coreTicks)),
       collectorPivot = collectorPivot.map(CollectorPivotHardware.apply),
       collectorRollers = collectorRollers.map(CollectorRollersHardware.apply),
       driver = driverHardware,

@@ -2,8 +2,10 @@ package com.lynbrookrobotics.eighteen
 
 import java.io.{File, FileWriter, PrintWriter}
 
+import argonaut.Argonaut._
 import com.lynbrookrobotics.eighteen.driver.DriverConfig
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
+import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.control.PIDConfig
 import com.lynbrookrobotics.potassium.frc.WPIClock
@@ -12,10 +14,11 @@ import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.hal.HAL
-import squants.Percent
+import squants.electro.Volts
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
+import squants.{Each, Percent}
 import argonaut.Argonaut._
 import argonaut._
 import ArgonautShapeless._
@@ -40,10 +43,11 @@ class LaunchRobot extends RobotBase {
   ).getOrElse("")
 
   implicit def vToOption[T](v: T): Option[T] = Some(v)
-
   implicit var configJson = configString
     .decodeOption[RobotConfig]
-    .getOrElse(
+    .getOrElse {
+      println("ERROR DEFAULTING CONFIG")
+      configString = ""
       RobotConfig(
         climberDeployment = None,
         climberWinch = None,
@@ -99,9 +103,28 @@ class LaunchRobot extends RobotBase {
           )
         ),
         forklift = None,
-        cubeLift = None
+        cubeLift = CubeLiftConfig(
+          ports = CubeLiftPorts(20),
+          props = CubeLiftProperties(
+            pidConfig = PIDConfig(
+              Percent(0) / Feet(5),
+              Percent(0) / (Feet(5) * Seconds(1)),
+              Percent(0) / FeetPerSecond(5)
+            ),
+            voltageOverHeight = Ratio(Volts(2.5), Inches(42)),
+            talonOverVoltage = Ratio(Each(1023), Volts(3.3)),
+            voltageAtBottom = Volts(2.94),
+            collectHeight = Inches(10),
+            switchHeight = Inches(20),
+            scaleHeight = Inches(30),
+            switchTolerance = Inches(2),
+            maxMotorOutput = Percent(20),
+            maxHeight = Inches(30),
+            minHeight = Inches(15)
+          )
+        )
       )
-    )
+    }
 
   implicit val configSig = Signal(configJson)
 
@@ -110,15 +133,21 @@ class LaunchRobot extends RobotBase {
   override def startCompetition(): Unit = {
     coreRobot = new CoreRobot(
       Signal(configString),
-      newS =>
-        newS.decodeOption[RobotConfig].foreach { it =>
-          println("writing to robot-config.json")
-          configString = newS
-          configJson = it
+      newS => {
+        val parsed = newS.decodeOption[RobotConfig]
+        if (parsed.isEmpty) {
+          println("COULD NOT PARSE NEW CONFIG")
+        } else {
+          parsed.foreach { it =>
+            println("writing to robot-config.json")
+            configString = newS
+            configJson = it
 
-          val writer = new PrintWriter(new FileWriter(configFile))
-          writer.println(configString)
-          writer.close()
+            val writer = new PrintWriter(new FileWriter(configFile))
+            writer.println(configString)
+            writer.close()
+          }
+        }
       },
       coreTicks
     )
