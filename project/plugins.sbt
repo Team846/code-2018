@@ -1,9 +1,9 @@
 resolvers += "Funky-Repo" at "http://team846.github.io/repo"
 
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.6")
-addSbtPlugin("com.lynbrookrobotics" % "sbt-frc-jvm" % "0.5.2")
+addSbtPlugin("com.lynbrookrobotics" % "sbt-frc-jvm" % "0.5.3")
 addSbtPlugin(
-  "com.lynbrookrobotics" % "sbt-frc-native" % "0.5.2" exclude ("org.scala-native", "sbt-crossproject")
+  "com.lynbrookrobotics" % "sbt-frc-native" % "0.5.3" exclude ("org.scala-native", "sbt-crossproject")
 )
 
 addSbtPlugin("org.portable-scala" % "sbt-crossproject" % "0.3.0")

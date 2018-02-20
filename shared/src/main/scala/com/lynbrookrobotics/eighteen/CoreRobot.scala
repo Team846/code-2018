@@ -15,7 +15,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.networktables.NetworkTableInstance
-import   com.lynbrookrobotics.funkydashboard.TimeSeriesNumeric
+import com.lynbrookrobotics.funkydashboard.TimeSeriesNumeric
 
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}

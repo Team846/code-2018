@@ -38,11 +38,11 @@
         }
       },
       "collectHeight": [
-        10,
+        2,
         "Inches"
       ],
       "voltageAtBottom": [
-        2.94,
+        -2.94,
         "Volts"
       ],
       "switchTolerance": [
@@ -55,7 +55,7 @@
       ],
       "voltageOverHeight": {
         "den": [
-          42,
+          80.25,
           "Inches"
         ],
         "num": [
@@ -64,7 +64,7 @@
         ]
       },
       "maxMotorOutput": [
-        20,
+        100,
         "Percent"
       ],
       "talonOverVoltage": {
@@ -78,11 +78,11 @@
         ]
       },
       "maxHeight": [
-        35,
+        30,
         "Inches"
       ],
       "minHeight": [
-        0,
+        1,
         "Inches"
       ]
     },

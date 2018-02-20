@@ -69,7 +69,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(TriggerBottom)
       }.foreach( // bottom trigger — lift to collect height
-        new WhileAbovePosition(
+        new WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
         )(lift).toContinuous
       )
@@ -86,7 +86,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(TriggerRight)
       }.foreach( // right trigger — lift to scale height
-        new WhileBelowPosition(
+        new WhileAbovePosition(
           coreTicks.map(_ => cubeLiftProps.get.scaleHeight)
         )(lift).toContinuous
       )
@@ -153,7 +153,7 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(RightFive)
       }.foreach( // right 5 & joystick — manually control lift
         new LiftManualControl(
-          driverHardware.joystickStream.map(-_.operator.y).syncTo(lift.coreTicks)
+          driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
         )(lift)
       )
     }
