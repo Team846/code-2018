@@ -46,7 +46,9 @@ class LaunchRobot extends RobotBase {
 
   implicit var configJson = configString
     .decodeOption[RobotConfig]
-    .getOrElse(
+    .getOrElse {
+      println("ERROR DEFAULTING CONFIG")
+      configString = ""
       RobotConfig(
         climberDeployment = None,
         climberWinch = None,
@@ -123,7 +125,7 @@ class LaunchRobot extends RobotBase {
           )
         )
       )
-    )
+    }
 
   implicit val configSig = Signal(configJson)
 
@@ -132,8 +134,12 @@ class LaunchRobot extends RobotBase {
   override def startCompetition(): Unit = {
     coreRobot = new CoreRobot(
       Signal(configString),
-      newS =>
-        newS.decodeOption[RobotConfig].foreach { it =>
+      newS => {
+        val parsed = newS.decodeOption[RobotConfig]
+        if (parsed.isEmpty) {
+          println("COULD NOT PARSE NEW CONFIG")
+        }
+        parsed.foreach { it =>
           println("writing to robot-config.json")
           configString = newS
           configJson = it
@@ -141,6 +147,7 @@ class LaunchRobot extends RobotBase {
           val writer = new PrintWriter(new FileWriter(configFile))
           writer.println(configString)
           writer.close()
+        }
       },
       coreTicks
     )

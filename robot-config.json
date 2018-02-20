@@ -294,9 +294,20 @@
     "driverPort": 0
   },
   "collectorClamp": {
-    "pneumaticPort": 0
+    "ports": {
+      "pneumaticPort": 0,
+      "proximityPort": 0
+    },
+    "props": {
+      "cubeGraspThreshold": [
+        1.2,
+        "Volts"
+      ]
+    }
   },
-  "collectorPivot": null,
+  "collectorPivot": {
+    "pneumaticPort": 1
+  },
   "collectorRollers": null,
   "climberWinch": null
 }
