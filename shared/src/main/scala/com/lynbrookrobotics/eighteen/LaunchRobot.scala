@@ -43,7 +43,6 @@ class LaunchRobot extends RobotBase {
   ).getOrElse("")
 
   implicit def vToOption[T](v: T): Option[T] = Some(v)
-
   implicit var configJson = configString
     .decodeOption[RobotConfig]
     .getOrElse {
@@ -138,15 +137,16 @@ class LaunchRobot extends RobotBase {
         val parsed = newS.decodeOption[RobotConfig]
         if (parsed.isEmpty) {
           println("COULD NOT PARSE NEW CONFIG")
-        }
-        parsed.foreach { it =>
-          println("writing to robot-config.json")
-          configString = newS
-          configJson = it
+        } else {
+          parsed.foreach { it =>
+            println("writing to robot-config.json")
+            configString = newS
+            configJson = it
 
-          val writer = new PrintWriter(new FileWriter(configFile))
-          writer.println(configString)
-          writer.close()
+            val writer = new PrintWriter(new FileWriter(configFile))
+            writer.println(configString)
+            writer.close()
+          }
         }
       },
       coreTicks

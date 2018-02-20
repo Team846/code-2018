@@ -1,14 +1,15 @@
 package com.lynbrookrobotics.eighteen.collector.rollers
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
+import edu.wpi.first.wpilibj.Spark
 
-final case class CollectorRollersHardware(rollerLeft: TalonSRX, rollerRight: TalonSRX)
+final case class CollectorRollersHardware(rollerLeft: Spark, rollerRight: Spark)
 
 object CollectorRollersHardware {
   def apply(config: CollectorRollersConfig): CollectorRollersHardware = {
     new CollectorRollersHardware(
-      new TalonSRX(config.ports.rollerLeftPort),
-      new TalonSRX(config.ports.rollerRightPort)
+      new Spark(config.ports.rollerLeftPort),
+      new Spark(config.ports.rollerRightPort)
     )
   }
 }

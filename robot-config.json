@@ -308,6 +308,17 @@
   "collectorPivot": {
     "pneumaticPort": 1
   },
-  "collectorRollers": null,
+  "collectorRollers": {
+    "ports": {
+      "rollerLeftPort": 0,
+      "rollerRightPort": 1
+    },
+    "props": {
+      "collectSpeed": [
+        50,
+        "Percent"
+      ]
+    }
+  },
   "climberWinch": null
 }

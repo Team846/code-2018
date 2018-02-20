@@ -9,14 +9,14 @@ trait CollectorPivotState
 case object PivotUpState extends CollectorPivotState
 case object PivotDownState extends CollectorPivotState
 
-class CollectorPivot(val coreTicks: Stream[Unit])(implicit hardware: CollectorClampHardware)
+class CollectorPivot(val coreTicks: Stream[Unit])(implicit hardware: CollectorPivotHardware)
     extends Component[CollectorPivotState] {
-  override def defaultController: Stream[CollectorPivotState] = coreTicks.mapToConstant(PivotDownState)
+  override def defaultController: Stream[CollectorPivotState] = coreTicks.mapToConstant(PivotUpState)
 
   override def applySignal(signal: CollectorPivotState): Unit = {
     signal match {
-      case PivotUpState   => hardware.solenoid.set(true)
-      case PivotDownState => hardware.solenoid.set(false)
+      case PivotUpState   => hardware.pivotSolenoid.set(false)
+      case PivotDownState => hardware.pivotSolenoid.set(true)
     }
   }
 }

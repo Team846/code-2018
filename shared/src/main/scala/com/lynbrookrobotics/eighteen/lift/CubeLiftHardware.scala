@@ -28,9 +28,6 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
   talon.t.configForwardSoftLimitEnable(true, 0)
   talon.t.configReverseSoftLimitEnable(true, 0)
 
-  println(s"forward limit : ${toNative(maxHeight).toEach.toInt}")
-  println(s"reverse limit : ${toNative(minHeight).toEach.toInt}")
-
   talon.t.configSelectedFeedbackSensor(FeedbackDevice.Analog, 0, 0)
 
   val nativeReading: Stream[Dimensionless] =

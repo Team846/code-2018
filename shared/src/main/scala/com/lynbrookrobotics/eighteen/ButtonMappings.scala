@@ -53,7 +53,8 @@ object ButtonMappings {
       pivot <- collectorPivot
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(TriggerBottom)
+        driverHardware.driverJoystick.getRawButton(TriggerBottom) &&
+          !driverHardware.driverJoystick.getRawButton(Trigger)
       }.foreach( // bottom trigger — open clamp, pivot down
         new OpenCollector(clamp) and new PivotDown(pivot)
       )
@@ -148,7 +149,7 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(RightFour)
       }.foreach( // right 4 & joystick — manually control rollers
         new RollersManualControl(
-          driverHardware.joystickStream.map(-_.operator.y)
+          driverHardware.joystickStream.map(-_.operator.y).syncTo(rollers.coreTicks)
         )(rollers)
       )
     }
@@ -172,7 +173,7 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(RightSix)
       }.foreach( // right 6 & joystick — manually control winch
         new WinchManualControl(
-          driverHardware.joystickStream.map(-_.operator.y)
+          driverHardware.joystickStream.map(-_.operator.y).syncTo(winch.coreTicks)
         )(winch)
       )
     }
