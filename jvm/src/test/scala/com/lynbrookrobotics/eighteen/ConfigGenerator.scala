@@ -90,8 +90,8 @@ object ConfigGenerator extends App {
           scaleHeight = Inches(30),
           switchTolerance = Inches(2),
           maxMotorOutput = Percent(20),
-          maxHeight = Inches(30),
-          minHeight = Inches(15)
+          maxHeight = Inches(35),
+          minHeight = Inches(10)
         )
       )
     ).jencode.spaces2

@@ -76,7 +76,15 @@
           1023,
           "Each"
         ]
-      }
+      },
+      "maxHeight": [
+        35,
+        "Inches"
+      ],
+      "minHeight": [
+        0,
+        "Inches"
+      ]
     },
     "ports": {
       "motorPort": 20
@@ -285,7 +293,9 @@
     "operatorPort": 1,
     "driverPort": 0
   },
-  "collectorClamp": null,
+  "collectorClamp": {
+    "pneumaticPort": 0
+  },
   "collectorPivot": null,
   "collectorRollers": null,
   "climberWinch": null
