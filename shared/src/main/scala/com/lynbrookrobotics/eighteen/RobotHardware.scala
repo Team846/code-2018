@@ -1,6 +1,5 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.camera.CameraHardware
 import com.lynbrookrobotics.eighteen.climber.ClimberWinchHardware
 import com.lynbrookrobotics.eighteen.climber.deployment.DeploymentHardware
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampHardware
@@ -10,7 +9,10 @@ import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
 import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
+import com.lynbrookrobotics.potassium.Signal
+import com.lynbrookrobotics.potassium.frc.Implicits._
 import com.lynbrookrobotics.potassium.streams.Stream
+import com.lynbrookrobotics.potassium.vision.limelight.{CameraHardware, LimeLightHardware}
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],
@@ -22,7 +24,7 @@ final case class RobotHardware(
   drivetrain: Option[DrivetrainHardware],
   forklift: Option[ForkliftHardware],
   cubeLift: Option[CubeLiftHardware],
-  camera: Option[CameraHardware]
+  camera: Option[LimeLightHardware]
 )
 
 object RobotHardware {
@@ -41,7 +43,7 @@ object RobotHardware {
       drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
       cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
-      camera = Some(new CameraHardware)
+      camera = Some(new LimeLightHardware(null, null))
     )
   }
 }

@@ -1,6 +1,5 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.camera.CameraHardware
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
@@ -14,7 +13,7 @@ import com.lynbrookrobotics.potassium.frc.WPIClock
 import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
 import com.lynbrookrobotics.potassium.units.Point
 import com.lynbrookrobotics.potassium.vision.VisionTargetTracking
-import com.lynbrookrobotics.potassium.vision.limelight.LimelightNetwork
+import com.lynbrookrobotics.potassium.vision.limelight.{LimeLightHardware, LimelightNetwork}
 import squants.motion.FeetPerSecond
 import squants.{Angle, Percent}
 import squants.space.{Degrees, Feet, Inches, Length}
@@ -442,9 +441,9 @@ class AutoGenerator(r: CoreRobot) {
     )(drivetrain)
   }
 
-  def visionCubePickup (drivetrain: DrivetrainComponent,
-                        camera: CameraHardware,
-                        minDistance: Length): FiniteTask = {
+  def visionCubePickup(drivetrain: DrivetrainComponent,
+                       camera: LimeLightHardware,
+                       minDistance: Length): FiniteTask = {
 
     new DriveToTargetWithConstantSpeed(drivetrain,
                                         camera.distanceToTarget,
