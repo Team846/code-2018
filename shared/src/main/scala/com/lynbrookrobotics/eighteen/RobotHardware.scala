@@ -9,9 +9,10 @@ import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
 import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
+import com.lynbrookrobotics.potassium.frc.Implicits._
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.time.Seconds
+import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],

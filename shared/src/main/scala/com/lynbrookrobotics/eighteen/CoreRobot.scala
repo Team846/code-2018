@@ -17,7 +17,7 @@ import edu.wpi.first.networktables.NetworkTableInstance
 
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
-import squants.space.Meters
+import squants.space.{Feet, Meters}
 import scala.util.Try
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])(
@@ -107,11 +107,17 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     }
   }
 
+//  coreTicks.foreach { _ =>
+//    println("updating limelight settings")
+//    val table = LimelightNetwork(WPIClock)
+//    table.table.getEntry("ledMode").setDouble(2)
+//  }
+
   for {
     drivetrain <- drivetrain
   } {
     addAutonomousRoutine(1) {
-      generator.visionCubePickup(drivetrain, hardware.camera.get, Meters(1)).toContinuous
+      generator.visionCubePickup(drivetrain, hardware.camera.get, Feet(1.5)).toContinuous
     }
   }
 

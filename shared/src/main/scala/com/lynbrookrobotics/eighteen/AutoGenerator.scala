@@ -11,10 +11,10 @@ import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.{BackwardsOnly, ForwardsOnly}
 import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
 import com.lynbrookrobotics.potassium.units.Point
-import com.lynbrookrobotics.potassium.vision.limelight.CameraHardware
+import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.motion.FeetPerSecond
 import squants.{Angle, Percent}
-import squants.space.{Degrees, Feet, Inches, Length}
+import squants.space.{Feet, Inches, Length}
 import squants.time.Seconds
 
 class AutoGenerator(r: CoreRobot) {
@@ -449,9 +449,9 @@ class AutoGenerator(r: CoreRobot) {
     )(drivetrain)
   }
 
-  def visionCubePickup (drivetrain: DrivetrainComponent,
-                        camera: CameraHardware,
-                        minDistance: Length): FiniteTask = {
+  def visionCubePickup(drivetrain: DrivetrainComponent,
+                       camera: LimeLightHardware,
+                       minDistance: Length): FiniteTask = {
 
     new DriveToTargetWithConstantSpeed(drivetrain,
                                         camera.distanceToTarget,

@@ -28,6 +28,8 @@ import scala.io.Source
 import scala.util.Try
 
 class LaunchRobot extends RobotBase {
+
+
   implicit val clock = WPIClock
 
   private var coreRobot: CoreRobot = null
