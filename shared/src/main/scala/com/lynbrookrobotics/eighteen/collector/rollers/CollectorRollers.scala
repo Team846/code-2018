@@ -1,6 +1,5 @@
 package com.lynbrookrobotics.eighteen.collector.rollers
 
-import com.ctre.phoenix.motorcontrol.ControlMode
 import com.lynbrookrobotics.potassium.Component
 import com.lynbrookrobotics.potassium.streams.Stream
 import squants.{Dimensionless, Each, Percent}

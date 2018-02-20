@@ -1,6 +1,5 @@
 package com.lynbrookrobotics.eighteen.collector.pivot
 
-import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClampHardware
 import com.lynbrookrobotics.potassium.Component
 import com.lynbrookrobotics.potassium.streams.Stream
 

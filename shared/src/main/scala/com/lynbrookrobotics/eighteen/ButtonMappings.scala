@@ -25,7 +25,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(Trigger) &&
-          driverHardware.driverJoystick.getRawButton(TriggerBottom)
+        driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach( // trigger & bottom trigger — [bottom trigger] + [trigger]
         new WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
@@ -40,7 +40,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(Trigger) &&
-          !driverHardware.driverJoystick.getRawButton(TriggerBottom)
+        !driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach( // trigger — pivot down, spin rollers in, lift to collect height
         new WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
@@ -54,7 +54,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(TriggerBottom) &&
-          !driverHardware.driverJoystick.getRawButton(Trigger)
+        !driverHardware.driverJoystick.getRawButton(Trigger)
       }.foreach( // bottom trigger — open clamp, pivot down
         new OpenCollector(clamp) and new PivotDown(pivot)
       )

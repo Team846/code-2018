@@ -180,7 +180,9 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
       board
         .datasetGroup("CubeLift/Current")
-        .addDataset(coreTicks.map(_ => cubeLiftHardware.talon.t.getOutputCurrent).toTimeSeriesNumeric("TalonSRX Current Draw"))
+        .addDataset(
+          coreTicks.map(_ => cubeLiftHardware.talon.t.getOutputCurrent).toTimeSeriesNumeric("TalonSRX Current Draw")
+        )
     }
   }
 }
