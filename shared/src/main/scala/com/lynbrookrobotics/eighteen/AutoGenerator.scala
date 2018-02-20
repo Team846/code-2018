@@ -7,24 +7,14 @@ import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
-import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.{BackwardsOnly, ForwardsOnly}
-import com.lynbrookrobotics.potassium.frc.WPIClock
 import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
 import com.lynbrookrobotics.potassium.units.Point
-<<<<<<< HEAD
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.motion.FeetPerSecond
 import squants.{Angle, Percent}
 import squants.space.{Feet, Inches, Length}
-=======
-import com.lynbrookrobotics.potassium.vision.VisionTargetTracking
-import com.lynbrookrobotics.potassium.vision.limelight.{LimeLightHardware, LimelightNetwork}
-import squants.motion.FeetPerSecond
-import squants.{Angle, Percent}
-import squants.space.{Degrees, Feet, Inches, Length}
->>>>>>> f0e3dac5b8b147d871b3b3df3fa99a4b64d0bbe5
 import squants.time.Seconds
 
 class AutoGenerator(r: CoreRobot) {
@@ -469,5 +459,5 @@ class AutoGenerator(r: CoreRobot) {
                                         Percent(20),
                                         Percent(20),
                                         minDistance)
-  }.then(printTask("done camera tracking"))
+  }
 }

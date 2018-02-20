@@ -11,19 +11,14 @@ import com.lynbrookrobotics.eighteen.forklift.Forklift
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.funkydashboard.{FunkyDashboard, JsonEditor, TimeSeriesNumeric}
 import com.lynbrookrobotics.potassium.clock.Clock
-import com.lynbrookrobotics.potassium.frc.WPIClock
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
-import com.lynbrookrobotics.potassium.vision.limelight.LimelightNetwork
 import edu.wpi.first.networktables.NetworkTableInstance
 
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import squants.space.{Feet, Meters}
-<<<<<<< HEAD
-=======
 
->>>>>>> f0e3dac5b8b147d871b3b3df3fa99a4b64d0bbe5
 import scala.util.Try
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])(
@@ -68,6 +63,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   implicit val cubeLiftProps = config.map(_.cubeLift.get.props)
   val cubeLiftComp: Option[CubeLiftComp] =
     hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
+
+  implicit val cameraHardware = hardware.camera.orNull
 
 
 

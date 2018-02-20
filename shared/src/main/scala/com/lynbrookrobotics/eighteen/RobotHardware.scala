@@ -9,17 +9,10 @@ import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
 import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
-<<<<<<< HEAD
-import com.lynbrookrobotics.potassium.frc.Implicits._
-import com.lynbrookrobotics.potassium.streams.Stream
 import squants.time.Seconds
-import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
-=======
-import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.frc.Implicits._
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.vision.limelight.{CameraHardware, LimeLightHardware}
->>>>>>> f0e3dac5b8b147d871b3b3df3fa99a4b64d0bbe5
+import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],
@@ -50,11 +43,7 @@ object RobotHardware {
       drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
       cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
-<<<<<<< HEAD
       camera = Some(new LimeLightHardware(Seconds(10)))
-=======
-      camera = Some(new LimeLightHardware(null, null))
->>>>>>> f0e3dac5b8b147d871b3b3df3fa99a4b64d0bbe5
     )
   }
 }

@@ -1,5 +1,3 @@
-import scala.sys.process.Process
-
 name := "code-2018"
 
 version := "0.1"
@@ -10,11 +8,7 @@ resolvers in ThisBuild += "Funky-Repo" at "http://lynbrookrobotics.com/repo"
 resolvers in ThisBuild += "WPILib-Maven" at "http://lynbrookrobotics.com/wpilib-maven"
 resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/development"
 
-<<<<<<< HEAD
 val potassiumVersion = "0.1.0-792cad60"
-=======
-val potassiumVersion = "0.1.0-20739f34"
->>>>>>> f0e3dac5b8b147d871b3b3df3fa99a4b64d0bbe5
 val wpiVersion = "2018.2.2"
 
 lazy val robot = crossProject(JVMPlatform, NativePlatform)
