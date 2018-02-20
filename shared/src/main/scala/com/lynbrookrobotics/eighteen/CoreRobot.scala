@@ -11,13 +11,19 @@ import com.lynbrookrobotics.eighteen.forklift.Forklift
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.funkydashboard.{FunkyDashboard, JsonEditor, TimeSeriesNumeric}
 import com.lynbrookrobotics.potassium.clock.Clock
+import com.lynbrookrobotics.potassium.frc.WPIClock
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
+import com.lynbrookrobotics.potassium.vision.limelight.LimelightNetwork
 import edu.wpi.first.networktables.NetworkTableInstance
 
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import squants.space.{Feet, Meters}
+<<<<<<< HEAD
+=======
+
+>>>>>>> f0e3dac5b8b147d871b3b3df3fa99a4b64d0bbe5
 import scala.util.Try
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])(
@@ -100,6 +106,24 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
     addAutonomousRoutine(2) {
       generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot).toContinuous
+    }
+
+    addAutonomousRoutine(3) {
+      generator.visionCubePickup(drivetrain, hardware.camera.get, Meters(1)).toContinuous
+    }
+  }
+
+//  coreTicks.foreach { _ =>
+//    println("updating limelight settings")
+//    val table = LimelightNetwork(WPIClock)
+//    table.table.getEntry("ledMode").setDouble(2)
+//  }
+
+  for {
+    drivetrain <- drivetrain
+  } {
+    addAutonomousRoutine(1) {
+      generator.visionCubePickup(drivetrain, hardware.camera.get, Feet(1.5)).toContinuous
     }
 
     addAutonomousRoutine(3) {

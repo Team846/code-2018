@@ -45,11 +45,14 @@ class LaunchRobot extends RobotBase {
   ).getOrElse("")
 
   implicit def vToOption[T](v: T): Option[T] = Some(v)
+<<<<<<< HEAD
   implicit var configJson = configString
     .decodeOption[RobotConfig]
     .getOrElse {
       println("ERROR DEFAULTING CONFIG")
       configString = ""
+=======
+>>>>>>> f0e3dac5b8b147d871b3b3df3fa99a4b64d0bbe5
 
   implicit var configJson = (
       RobotConfig(
