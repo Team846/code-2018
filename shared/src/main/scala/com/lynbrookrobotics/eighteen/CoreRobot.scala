@@ -15,7 +15,6 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.networktables.NetworkTableInstance
-import edu.wpi.first.wpilibj.PowerDistributionPanel
 
 import scala.collection.mutable
 import scala.util.Try
@@ -142,8 +141,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   dashboard.failed.foreach(_.printStackTrace())
 
-  val pdp = new PowerDistributionPanel()
-
   dashboard.foreach { board =>
     import CoreRobot.ToTimeSeriesNumeric
 
@@ -184,10 +181,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("CubeLift/Current")
         .addDataset(coreTicks.map(_ => cubeLiftHardware.talon.t.getOutputCurrent).toTimeSeriesNumeric("TalonSRX Current Draw"))
-
-      board
-        .datasetGroup("CubeLift/Current")
-        .addDataset(coreTicks.map(_ => pdp.getCurrent(15)).toTimeSeriesNumeric("PDP Current Draw"))
     }
   }
 }
