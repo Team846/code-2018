@@ -14,7 +14,7 @@ import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.hal.HAL
-import squants.electro.Volts
+import squants.electro.{Volts, Amperes}
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
@@ -97,6 +97,7 @@ class LaunchRobot extends RobotBase {
             ),
             maxTurnVelocity = DegreesPerSecond(90),
             maxAcceleration = FeetPerSecondSquared(0),
+            maxCurrent = Amperes(1),
             defaultLookAheadDistance = Feet(2.5),
             blendExponent = 0,
             track = Inches(21.75)

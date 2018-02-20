@@ -144,6 +144,10 @@
         0,
         "FeetPerSecondSquared"
       ],
+      "maxCurrent": [
+        25,
+        "Amperes"
+      ],
       "maxRightVelocity": [
         19.25,
         "FeetPerSecond"
