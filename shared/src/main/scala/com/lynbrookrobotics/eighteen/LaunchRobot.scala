@@ -7,7 +7,7 @@ import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPor
 import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.control.PIDConfig
-import com.lynbrookrobotics.potassium.frc.WPIClock
+import com.lynbrookrobotics.potassium.frc.{LEDControllerConfig, WPIClock}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
@@ -122,7 +122,8 @@ class LaunchRobot extends RobotBase {
               maxHeight = Inches(30),
               minHeight = Inches(15)
             )
-          )
+          ),
+          led = None
         )
     }
 

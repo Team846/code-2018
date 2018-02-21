@@ -66,6 +66,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   implicit val cameraHardware = hardware.camera.orNull
 
+  implicit val lightingHardware = hardware.led.orNull
+
 
 
   lazy val components: Seq[Component[_]] = Seq(
