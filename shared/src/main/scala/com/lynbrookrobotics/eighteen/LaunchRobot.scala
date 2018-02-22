@@ -2,7 +2,6 @@ package com.lynbrookrobotics.eighteen
 
 import java.io.{File, FileWriter, PrintWriter}
 
-import argonaut.Argonaut._
 import com.lynbrookrobotics.eighteen.driver.DriverConfig
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
 import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
@@ -20,9 +19,6 @@ import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 import squants.{Each, Percent}
 import argonaut.Argonaut._
-import argonaut._
-import ArgonautShapeless._
-import com.lynbrookrobotics.potassium.config.SquantsPickling._
 
 import scala.io.Source
 import scala.util.Try
@@ -42,9 +38,8 @@ class LaunchRobot extends RobotBase {
     Source.fromFile(configFile).mkString
   ).getOrElse("")
 
-  implicit def vToOption[T](v: T): Option[T] = Some(v)
   implicit var configJson = configString
-    .decodeOption[RobotConfig]
+    .decodeOption[RobotConfig](RobotConfig.reader)
     .getOrElse {
       println("ERROR DEFAULTING CONFIG")
       configString = ""
@@ -54,13 +49,13 @@ class LaunchRobot extends RobotBase {
         collectorClamp = None,
         collectorPivot = None,
         collectorRollers = None,
-        driver = DriverConfig(
+        driver = Some(DriverConfig(
           driverPort = 0,
           operatorPort = 1,
           driverWheelPort = 2,
           launchpadPort = -1
-        ),
-        drivetrain = DrivetrainConfig(
+        )),
+        drivetrain = Some(DrivetrainConfig(
           ports = DrivetrainPorts(
             leftPort = 12,
             rightPort = 11,
@@ -101,9 +96,9 @@ class LaunchRobot extends RobotBase {
             blendExponent = 0,
             track = Inches(21.75)
           )
-        ),
+        )),
         forklift = None,
-        cubeLift = CubeLiftConfig(
+        cubeLift = Some(CubeLiftConfig(
           ports = CubeLiftPorts(20),
           props = CubeLiftProperties(
             pidConfig = PIDConfig(
@@ -122,7 +117,7 @@ class LaunchRobot extends RobotBase {
             maxHeight = Inches(30),
             minHeight = Inches(15)
           )
-        )
+        ))
       )
     }
 
@@ -134,7 +129,7 @@ class LaunchRobot extends RobotBase {
     coreRobot = new CoreRobot(
       Signal(configString),
       newS => {
-        val parsed = newS.decodeOption[RobotConfig]
+        val parsed = newS.decodeOption[RobotConfig](RobotConfig.reader)
         if (parsed.isEmpty) {
           println("COULD NOT PARSE NEW CONFIG")
         } else {

@@ -21,3 +21,13 @@ final case class RobotConfig(
   forklift: Option[ForkliftConfig],
   cubeLift: Option[CubeLiftConfig]
 )
+
+object RobotConfig {
+  import argonaut._
+  import argonaut.Argonaut._
+  import ArgonautShapeless._
+  import com.lynbrookrobotics.potassium.config.SquantsPickling._
+
+  val writer = EncodeJson.of[RobotConfig]
+  val reader = DecodeJson.of[RobotConfig]
+}

@@ -9,15 +9,12 @@ import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
-import argonaut.Argonaut._
-import argonaut._
-import ArgonautShapeless._
 import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
-import com.lynbrookrobotics.potassium.config.SquantsPickling._
 import squants.electro.Volts
 
+import argonaut.Argonaut._
+
 object ConfigGenerator extends App {
-  implicit def vToOption[T](v: T): Option[T] = Some(v)
   println(
     RobotConfig(
       climberDeployment = None,
@@ -25,13 +22,13 @@ object ConfigGenerator extends App {
       collectorClamp = None,
       collectorPivot = None,
       collectorRollers = None,
-      driver = DriverConfig(
+      driver = Some(DriverConfig(
         driverPort = 0,
         operatorPort = 1,
         driverWheelPort = 2,
         launchpadPort = -1
-      ),
-      drivetrain = DrivetrainConfig(
+      )),
+      drivetrain = Some(DrivetrainConfig(
         ports = DrivetrainPorts(
           leftPort = 12,
           rightPort = 11,
@@ -72,9 +69,9 @@ object ConfigGenerator extends App {
           blendExponent = 0,
           track = Inches(21.75)
         )
-      ),
+      )),
       forklift = None,
-      cubeLift = CubeLiftConfig(
+      cubeLift = Some(CubeLiftConfig(
         ports = CubeLiftPorts(20),
         props = CubeLiftProperties(
           pidConfig = PIDConfig(
@@ -93,7 +90,7 @@ object ConfigGenerator extends App {
           maxHeight = Inches(35),
           minHeight = Inches(10)
         )
-      )
-    ).jencode.spaces2
+      ))
+    ).jencode(RobotConfig.writer).spaces2
   )
 }
