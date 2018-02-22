@@ -42,7 +42,7 @@
         "Inches"
       ],
       "voltageAtBottom": [
-        2.94,
+        0.316,
         "Volts"
       ],
       "switchTolerance": [
@@ -64,7 +64,7 @@
         ]
       },
       "maxMotorOutput": [
-        100,
+        80,
         "Percent"
       ],
       "talonOverVoltage": {
@@ -78,7 +78,7 @@
         ]
       },
       "maxHeight": [
-        30,
+        75,
         "Inches"
       ],
       "minHeight": [
@@ -90,8 +90,12 @@
       "motorPort": 20
     }
   },
-  "forklift": null,
-  "climberDeployment": null,
+  "forklift": {
+    "solenoidPort": 3
+  },
+  "climberDeployment": {
+    "solenoidPort": 0
+  },
   "drivetrain": {
     "ports": {
       "rightFollowerPort": 13,
@@ -299,7 +303,7 @@
   },
   "collectorClamp": {
     "ports": {
-      "pneumaticPort": 0,
+      "pneumaticPort": 2,
       "proximityPort": 0
     },
     "props": {

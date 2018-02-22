@@ -12,19 +12,19 @@ import squants.space.{Inches, Turns}
 final case class DrivetrainConfig(props: DrivetrainProperties, ports: DrivetrainPorts)
 
 final case class DrivetrainProperties(
-                                       maxLeftVelocity: Velocity,
-                                       maxRightVelocity: Velocity,
-                                       leftVelocityGains: ForwardVelocityGains,
-                                       rightVelocityGains: ForwardVelocityGains,
-                                       forwardPositionGains: ForwardPositionGains,
-                                       turnVelocityGains: TurnVelocityGains,
-                                       turnPositionGains: TurnPositionGains,
-                                       maxTurnVelocity: AngularVelocity,
-                                       maxAcceleration: Acceleration,
-                                       maxCurrent: ElectricCurrent,
-                                       defaultLookAheadDistance: Length,
-                                       blendExponent: Double,
-                                       track: Length
+  maxLeftVelocity: Velocity,
+  maxRightVelocity: Velocity,
+  leftVelocityGains: ForwardVelocityGains,
+  rightVelocityGains: ForwardVelocityGains,
+  forwardPositionGains: ForwardPositionGains,
+  turnVelocityGains: TurnVelocityGains,
+  turnPositionGains: TurnPositionGains,
+  maxTurnVelocity: AngularVelocity,
+  maxAcceleration: Acceleration,
+  maxCurrent: ElectricCurrent,
+  defaultLookAheadDistance: Length,
+  blendExponent: Double,
+  track: Length
 ) extends OffloadedDriveProperties {
   override val wheelDiameter: Length = Inches(4)
   override val wheelOverEncoderGears: Ratio[Angle, Angle] = Ratio(Turns(1), Turns(2))

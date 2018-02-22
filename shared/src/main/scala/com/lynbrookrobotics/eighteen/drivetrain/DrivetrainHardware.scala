@@ -16,23 +16,23 @@ import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Length, Velocity}
 
 final case class DrivetrainData(
-                                 leftEncoderVelocity: AngularVelocity,
-                                 rightEncoderVelocity: AngularVelocity,
-                                 leftEncoderRotation: Angle,
-                                 rightEncoderRotation: Angle,
-                                 gyroVelocities: Value3D[AngularVelocity]
-                               )
+  leftEncoderVelocity: AngularVelocity,
+  rightEncoderVelocity: AngularVelocity,
+  leftEncoderRotation: Angle,
+  rightEncoderRotation: Angle,
+  gyroVelocities: Value3D[AngularVelocity]
+)
 
 final case class DrivetrainHardware(
-                                     coreTicks: Stream[Unit],
-                                     leftSRX: TalonSRX,
-                                     rightSRX: TalonSRX,
-                                     leftFollowerSRX: VictorSPX,
-                                     rightFollowerSRX: VictorSPX,
-                                     gyro: DigitalGyro,
-                                     driverHardware: DriverHardware,
-                                     props: DrivetrainProperties
-                                   ) extends TwoSidedDriveHardware {
+  coreTicks: Stream[Unit],
+  leftSRX: TalonSRX,
+  rightSRX: TalonSRX,
+  leftFollowerSRX: VictorSPX,
+  rightFollowerSRX: VictorSPX,
+  gyro: DigitalGyro,
+  driverHardware: DriverHardware,
+  props: DrivetrainProperties
+) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
   val escIdx = 0
@@ -61,15 +61,14 @@ final case class DrivetrainHardware(
   Set(leftSRX, rightSRX, leftFollowerSRX, rightFollowerSRX)
     .foreach(it => TalonManager.configSlave(it))
 
-  Set(left, right)
-    .foreach { it =>
-      TalonManager.configMaster(it.t)
+  Set(left, right).foreach { it =>
+    TalonManager.configMaster(it.t)
 
-      it.t.configContinuousCurrentLimit(maxCurrent.toAmperes.toInt, 0)
-      it.t.configPeakCurrentLimit(maxCurrent.toAmperes.toInt, 0)
-      it.t.configPeakCurrentDuration(0, 0)
-      it.t.enableCurrentLimit(true)
-    }
+    it.t.configContinuousCurrentLimit(maxCurrent.toAmperes.toInt, 0)
+    it.t.configPeakCurrentLimit(maxCurrent.toAmperes.toInt, 0)
+    it.t.configPeakCurrentDuration(0, 0)
+    it.t.enableCurrentLimit(true)
+  }
 
   private val t = Seconds(1)
 
