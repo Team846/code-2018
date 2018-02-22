@@ -27,9 +27,9 @@ object ButtonMappings {
         driverHardware.driverJoystick.getRawButton(Trigger) &&
           driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach( // trigger & bottom trigger — [bottom trigger] + [trigger]
-        (new WhileBelowPosition(
+        new WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
-        )(lift).toContinuous).and(CollectorTasks.collectCube(rollers, clamp, pivot))
+        )(lift).toContinuous and CollectorTasks.collectCube(rollers, clamp, pivot)
       )
     }
 
@@ -44,7 +44,7 @@ object ButtonMappings {
       }.foreach( // trigger — pivot down, spin rollers in, lift to collect height
         new WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
-        )(lift).toContinuous.and(CollectorTasks.collectCubeWithoutOpen(rollers, pivot))
+        )(lift).toContinuous and CollectorTasks.collectCubeWithoutOpen(rollers, pivot)
       )
     }
 
@@ -175,6 +175,26 @@ object ButtonMappings {
         new WinchManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(winch.coreTicks)
         )(winch)
+      )
+    }
+
+    for {
+      clamp <- collectorClamp
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightOne)
+      }.foreach( // right 1 — clamp open
+        new OpenCollector(clamp)
+      )
+    }
+
+    for {
+      pivot <- collectorPivot
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightTwo)
+      }.foreach( // right 2 — pivot down
+        new PivotDown(pivot)
       )
     }
   }
