@@ -10,6 +10,7 @@ import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainConfig
 import com.lynbrookrobotics.eighteen.forklift.ForkliftConfig
 import com.lynbrookrobotics.eighteen.lift.CubeLiftConfig
 import com.lynbrookrobotics.eighteen.lighting.LightingHardwareConfig
+import com.lynbrookrobotics.potassium.frc.{LEDControllerConfig, LEDControllerHardware}
 
 final case class RobotConfig(
   climberDeployment: Option[DeploymentConfig],
@@ -21,5 +22,5 @@ final case class RobotConfig(
   drivetrain: Option[DrivetrainConfig],
   forklift: Option[ForkliftConfig],
   cubeLift: Option[CubeLiftConfig],
-  led: Option[LightingHardwareConfig]
+  led: Option[LEDControllerConfig]
 )
