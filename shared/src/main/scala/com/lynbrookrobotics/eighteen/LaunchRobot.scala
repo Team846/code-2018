@@ -95,6 +95,7 @@ class LaunchRobot extends RobotBase {
               ),
               maxTurnVelocity = DegreesPerSecond(90),
               maxAcceleration = FeetPerSecondSquared(0),
+              maxCurrent = Amperes(25),
               defaultLookAheadDistance = Feet(2.5),
               blendExponent = 0,
               track = Inches(21.75)
