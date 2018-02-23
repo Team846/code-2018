@@ -17,7 +17,6 @@ import com.lynbrookrobotics.potassium.frc.LEDController
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import edu.wpi.first.networktables.NetworkTableInstance
-
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import squants.space.{Feet, Meters}
@@ -42,6 +41,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     hardware.collectorRollers.map(_ => new CollectorRollers(coreTicks))
 
   implicit val collectorClampHardware = hardware.collectorClamp.orNull
+  implicit val collectorClampProps = config.map(_.collectorClamp.get.props)
+
   val collectorClamp: Option[CollectorClamp] =
     hardware.collectorClamp.map(_ => new CollectorClamp(coreTicks))
 
@@ -67,7 +68,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   val cubeLiftComp: Option[CubeLiftComp] =
     hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
 
-  implicit val cameraHardware = hardware.camera.orNull
+  val cameraHardware = hardware.camera
 
   implicit val lightingHardware = hardware.ledHardware.orNull
   implicit val lightingComponent: Option[LEDController] =
@@ -116,12 +117,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       generator.visionCubePickup(drivetrain, hardware.camera.get, Meters(1)).toContinuous
     }
   }
-
-//  coreTicks.foreach { _ =>
-//    println("updating limelight settings")
-//    val table = LimelightNetwork(WPIClock)
-//    table.table.getEntry("ledMode").setDouble(2)
-//  }
 
   for {
     drivetrain <- drivetrain

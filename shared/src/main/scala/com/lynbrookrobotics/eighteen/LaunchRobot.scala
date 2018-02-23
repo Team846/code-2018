@@ -7,7 +7,7 @@ import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPor
 import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.control.PIDConfig
-import com.lynbrookrobotics.potassium.frc.{LEDControllerConfig, WPIClock}
+import com.lynbrookrobotics.potassium.frc.WPIClock
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
@@ -19,6 +19,9 @@ import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
 import squants.{Each, Percent}
 import argonaut.Argonaut._
+import argonaut._
+import ArgonautShapeless._
+import com.lynbrookrobotics.potassium.config.SquantsPickling._
 
 import scala.io.Source
 import scala.util.Try
@@ -47,7 +50,6 @@ class LaunchRobot extends RobotBase {
       println("ERROR DEFAULTING CONFIG")
       configString = ""
 
-      implicit var configJson =
         RobotConfig(
           climberDeployment = None,
           climberWinch = None,
