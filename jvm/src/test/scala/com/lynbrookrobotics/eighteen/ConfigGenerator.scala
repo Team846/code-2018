@@ -93,7 +93,8 @@ object ConfigGenerator extends App {
           maxHeight = Inches(35),
           minHeight = Inches(10)
         )
-      )
+      ),
+      led = None
     ).jencode.spaces2
   )
 }
