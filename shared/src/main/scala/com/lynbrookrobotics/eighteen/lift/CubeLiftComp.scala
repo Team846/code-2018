@@ -11,7 +11,6 @@ class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardw
   override def defaultController: Stream[OffloadedSignal] = coreTicks.mapToConstant(OpenLoop(Each(0)))
 
   override def applySignal(signal: OffloadedSignal): Unit = {
-    println(s"outputting to lift : $signal")
     hardware.talon.applyCommand(signal)
   }
 }
