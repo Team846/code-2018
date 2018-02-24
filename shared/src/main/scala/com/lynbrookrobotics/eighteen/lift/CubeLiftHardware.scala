@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen.lift
 
-import com.ctre.phoenix.motorcontrol.{FeedbackDevice, NeutralMode}
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
+import com.ctre.phoenix.motorcontrol.{FeedbackDevice, NeutralMode}
 import com.lynbrookrobotics.eighteen.TalonManager
 import com.lynbrookrobotics.potassium.commons.lift._
 import com.lynbrookrobotics.potassium.frc.LazyTalon
@@ -18,7 +18,7 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
   TalonManager.configMaster(talon.t)
 
   talon.t.setInverted(false)
-  talon.t.setSensorPhase(true)
+  talon.t.setSensorPhase(false)
   talon.t.setNeutralMode(NeutralMode.Brake)
   talon.t.configPeakOutputForward(props.maxMotorOutput.toEach, 0)
   talon.t.configPeakOutputReverse(-props.maxMotorOutput.toEach, 0)
@@ -37,7 +37,8 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
     nativeReading.map(props.fromNative)
 
   private val sensors = talon.t.getSensorCollection
-  val potVoltage: Stream[ElectricPotential] = nativeReading.map(r => props.talonOverVoltage.recip * r)
+  val potVoltage: Stream[ElectricPotential] =
+    coreTicks.map(_ => props.talonOverVoltage.recip * Each(sensors.getAnalogInRaw))
 }
 
 object CubeLiftHardware {

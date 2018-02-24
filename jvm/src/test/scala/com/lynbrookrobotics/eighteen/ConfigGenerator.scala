@@ -10,8 +10,7 @@ import squants.time.Seconds
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
 import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
-import squants.electro.Volts
-
+import squants.electro.{Amperes, Volts}
 import argonaut.Argonaut._
 
 object ConfigGenerator extends App {
@@ -67,6 +66,7 @@ object ConfigGenerator extends App {
               Percent(0) / (Degrees(1) / Seconds(1))
             ),
             maxTurnVelocity = DegreesPerSecond(90),
+            maxCurrent = Amperes(25),
             maxAcceleration = FeetPerSecondSquared(0),
             defaultLookAheadDistance = Feet(2.5),
             blendExponent = 0,

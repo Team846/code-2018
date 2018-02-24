@@ -61,8 +61,14 @@ final case class DrivetrainHardware(
   Set(leftSRX, rightSRX, leftFollowerSRX, rightFollowerSRX)
     .foreach(it => TalonManager.configSlave(it))
 
-  Set(left, right)
-    .foreach(it => TalonManager.configMaster(it.t))
+  Set(left, right).foreach { it =>
+    TalonManager.configMaster(it.t)
+
+    it.t.configContinuousCurrentLimit(maxCurrent.toAmperes.toInt, 0)
+    it.t.configPeakCurrentLimit(maxCurrent.toAmperes.toInt, 0)
+    it.t.configPeakCurrentDuration(0, 0)
+    it.t.enableCurrentLimit(true)
+  }
 
   private val t = Seconds(1)
 
