@@ -28,7 +28,7 @@ final case class DrivetrainHardware(
   leftSRX: TalonSRX,
   rightSRX: TalonSRX,
   leftFollowerSRX: VictorSPX,
-  rightFollowerSRX: VictorSPX,
+  rightFollowerSRX: TalonSRX,
   gyro: DigitalGyro,
   driverHardware: DriverHardware,
   props: DrivetrainProperties
@@ -111,7 +111,7 @@ object DrivetrainHardware {
       new TalonSRX(config.ports.leftPort),
       new TalonSRX(config.ports.rightPort),
       new VictorSPX(config.ports.leftFollowerPort),
-      new VictorSPX(config.ports.rightFollowerPort),
+      new TalonSRX(config.ports.rightFollowerPort),
       new ADIS16448(new SPI(SPI.Port.kMXP), null),
       driverHardware,
       config.props

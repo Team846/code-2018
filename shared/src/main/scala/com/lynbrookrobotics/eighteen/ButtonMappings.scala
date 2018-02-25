@@ -11,6 +11,8 @@ import com.lynbrookrobotics.eighteen.cubeLift.LiftManualControl
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
 import com.lynbrookrobotics.eighteen.forklift.MoveForkliftDown
 
+import squants.space.Inches
+
 // https://team846.slab.com/posts/button-mappings-625f4bf7
 object ButtonMappings {
   def setup(robot: CoreRobot): Unit = {
@@ -77,8 +79,9 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(TriggerBottom)
       }.foreach( // bottom trigger — lift to collect height
-        new WhileBelowPosition(
-          coreTicks.map(_ => cubeLiftProps.get.collectHeight)
+        new WhileAtPosition(
+          coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+          Inches(2)
         )(lift).toContinuous
       )
 
@@ -87,15 +90,34 @@ object ButtonMappings {
       }.foreach( // left trigger — lift to switch height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.switchHeight),
-          cubeLiftProps.get.switchTolerance
+          Inches(2)
         )(lift).toContinuous
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(TriggerRight)
       }.foreach( // right trigger — lift to scale height
-        new WhileAbovePosition(
-          coreTicks.map(_ => cubeLiftProps.get.scaleHeight)
+        new WhileAtPosition(
+          coreTicks.map(_ => cubeLiftProps.get.lowScaleHeight),
+          Inches(2)
+        )(lift).toContinuous
+      )
+
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(TriggerRight)
+      }.foreach( // right trigger — lift to scale height
+        new WhileAtPosition(
+          coreTicks.map(_ => cubeLiftProps.get.lowScaleHeight),
+          Inches(2)
+        )(lift).toContinuous
+      )
+
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightOne)
+      }.foreach( // right trigger — lift to scale height
+        new WhileAtPosition(
+          coreTicks.map(_ => cubeLiftProps.get.highScaleHeight),
+          Inches(2)
         )(lift).toContinuous
       )
     }
@@ -105,7 +127,7 @@ object ButtonMappings {
       pivot <- collectorPivot
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(Trigger)
+        driverHardware.operatorJoystick.getRawButton(Trigger)
       }.foreach( // trigger — pivot down, spin rollers out
         CollectorTasks.purgeCube(rollers, pivot)
       )
@@ -158,9 +180,24 @@ object ButtonMappings {
       lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightFive)
+        driverHardware.operatorJoystick.getRawButton(RightFive) &&
+        !driverHardware.operatorJoystick.getRawButton(RightTwo)
       }.foreach( // right 5 & joystick — manually control lift
         new LiftManualControl(
+          driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
+        )(lift)
+      )
+    }
+
+    for {
+      lift <- cubeLiftComp
+      pivot <- collectorPivot
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightTwo) &&
+        driverHardware.operatorJoystick.getRawButton(RightFive)
+      }.foreach( // right 2 — pivot down
+        new PivotDown(pivot) and new LiftManualControl(
           driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
         )(lift)
       )
@@ -182,7 +219,7 @@ object ButtonMappings {
       clamp <- collectorClamp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightOne)
+        driverHardware.operatorJoystick.getRawButton(RightThree)
       }.foreach( // right 1 — clamp open
         new OpenCollector(clamp)
       )
@@ -192,7 +229,8 @@ object ButtonMappings {
       pivot <- collectorPivot
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightTwo)
+        driverHardware.operatorJoystick.getRawButton(RightTwo) &&
+        !driverHardware.operatorJoystick.getRawButton(RightFive)
       }.foreach( // right 2 — pivot down
         new PivotDown(pivot)
       )
