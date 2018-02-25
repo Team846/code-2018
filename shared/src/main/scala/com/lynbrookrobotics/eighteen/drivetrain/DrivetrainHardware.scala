@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen.drivetrain
 
 import com.ctre.phoenix.motorcontrol._
-import com.ctre.phoenix.motorcontrol.can.{TalonSRX, VictorSPX}
+import com.ctre.phoenix.motorcontrol.can.{BaseMotorController, TalonSRX, VictorSPX}
 import com.lynbrookrobotics.eighteen.TalonManager
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSidedDriveHardware
@@ -24,14 +24,14 @@ final case class DrivetrainData(
 )
 
 final case class DrivetrainHardware(
-  coreTicks: Stream[Unit],
-  leftSRX: TalonSRX,
-  rightSRX: TalonSRX,
-  leftFollowerSRX: VictorSPX,
-  rightFollowerSRX: TalonSRX,
-  gyro: DigitalGyro,
-  driverHardware: DriverHardware,
-  props: DrivetrainProperties
+                                     coreTicks: Stream[Unit],
+                                     leftSRX: TalonSRX,
+                                     rightSRX: TalonSRX,
+                                     leftFollowerSRX: BaseMotorController,
+                                     rightFollowerSRX: BaseMotorController,
+                                     gyro: DigitalGyro,
+                                     driverHardware: DriverHardware,
+                                     props: DrivetrainProperties
 ) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
@@ -111,7 +111,7 @@ object DrivetrainHardware {
       new TalonSRX(config.ports.leftPort),
       new TalonSRX(config.ports.rightPort),
       new VictorSPX(config.ports.leftFollowerPort),
-      new TalonSRX(config.ports.rightFollowerPort),
+      new /*VictorSPX*/TalonSRX(config.ports.rightFollowerPort),
       new ADIS16448(new SPI(SPI.Port.kMXP), null),
       driverHardware,
       config.props
