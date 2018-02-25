@@ -332,5 +332,17 @@
       ]
     }
   },
-  "climberWinch": null
+  "climberWinch": {
+    "ports": {
+      "leftMotorPort": 15,
+      "middleMotorPort": 16,
+      "rightMotorPort": 17
+    },
+    "props": {
+      "climbingSpeed": [
+        85,
+        "Percent"
+      ]
+    }
+  }
 }
