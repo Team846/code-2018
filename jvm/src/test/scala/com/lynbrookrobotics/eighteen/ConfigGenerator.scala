@@ -32,6 +32,7 @@ object ConfigGenerator extends App {
       drivetrain = Some(
         DrivetrainConfig(
           ports = DrivetrainPorts(
+            practiceSpeedControllers = false,
             leftPort = 12,
             rightPort = 11,
             leftFollowerPort = 14,
@@ -89,7 +90,8 @@ object ConfigGenerator extends App {
             voltageAtBottom = Volts(2.94),
             collectHeight = Inches(10),
             switchHeight = Inches(20),
-            scaleHeight = Inches(30),
+            lowScaleHeight = Inches(30),
+            highScaleHeight = Inches(30),
             switchTolerance = Inches(2),
             maxMotorOutput = Percent(20),
             maxHeight = Inches(35),

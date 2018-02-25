@@ -34,4 +34,10 @@ final case class DrivetrainProperties(
   )
 }
 
-final case class DrivetrainPorts(leftPort: Int, rightPort: Int, leftFollowerPort: Int, rightFollowerPort: Int)
+final case class DrivetrainPorts(
+  practiceSpeedControllers: Boolean,
+  leftPort: Int,
+  rightPort: Int,
+  leftFollowerPort: Int,
+  rightFollowerPort: Int
+)

@@ -102,6 +102,7 @@
   },
   "drivetrain": {
     "ports": {
+      "practiceSpeedControllers": true,
       "rightFollowerPort": 14,
       "leftFollowerPort": 12,
       "rightPort": 13,

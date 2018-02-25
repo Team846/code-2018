@@ -24,14 +24,14 @@ final case class DrivetrainData(
 )
 
 final case class DrivetrainHardware(
-                                     coreTicks: Stream[Unit],
-                                     leftSRX: TalonSRX,
-                                     rightSRX: TalonSRX,
-                                     leftFollowerSRX: BaseMotorController,
-                                     rightFollowerSRX: BaseMotorController,
-                                     gyro: DigitalGyro,
-                                     driverHardware: DriverHardware,
-                                     props: DrivetrainProperties
+  coreTicks: Stream[Unit],
+  leftSRX: TalonSRX,
+  rightSRX: TalonSRX,
+  leftFollowerSRX: BaseMotorController,
+  rightFollowerSRX: BaseMotorController,
+  gyro: DigitalGyro,
+  driverHardware: DriverHardware,
+  props: DrivetrainProperties
 ) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
@@ -111,7 +111,11 @@ object DrivetrainHardware {
       new TalonSRX(config.ports.leftPort),
       new TalonSRX(config.ports.rightPort),
       new VictorSPX(config.ports.leftFollowerPort),
-      new /*VictorSPX*/TalonSRX(config.ports.rightFollowerPort),
+      if (config.ports.practiceSpeedControllers) {
+        new TalonSRX(config.ports.rightFollowerPort)
+      } else {
+        new VictorSPX(config.ports.rightFollowerPort)
+      },
       new ADIS16448(new SPI(SPI.Port.kMXP), null),
       driverHardware,
       config.props
