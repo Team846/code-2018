@@ -60,6 +60,7 @@ class LaunchRobot extends RobotBase {
         drivetrain = Some(
           DrivetrainConfig(
             ports = DrivetrainPorts(
+              practiceSpeedControllers = false,
               leftPort = 12,
               rightPort = 11,
               leftFollowerPort = 14,
