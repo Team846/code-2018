@@ -22,7 +22,8 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-frc" % potassiumVersion,
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-config" % potassiumVersion,
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-vision" % potassiumVersion,
-    libraryDependencies += "com.lynbrookrobotics" %%% "funky-dashboard" % "0.3.0-SNAPSHOT"
+    libraryDependencies += "com.lynbrookrobotics" %%% "funky-dashboard" % "0.3.0-SNAPSHOT",
+    libraryDependencies += "com.lynbrookrobotics" %%% "funky-dashboard" % "0.3.0"
   )
   .jvmSettings(
     scalaVersion := "2.12.4",
@@ -34,9 +35,9 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
     libraryDependencies += "org.opencv" % "opencv-java" % "3.2.0"
   )
   .nativeSettings(
-    libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.0+4-f5af12c9",
-    libraryDependencies += "com.lynbrookrobotics" %%% "ntcore-scala-native" % "0.1.0+4-f5af12c9",
-    libraryDependencies += "com.lynbrookrobotics" %%% "phoenix-scala-native" % "0.1.0+4-f5af12c9",
+    libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.2",
+    libraryDependencies += "com.lynbrookrobotics" %%% "ntcore-scala-native" % "0.1.2",
+    libraryDependencies += "com.lynbrookrobotics" %%% "phoenix-scala-native" % "0.1.2",
     scalaVersion := "2.11.12",
     scalacOptions ++= Seq("-target:jvm-1.8")
   )

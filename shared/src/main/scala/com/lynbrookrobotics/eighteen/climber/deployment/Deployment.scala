@@ -15,12 +15,10 @@ class Deployment(val coreTicks: Stream[Unit])(implicit hardware: DeploymentHardw
   override def applySignal(signal: DeploymentState): Unit = {
     signal match {
       case DeploymentOn => {
-        hardware.solenoidLeft.set(true)
-        hardware.solenoidRight.set(true)
+        hardware.deploymentSolenoid.set(true)
       }
       case DeploymentOff => {
-        hardware.solenoidLeft.set(false)
-        hardware.solenoidRight.set(false)
+        hardware.deploymentSolenoid.set(false)
       }
     }
   }

@@ -4,6 +4,7 @@ import com.lynbrookrobotics.potassium.commons.drivetrain._
 import com.lynbrookrobotics.potassium.commons.drivetrain.offloaded.OffloadedDriveProperties
 import com.lynbrookrobotics.potassium.control.offload.EscConfig
 import com.lynbrookrobotics.potassium.units._
+import squants.electro.ElectricCurrent
 import squants.{Acceleration, Angle, Dimensionless, Each, Length, Velocity}
 import squants.motion.AngularVelocity
 import squants.space.{Inches, Turns}
@@ -20,6 +21,7 @@ final case class DrivetrainProperties(
   turnPositionGains: TurnPositionGains,
   maxTurnVelocity: AngularVelocity,
   maxAcceleration: Acceleration,
+  maxCurrent: ElectricCurrent,
   defaultLookAheadDistance: Length,
   blendExponent: Double,
   track: Length

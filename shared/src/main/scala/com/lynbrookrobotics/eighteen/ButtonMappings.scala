@@ -193,5 +193,25 @@ object ButtonMappings {
         )(winch)
       )
     }
+
+    for {
+      clamp <- collectorClamp
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightOne)
+      }.foreach( // right 1 — clamp open
+        new OpenCollector(clamp)
+      )
+    }
+
+    for {
+      pivot <- collectorPivot
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightTwo)
+      }.foreach( // right 2 — pivot down
+        new PivotDown(pivot)
+      )
+    }
   }
 }
