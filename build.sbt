@@ -10,7 +10,7 @@ resolvers in ThisBuild += "Funky-Repo" at "http://lynbrookrobotics.com/repo"
 resolvers in ThisBuild += "WPILib-Maven" at "http://lynbrookrobotics.com/wpilib-maven"
 resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/development"
 
-val potassiumVersion = "0.1.0-d2ba6d0d"
+val potassiumVersion = "0.1.0-6b3b4e1c"
 val wpiVersion = "2018.2.2"
 
 lazy val robot = crossProject(JVMPlatform, NativePlatform)
@@ -22,7 +22,6 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-frc" % potassiumVersion,
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-config" % potassiumVersion,
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-vision" % potassiumVersion,
-    libraryDependencies += "com.lynbrookrobotics" %%% "funky-dashboard" % "0.3.0-SNAPSHOT",
     libraryDependencies += "com.lynbrookrobotics" %%% "funky-dashboard" % "0.3.0"
   )
   .jvmSettings(
