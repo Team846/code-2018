@@ -16,17 +16,17 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 
 final case class RobotHardware(
-                                climberDeployment: Option[DeploymentHardware],
-                                climberWinch: Option[ClimberWinchHardware],
-                                collectorClamp: Option[CollectorClampHardware],
-                                collectorPivot: Option[CollectorPivotHardware],
-                                collectorRollers: Option[CollectorRollersHardware],
-                                driver: DriverHardware,
-                                drivetrain: Option[DrivetrainHardware],
-                                forklift: Option[ForkliftHardware],
-                                cubeLift: Option[CubeLiftHardware],
-                                camera: Option[LimeLightHardware],
-                                ledHardware: Option[LEDControllerHardware]
+  climberDeployment: Option[DeploymentHardware],
+  climberWinch: Option[ClimberWinchHardware],
+  collectorClamp: Option[CollectorClampHardware],
+  collectorPivot: Option[CollectorPivotHardware],
+  collectorRollers: Option[CollectorRollersHardware],
+  driver: DriverHardware,
+  drivetrain: Option[DrivetrainHardware],
+  forklift: Option[ForkliftHardware],
+  cubeLift: Option[CubeLiftHardware],
+  camera: Option[LimeLightHardware],
+  ledHardware: Option[LEDControllerHardware]
 )
 
 object RobotHardware {

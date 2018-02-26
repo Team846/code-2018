@@ -449,15 +449,15 @@ class AutoGenerator(r: CoreRobot) {
     )(drivetrain)
   }
 
-  def visionCubePickup(drivetrain: DrivetrainComponent,
-                       camera: LimeLightHardware,
-                       minDistance: Length): FiniteTask = {
+  def visionCubePickup(drivetrain: DrivetrainComponent, camera: LimeLightHardware, minDistance: Length): FiniteTask = {
 
-    new DriveToTargetWithConstantSpeed(drivetrain,
-                                        camera.distanceToTarget,
-                                        camera.angleToTarget,
-                                        Percent(20),
-                                        Percent(20),
-                                        minDistance)
+    new DriveToTargetWithConstantSpeed(
+      drivetrain,
+      camera.distanceToTarget,
+      camera.angleToTarget,
+      Percent(20),
+      Percent(20),
+      minDistance
+    )
   }
 }

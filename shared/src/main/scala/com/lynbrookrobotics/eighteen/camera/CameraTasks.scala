@@ -13,17 +13,20 @@ import squants.Percent
 import squants.space.Length
 
 object CameraTasks {
-  def visionCubePickup(drivetrain: DrivetrainComponent,
-                       camera: LimeLightHardware,
-                       minDistance: Length,
-                       rollers: CollectorRollers,
-                       clamp: CollectorClamp,
-                       pivot: CollectorPivot)
-                      (implicit drivetrainHardware: DrivetrainHardware,
-                       drivetrainProperties: Signal[DrivetrainProperties],
-                       collectorClampProps: Signal[CollectorClampProps],
-                       collectorRollerProps: Signal[CollectorRollersProperties],
-                       collectorClampHardware: CollectorClampHardware): FiniteTask = {
+  def visionCubePickup(
+    drivetrain: DrivetrainComponent,
+    camera: LimeLightHardware,
+    minDistance: Length,
+    rollers: CollectorRollers,
+    clamp: CollectorClamp,
+    pivot: CollectorPivot
+  )(
+    implicit drivetrainHardware: DrivetrainHardware,
+    drivetrainProperties: Signal[DrivetrainProperties],
+    collectorClampProps: Signal[CollectorClampProps],
+    collectorRollerProps: Signal[CollectorRollersProperties],
+    collectorClampHardware: CollectorClampHardware
+  ): FiniteTask = {
 
     new DriveToTargetWithConstantSpeed(
       drivetrain,
@@ -31,7 +34,8 @@ object CameraTasks {
       camera.angleToTarget,
       Percent(20),
       Percent(20),
-      minDistance)(drivetrainHardware, drivetrainProperties).then(
+      minDistance
+    )(drivetrainHardware, drivetrainProperties).then(
       CollectorTasks.collectUntilCubeIn(
         rollers,
         clamp,
