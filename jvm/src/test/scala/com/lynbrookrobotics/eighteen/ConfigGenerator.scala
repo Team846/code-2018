@@ -66,7 +66,6 @@ object ConfigGenerator extends App {
               Percent(0) / (Degrees(1) * Seconds(1)),
               Percent(0) / (Degrees(1) / Seconds(1))
             ),
-            maxTurnVelocity = DegreesPerSecond(90),
             maxCurrent = Amperes(25),
             maxAcceleration = FeetPerSecondSquared(0),
             defaultLookAheadDistance = Feet(2.5),
@@ -92,6 +91,7 @@ object ConfigGenerator extends App {
             switchHeight = Inches(20),
             lowScaleHeight = Inches(30),
             highScaleHeight = Inches(30),
+            exchangeHeight = Inches(4),
             switchTolerance = Inches(2),
             maxMotorOutput = Percent(20),
             maxHeight = Inches(35),
