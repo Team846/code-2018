@@ -29,8 +29,9 @@ object ButtonMappings {
         driverHardware.driverJoystick.getRawButton(Trigger) &&
         driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach( // trigger & bottom trigger — [bottom trigger] + [trigger]
-        new WhileBelowPosition(
-          coreTicks.map(_ => cubeLiftProps.get.collectHeight)
+        new WhileAtPosition(
+          coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+          Inches(2)
         )(lift).toContinuous and CollectorTasks.collectCube(rollers, clamp, pivot)
       )
     }
@@ -44,8 +45,9 @@ object ButtonMappings {
         driverHardware.driverJoystick.getRawButton(Trigger) &&
         !driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach( // trigger — pivot down, spin rollers in, lift to collect height
-        new WhileBelowPosition(
-          coreTicks.map(_ => cubeLiftProps.get.collectHeight)
+        new WhileAtPosition(
+          coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+          Inches(2)
         )(lift).toContinuous and CollectorTasks.collectCubeWithoutOpen(rollers, pivot)
       )
     }
@@ -117,6 +119,15 @@ object ButtonMappings {
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.highScaleHeight),
+          Inches(2)
+        )(lift).toContinuous
+      )
+
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(LeftSix)
+      }.foreach( // right trigger — lift to scale height
+        new WhileAtPosition(
+          coreTicks.map(_ => cubeLiftProps.get.exchangeHeight),
           Inches(2)
         )(lift).toContinuous
       )

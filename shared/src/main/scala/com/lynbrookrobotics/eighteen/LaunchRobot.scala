@@ -94,12 +94,11 @@ class LaunchRobot extends RobotBase {
                 Percent(0) / (Degrees(1) * Seconds(1)),
                 Percent(0) / (Degrees(1) / Seconds(1))
               ),
-              maxTurnVelocity = DegreesPerSecond(90),
               maxAcceleration = FeetPerSecondSquared(0),
               maxCurrent = Amperes(25),
               defaultLookAheadDistance = Feet(2.5),
               blendExponent = 0,
-              track = Inches(21.75)
+              track = Inches(25)
             )
           )
         ),
@@ -120,6 +119,7 @@ class LaunchRobot extends RobotBase {
               switchHeight = Inches(20),
               lowScaleHeight = Inches(30),
               highScaleHeight = Inches(30),
+              exchangeHeight = Inches(3),
               switchTolerance = Inches(2),
               maxMotorOutput = Percent(20),
               maxHeight = Inches(30),

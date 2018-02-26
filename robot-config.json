@@ -158,7 +158,7 @@
         "FeetPerSecond"
       ],
       "track": [
-        21.75,
+        25,
         "Inches"
       ],
       "rightVelocityGains": {
@@ -226,10 +226,6 @@
         }
       },
       "blendExponent": 0,
-      "maxTurnVelocity": [
-        90,
-        "DegreesPerSecond"
-      ],
       "leftVelocityGains": {
         "kd": {
           "den": [

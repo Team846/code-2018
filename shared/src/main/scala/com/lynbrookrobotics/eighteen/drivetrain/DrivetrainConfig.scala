@@ -6,8 +6,9 @@ import com.lynbrookrobotics.potassium.control.offload.EscConfig
 import com.lynbrookrobotics.potassium.units._
 import squants.electro.ElectricCurrent
 import squants.{Acceleration, Angle, Dimensionless, Each, Length, Velocity}
-import squants.motion.AngularVelocity
+import squants.motion.{AngularVelocity, RadiansPerSecond}
 import squants.space.{Inches, Turns}
+import squants.time.Seconds
 
 final case class DrivetrainConfig(props: DrivetrainProperties, ports: DrivetrainPorts)
 
@@ -19,7 +20,6 @@ final case class DrivetrainProperties(
   forwardPositionGains: ForwardPositionGains,
   turnVelocityGains: TurnVelocityGains,
   turnPositionGains: TurnPositionGains,
-  maxTurnVelocity: AngularVelocity,
   maxAcceleration: Acceleration,
   maxCurrent: ElectricCurrent,
   defaultLookAheadDistance: Length,
@@ -31,6 +31,10 @@ final case class DrivetrainProperties(
   override val encoderAngleOverTicks: Ratio[Angle, Dimensionless] = Ratio(Turns(1), Each(4096))
   override val escConfig: EscConfig[Length] = EscConfig(
     ticksPerUnit = floorPerTick.recip
+  )
+
+  override val maxTurnVelocity = RadiansPerSecond(
+    ((maxLeftVelocity + maxRightVelocity) * Seconds(1)) / track
   )
 }
 
