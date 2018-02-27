@@ -16,8 +16,10 @@ final case class CubeLiftProperties(
   voltageAtBottom: ElectricPotential,
   collectHeight: Length,
   switchHeight: Length,
-  scaleHeight: Length,
-  switchTolerance: Length,
+  lowScaleHeight: Length,
+  highScaleHeight: Length,
+  exchangeHeight: Length,
+  liftPositionTolerance: Length,
   maxMotorOutput: Dimensionless,
   maxHeight: Length,
   minHeight: Length

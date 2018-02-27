@@ -9,7 +9,7 @@ class RollersManualControl(target: Stream[Dimensionless])(rollers: CollectorRoll
   implicit props: Signal[CollectorRollersProperties]
 ) extends ContinuousTask() {
   override protected def onStart(): Unit = rollers.setController(
-    target.map(it => (it, it))
+    target.map(it => (it, -it))
   )
 
   override protected def onEnd(): Unit = rollers.resetToDefault()

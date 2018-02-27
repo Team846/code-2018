@@ -11,7 +11,7 @@ class CollectorRollers(val coreTicks: Stream[Unit])(
 ) extends Component[(Dimensionless, Dimensionless)] {
   override def defaultController: Stream[(Dimensionless, Dimensionless)] = {
     if (driverHardware.station.isEnabled) {
-      coreTicks.mapToConstant((Percent(5), -Percent(5)))
+      coreTicks.mapToConstant((Percent(20), -Percent(20)))
     } else {
       coreTicks.mapToConstant((Each(0), Each(0)))
     }

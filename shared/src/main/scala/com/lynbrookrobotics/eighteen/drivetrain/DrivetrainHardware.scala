@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen.drivetrain
 
 import com.ctre.phoenix.motorcontrol._
-import com.ctre.phoenix.motorcontrol.can.{TalonSRX, VictorSPX}
+import com.ctre.phoenix.motorcontrol.can.{BaseMotorController, TalonSRX, VictorSPX}
 import com.lynbrookrobotics.eighteen.TalonManager
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSidedDriveHardware
@@ -27,8 +27,8 @@ final case class DrivetrainHardware(
   coreTicks: Stream[Unit],
   leftSRX: TalonSRX,
   rightSRX: TalonSRX,
-  leftFollowerSRX: VictorSPX,
-  rightFollowerSRX: VictorSPX,
+  leftFollowerSRX: BaseMotorController,
+  rightFollowerSRX: BaseMotorController,
   gyro: DigitalGyro,
   driverHardware: DriverHardware,
   props: DrivetrainProperties
@@ -111,7 +111,11 @@ object DrivetrainHardware {
       new TalonSRX(config.ports.leftPort),
       new TalonSRX(config.ports.rightPort),
       new VictorSPX(config.ports.leftFollowerPort),
-      new VictorSPX(config.ports.rightFollowerPort),
+      if (config.ports.practiceSpeedControllers) {
+        new TalonSRX(config.ports.rightFollowerPort)
+      } else {
+        new VictorSPX(config.ports.rightFollowerPort)
+      },
       new ADIS16448(new SPI(SPI.Port.kMXP), null),
       driverHardware,
       config.props
