@@ -11,7 +11,6 @@ import com.lynbrookrobotics.eighteen.cubeLift.LiftManualControl
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
 import com.lynbrookrobotics.eighteen.forklift.MoveForkliftDown
 
-
 // https://team846.slab.com/posts/button-mappings-625f4bf7
 object ButtonMappings {
   def setup(robot: CoreRobot): Unit = {
