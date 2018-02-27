@@ -5,7 +5,7 @@ import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPor
 import com.lynbrookrobotics.potassium.control.PIDConfig
 import squants.{Each, Percent}
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
-import squants.space.{Degrees, Feet, Inches}
+import squants.space.{Degrees, Feet, Inches, Turns}
 import squants.time.Seconds
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
@@ -32,6 +32,7 @@ object ConfigGenerator extends App {
       drivetrain = Some(
         DrivetrainConfig(
           ports = DrivetrainPorts(
+            practiceSpeedControllers = false,
             leftPort = 12,
             rightPort = 11,
             leftFollowerPort = 14,
@@ -65,12 +66,16 @@ object ConfigGenerator extends App {
               Percent(0) / (Degrees(1) * Seconds(1)),
               Percent(0) / (Degrees(1) / Seconds(1))
             ),
-            maxTurnVelocity = DegreesPerSecond(90),
             maxCurrent = Amperes(25),
             maxAcceleration = FeetPerSecondSquared(0),
             defaultLookAheadDistance = Feet(2.5),
             blendExponent = 0,
-            track = Inches(21.75)
+            track = Inches(21.75),
+            wheelDiameter = Inches(6),
+            wheelOverEncoderGears = Ratio(
+              Turns(18),
+              Turns(74)
+            )
           )
         )
       ),
@@ -89,8 +94,10 @@ object ConfigGenerator extends App {
             voltageAtBottom = Volts(2.94),
             collectHeight = Inches(10),
             switchHeight = Inches(20),
-            scaleHeight = Inches(30),
-            switchTolerance = Inches(2),
+            lowScaleHeight = Inches(30),
+            highScaleHeight = Inches(30),
+            exchangeHeight = Inches(4),
+            liftPositionTolerance = Inches(2),
             maxMotorOutput = Percent(20),
             maxHeight = Inches(35),
             minHeight = Inches(10)

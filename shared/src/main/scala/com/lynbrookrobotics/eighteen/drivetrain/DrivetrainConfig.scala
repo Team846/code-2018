@@ -6,8 +6,9 @@ import com.lynbrookrobotics.potassium.control.offload.EscConfig
 import com.lynbrookrobotics.potassium.units._
 import squants.electro.ElectricCurrent
 import squants.{Acceleration, Angle, Dimensionless, Each, Length, Velocity}
-import squants.motion.AngularVelocity
-import squants.space.{Inches, Turns}
+import squants.motion.RadiansPerSecond
+import squants.space.Turns
+import squants.time.Seconds
 
 final case class DrivetrainConfig(props: DrivetrainProperties, ports: DrivetrainPorts)
 
@@ -19,19 +20,28 @@ final case class DrivetrainProperties(
   forwardPositionGains: ForwardPositionGains,
   turnVelocityGains: TurnVelocityGains,
   turnPositionGains: TurnPositionGains,
-  maxTurnVelocity: AngularVelocity,
   maxAcceleration: Acceleration,
   maxCurrent: ElectricCurrent,
   defaultLookAheadDistance: Length,
   blendExponent: Double,
-  track: Length
+  track: Length,
+  wheelDiameter: Length,
+  wheelOverEncoderGears: Ratio[Angle, Angle]
 ) extends OffloadedDriveProperties {
-  override val wheelDiameter: Length = Inches(4)
-  override val wheelOverEncoderGears: Ratio[Angle, Angle] = Ratio(Turns(1), Turns(2))
   override val encoderAngleOverTicks: Ratio[Angle, Dimensionless] = Ratio(Turns(1), Each(4096))
   override val escConfig: EscConfig[Length] = EscConfig(
     ticksPerUnit = floorPerTick.recip
   )
+
+  override val maxTurnVelocity = RadiansPerSecond(
+    ((maxLeftVelocity + maxRightVelocity) * Seconds(1)) / track
+  )
 }
 
-final case class DrivetrainPorts(leftPort: Int, rightPort: Int, leftFollowerPort: Int, rightFollowerPort: Int)
+final case class DrivetrainPorts(
+  practiceSpeedControllers: Boolean,
+  leftPort: Int,
+  rightPort: Int,
+  leftFollowerPort: Int,
+  rightFollowerPort: Int
+)
