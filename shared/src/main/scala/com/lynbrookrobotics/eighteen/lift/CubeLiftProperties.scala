@@ -19,7 +19,7 @@ final case class CubeLiftProperties(
   lowScaleHeight: Length,
   highScaleHeight: Length,
   exchangeHeight: Length,
-  switchTolerance: Length,
+  liftPositionTolerance: Length,
   maxMotorOutput: Dimensionless,
   maxHeight: Length,
   minHeight: Length

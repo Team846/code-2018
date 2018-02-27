@@ -24,10 +24,10 @@ final case class DrivetrainProperties(
   maxCurrent: ElectricCurrent,
   defaultLookAheadDistance: Length,
   blendExponent: Double,
-  track: Length
+  track: Length,
+  wheelDiameter: Length,
+  wheelOverEncoderGears: Ratio[Angle, Angle]
 ) extends OffloadedDriveProperties {
-  override val wheelDiameter: Length = Inches(4)
-  override val wheelOverEncoderGears: Ratio[Angle, Angle] = Ratio(Turns(1), Turns(2))
   override val encoderAngleOverTicks: Ratio[Angle, Dimensionless] = Ratio(Turns(1), Each(4096))
   override val escConfig: EscConfig[Length] = EscConfig(
     ticksPerUnit = floorPerTick.recip

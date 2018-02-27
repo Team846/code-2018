@@ -31,7 +31,7 @@ object ButtonMappings {
       }.foreach( // trigger & bottom trigger — [bottom trigger] + [trigger]
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight),
-          Inches(2)
+          cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous and CollectorTasks.collectCube(rollers, clamp, pivot)
       )
     }
@@ -47,7 +47,7 @@ object ButtonMappings {
       }.foreach( // trigger — pivot down, spin rollers in, lift to collect height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight),
-          Inches(2)
+          cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous and CollectorTasks.collectCubeWithoutOpen(rollers, pivot)
       )
     }
@@ -83,7 +83,7 @@ object ButtonMappings {
       }.foreach( // bottom trigger — lift to collect height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight),
-          Inches(2)
+          cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
 
@@ -92,7 +92,7 @@ object ButtonMappings {
       }.foreach( // left trigger — lift to switch height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.switchHeight),
-          Inches(2)
+          cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
 
@@ -101,7 +101,7 @@ object ButtonMappings {
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.lowScaleHeight),
-          Inches(2)
+          cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
 
@@ -110,7 +110,7 @@ object ButtonMappings {
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.lowScaleHeight),
-          Inches(2)
+          cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
 
@@ -119,7 +119,7 @@ object ButtonMappings {
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.highScaleHeight),
-          Inches(2)
+          cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
 
@@ -128,7 +128,7 @@ object ButtonMappings {
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.exchangeHeight),
-          Inches(2)
+          cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
     }

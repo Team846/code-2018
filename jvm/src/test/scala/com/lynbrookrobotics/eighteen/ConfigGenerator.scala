@@ -5,7 +5,7 @@ import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPor
 import com.lynbrookrobotics.potassium.control.PIDConfig
 import squants.{Each, Percent}
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
-import squants.space.{Degrees, Feet, Inches}
+import squants.space.{Degrees, Feet, Inches, Turns}
 import squants.time.Seconds
 import com.lynbrookrobotics.potassium.units.GenericValue._
 import com.lynbrookrobotics.potassium.units._
@@ -70,7 +70,12 @@ object ConfigGenerator extends App {
             maxAcceleration = FeetPerSecondSquared(0),
             defaultLookAheadDistance = Feet(2.5),
             blendExponent = 0,
-            track = Inches(21.75)
+            track = Inches(21.75),
+            wheelDiameter = Inches(6),
+            wheelOverEncoderGears = Ratio(
+              Turns(18),
+              Turns(74)
+            )
           )
         )
       ),

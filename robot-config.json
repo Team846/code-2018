@@ -45,7 +45,7 @@
         0.316,
         "Volts"
       ],
-      "switchTolerance": [
+      "liftPositionTolerance": [
         2,
         "Inches"
       ],
@@ -161,6 +161,20 @@
         25,
         "Inches"
       ],
+      "wheelDiameter": [
+        6,
+        "Inches"
+      ],
+      "wheelOverEncoderGears": {
+        "num": [
+          17,
+          "Turns"
+        ],
+        "den": [
+          74,
+          "Turns"
+        ]
+      },
       "rightVelocityGains": {
         "kd": {
           "den": [
