@@ -17,8 +17,10 @@ import com.lynbrookrobotics.potassium.frc.LEDController
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import edu.wpi.first.networktables.NetworkTableInstance
+
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
+import edu.wpi.first.wpilibj.DriverStation
 
 import scala.util.Try
 
@@ -71,7 +73,10 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   implicit val lightingHardware = hardware.ledHardware.orNull
   implicit val lightingComponent: Option[LEDController] =
-    hardware.ledHardware.map(_ => new LEDController(coreTicks, ???))
+    hardware.ledHardware.map(_ => new LEDController(
+      coreTicks,
+      Signal.constant(DriverStation.Alliance))
+    )
 
   lazy val components: Seq[Component[_]] = Seq(
     climberDeployment,

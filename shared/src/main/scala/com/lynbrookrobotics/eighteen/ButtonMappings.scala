@@ -78,11 +78,23 @@ object ButtonMappings {
       roller <- collectorRollers
       clamp <- collectorClamp
       pivot <- collectorPivot
+      lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(LeftSix)
       }.foreach(
-        visionCubePickup(drivetrainComponent, camera, Feet(1.75), roller, clamp, pivot).toContinuous
+        new WhileBelowPosition(
+          coreTicks.map(_ => cubeLiftProps.get.collectHeight)
+        )(lift).toContinuous
+          and
+        visionCubePickup(
+            drivetrainComponent,
+            camera,
+            Feet(1.75),
+            roller,
+            clamp,
+            pivot
+          ).toContinuous
       )
     }
 
