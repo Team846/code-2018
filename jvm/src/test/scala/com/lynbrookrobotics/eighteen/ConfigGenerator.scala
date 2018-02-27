@@ -97,7 +97,7 @@ object ConfigGenerator extends App {
             lowScaleHeight = Inches(30),
             highScaleHeight = Inches(30),
             exchangeHeight = Inches(4),
-            switchTolerance = Inches(2),
+            liftPositionTolerance = Inches(2),
             maxMotorOutput = Percent(20),
             maxHeight = Inches(35),
             minHeight = Inches(10)

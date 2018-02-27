@@ -7,7 +7,7 @@ import com.lynbrookrobotics.potassium.units._
 import squants.electro.ElectricCurrent
 import squants.{Acceleration, Angle, Dimensionless, Each, Length, Velocity}
 import squants.motion.RadiansPerSecond
-import squants.space.{Inches, Turns}
+import squants.space.Turns
 import squants.time.Seconds
 
 final case class DrivetrainConfig(props: DrivetrainProperties, ports: DrivetrainPorts)

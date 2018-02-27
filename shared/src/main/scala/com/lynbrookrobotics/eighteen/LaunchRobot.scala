@@ -2,22 +2,12 @@ package com.lynbrookrobotics.eighteen
 
 import java.io.{File, FileWriter, PrintWriter}
 
-import com.lynbrookrobotics.eighteen.driver.DriverConfig
-import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
-import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.Signal
-import com.lynbrookrobotics.potassium.control.PIDConfig
 import com.lynbrookrobotics.potassium.frc.WPIClock
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.units.GenericValue._
-import com.lynbrookrobotics.potassium.units._
 import edu.wpi.first.wpilibj.RobotBase
 import edu.wpi.first.wpilibj.hal.HAL
-import squants.electro.{Amperes, Volts}
-import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
-import squants.space.{Degrees, Feet, Inches}
 import squants.time.Seconds
-import squants.{Each, Percent}
 import argonaut.Argonaut._
 
 import scala.io.Source
