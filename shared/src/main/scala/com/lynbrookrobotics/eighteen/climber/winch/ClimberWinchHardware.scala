@@ -6,6 +6,7 @@ final case class ClimberWinchHardware(leftMotor: TalonSRX, middleMotor: TalonSRX
 
 object ClimberWinchHardware {
   def apply(config: ClimberWinchConfig): ClimberWinchHardware = {
+    println(s"Creating TalonSRXs on Ports ${config.ports.leftMotorPort}, ${config.ports.rightMotorPort}, ${config.ports.middleMotorPort}")
     new ClimberWinchHardware(
       new TalonSRX(config.ports.leftMotorPort),
       new TalonSRX(config.ports.middleMotorPort),

@@ -106,6 +106,7 @@ final case class DrivetrainHardware(
 
 object DrivetrainHardware {
   def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
+    println(s"Creating TalonSRX and Victor SPX on ports ${config.ports.leftPort}, ${config.ports.rightPort}, ${config.ports.rightFollowerPort}, ${config.ports.leftFollowerPort}")
     new DrivetrainHardware(
       coreTicks,
       new TalonSRX(config.ports.leftPort),
