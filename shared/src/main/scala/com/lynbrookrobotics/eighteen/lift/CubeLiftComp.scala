@@ -11,16 +11,14 @@ class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardw
     extends Component[OffloadedSignal] {
   override def defaultController: Stream[OffloadedSignal] = coreTicks.mapToConstant(OpenLoop(Each(0)))
 
-  override def applySignal(signal: OffloadedSignal): Unit = {
-    if (hardware.readPotentiometerVoltage == Volts(0) && !signal.isInstanceOf[OpenLoop]) {
-      hardware.talon.applyCommand(OpenLoop(Percent(0)))
-      println("[ERROR] No cube lift potentiometer detected")
-    } else
-      signal match {
-        case openLoopSignal: OpenLoop if openLoopSignal.signal.toPercent.abs > 20 =>
-          hardware.talon.applyCommand(OpenLoop(Percent(20) * openLoopSignal.signal.toPercent.signum))
-        case _ =>
-          hardware.talon.applyCommand(signal)
-      }
+  override def applySignal(signal: OffloadedSignal): Unit = signal match {
+    case OpenLoop(s) =>
+      if (s.abs > Percent(20)) applySignal(OpenLoop(Percent(20) * s.value.signum))
+      else hardware.talon.applyCommand(signal)
+    case _ =>
+      if (hardware.readPotentiometerVoltage == Volts(0)) {
+        applySignal(OpenLoop(Percent(0)))
+        println("[ERROR] No cube lift potentiometer detected")
+      } else hardware.talon.applyCommand(signal)
   }
 }
