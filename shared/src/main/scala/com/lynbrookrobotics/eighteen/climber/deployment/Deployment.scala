@@ -10,7 +10,7 @@ case object DeploymentOn extends DeploymentState
 case object DeploymentOff extends DeploymentState
 
 class Deployment(val coreTicks: Stream[Unit])(implicit hardware: DeploymentHardware)
-  extends Component[DeploymentState] {
+    extends Component[DeploymentState] {
   override def defaultController: Stream[DeploymentState] = coreTicks.mapToConstant(DeploymentOff)
 
   private val check = new SingleOutputChecker(
