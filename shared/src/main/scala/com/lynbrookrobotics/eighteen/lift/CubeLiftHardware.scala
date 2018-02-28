@@ -43,10 +43,12 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
 
 object CubeLiftHardware {
   def apply(config: CubeLiftConfig, coreTicks: Stream[Unit]): CubeLiftHardware = {
-    println(s"Creating TalonSRX on Port ${config.ports.motorPort}")
     CubeLiftHardware(
-      new LazyTalon(
-        t = new TalonSRX(config.ports.motorPort),
+    new LazyTalon(
+        t = {
+          println(s"Creating TalonSRX (motor) on Port ${config.ports.motorPort}")
+          new TalonSRX(config.ports.motorPort)
+        },
         idx = 0,
         timeout = 0,
         defaultPeakOutputReverse = -1,

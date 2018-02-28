@@ -106,13 +106,24 @@ final case class DrivetrainHardware(
 
 object DrivetrainHardware {
   def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
-    println(s"Creating TalonSRX and Victor SPX on ports ${config.ports.leftPort}, ${config.ports.rightPort}, ${config.ports.rightFollowerPort}, ${config.ports.leftFollowerPort}")
     new DrivetrainHardware(
       coreTicks,
-      new TalonSRX(config.ports.leftPort),
-      new TalonSRX(config.ports.rightPort),
-      new VictorSPX(config.ports.leftFollowerPort),
-      new VictorSPX(config.ports.rightFollowerPort),
+      {
+        println(s"Creating new TalonSRX (left) on Port ${config.ports.leftPort}")
+        new TalonSRX(config.ports.leftPort)
+      },
+      {
+        println(s"Creating new TalonSRX (right) on Port ${config.ports.rightPort}")
+        new TalonSRX(config.ports.rightPort)
+      },
+      {
+        println(s"Creating new VictorSPX (left follower) on Port ${config.ports.leftFollowerPort}")
+        new VictorSPX(config.ports.leftFollowerPort)
+      },
+      {
+        println(s"Creating new VictorSPX (right follower) on Port ${config.ports.rightPort}")
+        new VictorSPX(config.ports.rightFollowerPort)
+      },
       new ADIS16448(new SPI(SPI.Port.kMXP), null),
       driverHardware,
       config.props

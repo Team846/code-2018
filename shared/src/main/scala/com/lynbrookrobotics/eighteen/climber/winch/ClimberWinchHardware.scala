@@ -8,9 +8,18 @@ object ClimberWinchHardware {
   def apply(config: ClimberWinchConfig): ClimberWinchHardware = {
     println(s"Creating TalonSRXs on Ports ${config.ports.leftMotorPort}, ${config.ports.rightMotorPort}, ${config.ports.middleMotorPort}")
     new ClimberWinchHardware(
-      new TalonSRX(config.ports.leftMotorPort),
-      new TalonSRX(config.ports.middleMotorPort),
-      new TalonSRX(config.ports.rightMotorPort)
+      {
+        println(s"Creating new TalonSRX (left motor) on Port ${config.ports.leftMotorPort}")
+        new TalonSRX(config.ports.leftMotorPort)
+      },
+      {
+        println(s"Creating new TalonSRX (middle motor) on Port ${config.ports.middleMotorPort}")
+        new TalonSRX(config.ports.middleMotorPort)
+      },
+      {
+        println(s"Creating new TalonSRX (middle motor) on Port ${config.ports.rightMotorPort}")
+        new TalonSRX(config.ports.rightMotorPort)
+      }
     )
   }
 }
