@@ -39,7 +39,7 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
   private val sensors = talon.t.getSensorCollection
   def readPotentiometerVoltage: ElectricPotential = props.talonOverVoltage.recip * Each(sensors.getAnalogInRaw)
   val potentiometerVoltage: Stream[ElectricPotential] =
-    coreTicks.map(_ => readPotentiometerVoltage())
+    coreTicks.map(_ => readPotentiometerVoltage)
 }
 
 object CubeLiftHardware {
