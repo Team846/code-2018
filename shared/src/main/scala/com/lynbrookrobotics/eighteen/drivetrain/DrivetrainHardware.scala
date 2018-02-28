@@ -16,23 +16,23 @@ import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Length, Velocity}
 
 final case class DrivetrainData(
-  leftEncoderVelocity: AngularVelocity,
-  rightEncoderVelocity: AngularVelocity,
-  leftEncoderRotation: Angle,
-  rightEncoderRotation: Angle,
-  gyroVelocities: Value3D[AngularVelocity]
-)
+                                 leftEncoderVelocity: AngularVelocity,
+                                 rightEncoderVelocity: AngularVelocity,
+                                 leftEncoderRotation: Angle,
+                                 rightEncoderRotation: Angle,
+                                 gyroVelocities: Value3D[AngularVelocity]
+                               )
 
 final case class DrivetrainHardware(
-  coreTicks: Stream[Unit],
-  leftSRX: TalonSRX,
-  rightSRX: TalonSRX,
-  leftFollowerSRX: BaseMotorController,
-  rightFollowerSRX: BaseMotorController,
-  gyro: DigitalGyro,
-  driverHardware: DriverHardware,
-  props: DrivetrainProperties
-) extends TwoSidedDriveHardware {
+                                     coreTicks: Stream[Unit],
+                                     leftSRX: TalonSRX,
+                                     rightSRX: TalonSRX,
+                                     leftFollowerSRX: BaseMotorController,
+                                     rightFollowerSRX: BaseMotorController,
+                                     gyro: DigitalGyro,
+                                     driverHardware: DriverHardware,
+                                     props: DrivetrainProperties
+                                   ) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
   val escIdx = 0
@@ -106,15 +106,26 @@ final case class DrivetrainHardware(
 
 object DrivetrainHardware {
   def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
-    println(s"Creating TalonSRX and Victor SPX on ports ${config.ports.leftPort}, ${config.ports.rightPort}, ${config.ports.rightFollowerPort}, ${config.ports.leftFollowerPort}")
     new DrivetrainHardware(
       coreTicks,
-      new TalonSRX(config.ports.leftPort),
-      new TalonSRX(config.ports.rightPort),
-      new VictorSPX(config.ports.leftFollowerPort),
+      {
+        println(s"Creating new TalonSRX (left) on Port ${config.ports.leftPort}")
+        new TalonSRX(config.ports.leftPort)
+      },
+      {
+        println(s"Creating new TalonSRX (right) on Port ${config.ports.rightPort}")
+        new TalonSRX(config.ports.rightPort)
+      },
+      {
+        println(s"Creating new TalonSRX (left follower) on Port ${config.ports.leftFollowerPort}")
+        new VictorSPX(config.ports.leftFollowerPort)
+      },
       if (config.ports.practiceSpeedControllers) {
+        println("Creating TalonSRX instead of VictorSPX because config.ports.practiceSpeedControllers was true")
+        println(s"Creating new TalonSRX (right follower) on Port ${config.ports.rightFollowerPort}")
         new TalonSRX(config.ports.rightFollowerPort)
       } else {
+        println(s"Creating new VictorSPX (right follower) on Port ${config.ports.rightFollowerPort}")
         new VictorSPX(config.ports.rightFollowerPort)
       },
       new ADIS16448(new SPI(SPI.Port.kMXP), null),

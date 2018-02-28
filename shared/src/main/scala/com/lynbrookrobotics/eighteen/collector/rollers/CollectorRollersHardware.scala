@@ -6,10 +6,15 @@ final case class CollectorRollersHardware(rollerLeft: Spark, rollerRight: Spark)
 
 object CollectorRollersHardware {
   def apply(config: CollectorRollersConfig): CollectorRollersHardware = {
-    println(s"Creating new Spark on ${config.ports.rollerLeftPort}, and ${config.ports.rollerRightPort}")
     new CollectorRollersHardware(
-      new Spark(config.ports.rollerLeftPort),
-      new Spark(config.ports.rollerRightPort)
+      {
+        println(s"Creating new Spark (roller left) on Port ${config.ports.rollerLeftPort}")
+        new Spark(config.ports.rollerLeftPort)
+      },
+      {
+        println(s"Creating new Spark (roller right) on Port ${config.ports.rollerRightPort}")
+        new Spark(config.ports.rollerRightPort)
+      }
     )
   }
 }
