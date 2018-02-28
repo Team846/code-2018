@@ -14,7 +14,7 @@ class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardw
   override def applySignal(signal: OffloadedSignal): Unit = {
     if(hardware.readPotentiometerVoltage() == Volts(0) && !signal.isInstanceOf[OpenLoop]) {
       hardware.talon.applyCommand(OpenLoop(Percent(0)))
-      println("NO CUBE LIFT POTENTIOMETER DETECTED")
+      println("[ERROR] No cube lift potentiometer detected")
     } else {
       hardware.talon.applyCommand(signal)
     }
