@@ -10,17 +10,26 @@ class ClimberWinch(val coreTicks: Stream[Unit])(implicit hardware: ClimberWinchH
   extends Component[Dimensionless] {
   override def defaultController: Stream[Dimensionless] = coreTicks.mapToConstant(Each(0))
 
-  private val check = new SingleOutputChecker(
-    "Climber Winch",
-    (hardware.leftMotor.getLastCommand, hardware.middleMotor.getLastCommand, hardware.rightMotor.getLastCommand)
+  private val checkL = new SingleOutputChecker(
+    "Climber Winch Left Motor",
+    hardware.leftMotor.getLastCommand
+  )
+  private val checkM = new SingleOutputChecker(
+    "Climber Winch Middle Motor",
+    hardware.leftMotor.getLastCommand
+  )
+  private val checkR = new SingleOutputChecker(
+    "Climber Winch Right Motor",
+    hardware.leftMotor.getLastCommand
   )
 
-  override def applySignal(signal: Dimensionless) = check.assertSingleOutput(() =>
+  override def applySignal(signal: Dimensionless) = checkL.assertSingleOutput(() => checkM.assertSingleOutput(() => checkR.assertSingleOutput(() =>
     if (signal < Percent(0)) applySignal(Percent(0)) // ratchet
     else {
       hardware.leftMotor.applyCommand(OpenLoop(signal))
       hardware.middleMotor.applyCommand(OpenLoop(signal))
       hardware.rightMotor.applyCommand(OpenLoop(signal))
     }
+  ))
   )
 }
