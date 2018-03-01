@@ -45,7 +45,10 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
 object CubeLiftHardware {
   def apply(config: CubeLiftConfig, coreTicks: Stream[Unit]): CubeLiftHardware = {
     CubeLiftHardware(
-      new LazyTalon(new TalonSRX(config.ports.motorPort))
+      {
+        println(s"Creating lift talon on port ${config.ports.motorPort}")
+        new LazyTalon(new TalonSRX(config.ports.motorPort))
+      }
     )(coreTicks, config.props)
   }
 }
