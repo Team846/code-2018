@@ -300,6 +300,10 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .addDataset(drivetrainHardware.rightPosition.map(_.toFeet).toTimeSeriesNumeric("Right Ground position"))
 
       board
+        .datasetGroup("Drivetrain/Position")
+        .addDataset(drivetrainHardware.forwardPosition.map(_.toFeet).toTimeSeriesNumeric("forward position"))
+
+      board
         .datasetGroup("Drivetrain/Posiition")
         .addDataset(pose.map(_.x.toFeet).toTimeSeriesNumeric("x"))
 

@@ -12,7 +12,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.FeetPerSecondSquared
-import squants.space.{Degrees, Inches}
+import squants.space.{Degrees, Feet, Inches}
 import squants.{Angle, Percent}
 
 
@@ -48,16 +48,27 @@ trait SideAutoGenerator extends AutoGenerator {
     def backOutPostScale(drivetrain: DrivetrainComponent,
                          pose: Stream[Point],
                          relativeAngle: Stream[Angle]): FiniteTask = {
-      new FollowWayPointsWithPosition(
+      new DriveDistance(
+        -Feet(1),
+        Inches(12)
+      )(drivetrain).then(
+        new RotateByAngle(
+          -Degrees(135),
+          Degrees(20),
+          1
+        )(drivetrain)
+      )
+      /*new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchAndScalePoints.backupPostScalePoints,
-        tolerance = Inches(6),
+        tolerance = Feet(1.5),
         position = pose,
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 1,
-        forwardBackwardMode = BackwardsOnly
-      )(drivetrain)
+        forwardBackwardMode = BackwardsOnly,
+        angleDeadband = Degrees(20)
+      )(drivetrain)*/
     }
 
     def pickupSecondCube(drivetrain: DrivetrainComponent,
@@ -173,13 +184,14 @@ trait SideAutoGenerator extends AutoGenerator {
         curr - init
       })
 
+      var iHateMyLife = false
       val pose = XYPosition
         .circularTracking(
           relativeAngle.map(compassToTrigonometric),
           drivetrainHardware.forwardPosition
         ).map(
           p => p + sideStartingPose
-        ).preserve
+        ).preserve.withCheck(_ => {iHateMyLife = true})
 
       startToScaleDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle).then(
         backOutPostScale(drivetrain, pose, relativeAngle)

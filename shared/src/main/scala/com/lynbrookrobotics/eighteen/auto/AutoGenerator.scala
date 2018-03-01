@@ -64,7 +64,9 @@ class AutoGenerator(protected val r: CoreRobot) {
       CollectorTasks.purgeCube(
         collectorRollers,
         collectorPivot
-      ).forDuration(Seconds(0.25)).then(liftElevatorToSwitch(cubeLiftComp).toFinite)
+      ).forDuration(Seconds(0.25)).then(
+        liftElevatorToCollect(cubeLiftComp).toFinite
+      ).then(printTask("done lowering"))
     )
   }
 
@@ -79,16 +81,23 @@ class AutoGenerator(protected val r: CoreRobot) {
         collectorPivot).forDuration(Seconds(0.25))
     )
   }
-  
-  def pickupGroundCube(collectorRollers: CollectorRollers,
-                 collectorClamp: CollectorClamp,
-                 collectorPivot: CollectorPivot,
-                 cubeLift: CubeLiftComp): ContinuousTask = {
+
+  def liftElevatorToCollect(cubeLiftComp: CubeLiftComp): WrapperTask = {
     new WhileAtPosition(
       cubeLiftHardware.position.map(_ => cubeLiftProps.get.collectHeight),
-      cubeLiftProps.get.collectHeight
-    )(cubeLift).apply(
-      CollectorTasks.collectCube(collectorRollers, collectorClamp, collectorPivot)
+      cubeLiftProps.get.liftPositionTolerance
+    )(cubeLiftComp)
+  }
+  
+  def pickupGroundCube(collectorRollers: CollectorRollers,
+                       collectorClamp: CollectorClamp,
+                       collectorPivot: CollectorPivot,
+                       cubeLift: CubeLiftComp): ContinuousTask = {
+    liftElevatorToCollect(cubeLift).apply(
+      CollectorTasks.collectCube(
+        collectorRollers,
+        collectorClamp,
+        collectorPivot)
     )
   }
 

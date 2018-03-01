@@ -34,10 +34,14 @@ object SameSideSwitchAndScalePoints {
     )
   )
   val pickupSecondCubePoints = Seq(
-    backupPostScalePoints.last,
+//    backupPostScalePoints.last,
     Point(
-      -Inches(41.8),
-      Inches(228.3) - smallRoomFactor
+      toScalePoints.last.x,
+      toScalePoints.last.y - Feet(1)
+    ),
+    Point(
+      -Inches(41.8 - 10),
+      Inches(228.3 + 6) - smallRoomFactor
     )
   )
   val pickupThirdCubePoints = Seq(

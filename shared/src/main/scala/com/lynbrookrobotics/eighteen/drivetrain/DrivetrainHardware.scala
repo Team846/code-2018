@@ -111,7 +111,8 @@ final case class DrivetrainHardware(
   }
 
   override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
-  override lazy val turnPosition: Stream[Angle] = turnVelocity.integral.preserve
+  override lazy val turnPosition: Stream[Angle] = turnVelocity.integral
+  turnPosition.foreach(_ => {})
 }
 
 object DrivetrainHardware {
