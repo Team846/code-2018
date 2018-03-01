@@ -24,15 +24,15 @@ final case class DrivetrainData(
 )
 
 final case class DrivetrainHardware(
-                                     coreTicks: Stream[Unit],
-                                     leftSRX: TalonSRX,
-                                     rightSRX: TalonSRX,
-                                     leftFollowerSRX: BaseMotorController,
-                                     rightFollowerSRX: BaseMotorController,
-                                     gyro: DigitalGyro,
-                                     driverHardware: DriverHardware,
-                                     props: DrivetrainProperties
-                                   ) extends TwoSidedDriveHardware {
+  coreTicks: Stream[Unit],
+  leftSRX: TalonSRX,
+  rightSRX: TalonSRX,
+  leftFollowerSRX: BaseMotorController,
+  rightFollowerSRX: BaseMotorController,
+  gyro: DigitalGyro,
+  driverHardware: DriverHardware,
+  props: DrivetrainProperties
+) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
   val escIdx = 0
@@ -107,16 +107,13 @@ final case class DrivetrainHardware(
 object DrivetrainHardware {
   def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
     new DrivetrainHardware(
-      coreTicks,
-      {
+      coreTicks, {
         println(s"Creating new TalonSRX (left) on Port ${config.ports.leftPort}")
         new TalonSRX(config.ports.leftPort)
-      },
-      {
+      }, {
         println(s"Creating new TalonSRX (right) on Port ${config.ports.rightPort}")
         new TalonSRX(config.ports.rightPort)
-      },
-      {
+      }, {
         println(s"Creating new TalonSRX (left follower) on Port ${config.ports.leftFollowerPort}")
         new VictorSPX(config.ports.leftFollowerPort)
       },
