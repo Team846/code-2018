@@ -14,7 +14,7 @@ class CollectorClamp(val coreTicks: Stream[Unit])(implicit hardware: CollectorCl
   extends Component[CollectorClampState] {
   override def defaultController: Stream[CollectorClampState] = coreTicks.mapToConstant(ClosedClamp)
 
-  val check = new SingleOutputChecker(
+  private val check = new SingleOutputChecker(
     "Collector Clamp Solenoid",
     hardware.solenoid.get
   )

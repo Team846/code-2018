@@ -43,12 +43,12 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     }
   }
 
-  val checkLM = new SingleOutputChecker(
+  private val checkLM = new SingleOutputChecker(
     "Drivetrain Left Master Talon",
     hardware.left.getLastCommand
   )
 
-  val checkRM = new SingleOutputChecker(
+  private val checkRM = new SingleOutputChecker(
     "Drivetrain Right Master Talon",
     hardware.right.getLastCommand
   )

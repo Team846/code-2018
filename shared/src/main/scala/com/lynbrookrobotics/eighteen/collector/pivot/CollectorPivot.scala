@@ -13,7 +13,7 @@ class CollectorPivot(val coreTicks: Stream[Unit])(implicit hardware: CollectorPi
     extends Component[CollectorPivotState] {
   override def defaultController: Stream[CollectorPivotState] = coreTicks.mapToConstant(PivotUpState)
 
-  val check = new SingleOutputChecker(
+  private val check = new SingleOutputChecker(
     "Collector Pivot Solenoid",
     hardware.pivotSolenoid.get
   )
