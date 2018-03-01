@@ -77,7 +77,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   def addAutonomousRoutine(id: Int)(task: => ContinuousTask): Unit = {
     if (autonomousRoutines.contains(id)) {
-      println(s"WARNING: overriding autonomous routine $id")
+      println(s"[WARNING] overriding autonomous routine $id")
     }
 
     autonomousRoutines(id) = () => task
@@ -109,7 +109,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
     autonomousRoutines
       .getOrElse(autoID, {
-        println(s"ERROR: autonomous routine $autoID not found")
+        println(s"[ERROR] autonomous routine $autoID not found")
         () =>
           FiniteTask.empty.toContinuous
       })

@@ -46,7 +46,7 @@ object CubeLiftHardware {
   def apply(config: CubeLiftConfig, coreTicks: Stream[Unit]): CubeLiftHardware = {
     CubeLiftHardware(
       {
-        println(s"Creating lift talon on port ${config.ports.motorPort}")
+        println(s"[DEBUG] Creating lift talon on port ${config.ports.motorPort}")
         new LazyTalon(new TalonSRX(config.ports.motorPort))
       }
     )(coreTicks, config.props)

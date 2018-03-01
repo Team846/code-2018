@@ -9,13 +9,13 @@ object ClimberWinchHardware {
   def apply(config: ClimberWinchConfig): ClimberWinchHardware = {
     new ClimberWinchHardware(
       {
-        println(s"Creating climber winch left talon on port ${config.ports.leftMotorPort}")
+        println(s"[DEBUG] Creating climber winch left talon on port ${config.ports.leftMotorPort}")
         new LazyTalon(new TalonSRX(config.ports.leftMotorPort))
       }, {
-        println(s"Creating climber winch middle talon on port ${config.ports.middleMotorPort}")
+        println(s"[DEBUG] Creating climber winch middle talon on port ${config.ports.middleMotorPort}")
         new LazyTalon(new TalonSRX(config.ports.middleMotorPort))
       }, {
-        println(s"Creating climber winch right talon on port ${config.ports.rightMotorPort}")
+        println(s"[DEBUG] Creating climber winch right talon on port ${config.ports.rightMotorPort}")
         new LazyTalon(new TalonSRX(config.ports.rightMotorPort))
       }
     )
