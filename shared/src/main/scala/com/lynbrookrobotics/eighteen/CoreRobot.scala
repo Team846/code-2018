@@ -184,6 +184,12 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
           coreTicks.map(_ => cubeLiftHardware.talon.t.getOutputCurrent).toTimeSeriesNumeric("TalonSRX Current Draw")
         )
     }
+
+    collectorClamp.foreach { c =>
+      board
+        .datasetGroup("Collector/Proximity")
+        .addDataset(collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity Sensor Voltage"))
+    }
   }
 }
 
