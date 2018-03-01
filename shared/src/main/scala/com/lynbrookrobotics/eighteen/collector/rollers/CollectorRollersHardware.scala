@@ -8,10 +8,10 @@ object CollectorRollersHardware {
   def apply(config: CollectorRollersConfig): CollectorRollersHardware = {
     new CollectorRollersHardware(
       {
-        println(s"Creating new Spark (roller left) on Port ${config.ports.rollerLeftPort}")
+        println(s"Creating roller left spark on port ${config.ports.rollerLeftPort}")
         new Spark(config.ports.rollerLeftPort)
       }, {
-        println(s"Creating new Spark (roller right) on Port ${config.ports.rollerRightPort}")
+        println(s"Creating roller right spark on port ${config.ports.rollerRightPort}")
         new Spark(config.ports.rollerRightPort)
       }
     )
