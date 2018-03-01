@@ -15,8 +15,7 @@ object CollectorClampHardware {
       {
         println(s"[DEBUG] Creating clamp solenoid on port ${config.ports.pneumaticPort}")
         new Solenoid(config.ports.pneumaticPort)
-      },
-      {
+      }, {
         println(s"[DEBUG] Creating clamp proximity sensor on port ${config.ports.proximityPort}")
         new ProximitySensor(config.ports.proximityPort)
       },
