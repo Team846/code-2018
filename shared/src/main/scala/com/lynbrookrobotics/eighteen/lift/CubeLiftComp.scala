@@ -9,7 +9,7 @@ import squants.electro.Volts
 import squants.{Each, Percent}
 
 class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardware)
-  extends Component[OffloadedSignal] {
+    extends Component[OffloadedSignal] {
   override def defaultController: Stream[OffloadedSignal] = coreTicks.mapToConstant(OpenLoop(Each(0)))
 
   private val check = new SingleOutputChecker(

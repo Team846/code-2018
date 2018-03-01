@@ -10,7 +10,7 @@ object ClimberWinchHardware {
     new ClimberWinchHardware(
       new LazyTalon(new TalonSRX(config.ports.leftMotorPort)),
       new LazyTalon(new TalonSRX(config.ports.middleMotorPort)),
-      new LazyTalon( new TalonSRX(config.ports.rightMotorPort))
+      new LazyTalon(new TalonSRX(config.ports.rightMotorPort))
     )
   }
 }

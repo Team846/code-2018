@@ -7,7 +7,7 @@ import com.lynbrookrobotics.potassium.streams._
 import squants.{Dimensionless, Each, Percent}
 
 class ClimberWinch(val coreTicks: Stream[Unit])(implicit hardware: ClimberWinchHardware)
-  extends Component[Dimensionless] {
+    extends Component[Dimensionless] {
   override def defaultController: Stream[Dimensionless] = coreTicks.mapToConstant(Each(0))
 
   private val checkL = new SingleOutputChecker(
@@ -23,13 +23,20 @@ class ClimberWinch(val coreTicks: Stream[Unit])(implicit hardware: ClimberWinchH
     hardware.leftMotor.getLastCommand
   )
 
-  override def applySignal(signal: Dimensionless) = checkL.assertSingleOutput(() => checkM.assertSingleOutput(() => checkR.assertSingleOutput(() =>
-    if (signal < Percent(0)) applySignal(Percent(0)) // ratchet
-    else {
-      hardware.leftMotor.applyCommand(OpenLoop(signal))
-      hardware.middleMotor.applyCommand(OpenLoop(signal))
-      hardware.rightMotor.applyCommand(OpenLoop(signal))
-    }
-  ))
-  )
+  override def applySignal(signal: Dimensionless) =
+    checkL.assertSingleOutput(
+      () =>
+        checkM.assertSingleOutput(
+          () =>
+            checkR.assertSingleOutput(
+              () =>
+                if (signal < Percent(0)) applySignal(Percent(0)) // ratchet
+                else {
+                  hardware.leftMotor.applyCommand(OpenLoop(signal))
+                  hardware.middleMotor.applyCommand(OpenLoop(signal))
+                  hardware.rightMotor.applyCommand(OpenLoop(signal))
+              }
+          )
+      )
+    )
 }
