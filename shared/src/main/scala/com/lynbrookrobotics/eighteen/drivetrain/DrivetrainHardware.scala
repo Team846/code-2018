@@ -108,24 +108,27 @@ object DrivetrainHardware {
   def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
     new DrivetrainHardware(
       coreTicks, {
-        println(s"Creating new TalonSRX (left) on Port ${config.ports.leftPort}")
+        println(s"Creating driver left master talon on port ${config.ports.leftPort}")
         new TalonSRX(config.ports.leftPort)
       }, {
-        println(s"Creating new TalonSRX (right) on Port ${config.ports.rightPort}")
+        println(s"Creating driver right master talon on port ${config.ports.rightPort}")
         new TalonSRX(config.ports.rightPort)
       }, {
-        println(s"Creating new TalonSRX (left follower) on Port ${config.ports.leftFollowerPort}")
+        println(s"Creating driver left follower victor on port ${config.ports.leftFollowerPort}")
         new VictorSPX(config.ports.leftFollowerPort)
       },
       if (config.ports.practiceSpeedControllers) {
         println("Creating TalonSRX instead of VictorSPX because config.ports.practiceSpeedControllers was true")
-        println(s"Creating new TalonSRX (right follower) on Port ${config.ports.rightFollowerPort}")
+        println(s"Creating driver right follower talon on port ${config.ports.rightFollowerPort}")
         new TalonSRX(config.ports.rightFollowerPort)
       } else {
-        println(s"Creating new VictorSPX (right follower) on Port ${config.ports.rightFollowerPort}")
+        println(s"Creating driver right follower victor on port ${config.ports.rightFollowerPort}")
         new VictorSPX(config.ports.rightFollowerPort)
       },
-      new ADIS16448(new SPI(SPI.Port.kMXP), null),
+      {
+        println(s"[DEBUG] Creating ADIS16448 on port ${SPI.Port.kMXP}")
+        new ADIS16448(new SPI(SPI.Port.kMXP), null)
+      },
       driverHardware,
       config.props
     )
