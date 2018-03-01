@@ -4,8 +4,12 @@ object DefaultConfig {
   val json = """{
                |  "cubeLift": {
                |    "props": {
-               |      "scaleHeight": [
-               |        30,
+               |      "lowScaleHeight": [
+               |        66,
+               |        "Inches"
+               |      ],
+               |      "highScaleHeight": [
+               |        68,
                |        "Inches"
                |      ],
                |      "pidConfig": {

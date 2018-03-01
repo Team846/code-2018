@@ -45,15 +45,15 @@ class AutoGenerator(protected val r: CoreRobot) {
 
   def liftElevatorToScale(cubeLiftComp: CubeLiftComp): WrapperTask = {
     new WhileAtPosition(
-      cubeLiftHardware.position.map(_ => cubeLiftProps.get.scaleHeight),
-      cubeLiftProps.get.switchTolerance
+      cubeLiftHardware.position.map(_ => cubeLiftProps.get.lowScaleHeight),
+      cubeLiftProps.get.liftPositionTolerance
     )(cubeLiftComp)
   }
   
   def liftElevatorToSwitch(cubeLiftComp: CubeLiftComp): WrapperTask = {
     new WhileAtPosition(
       cubeLiftHardware.position.map(_ => cubeLiftProps.get.switchHeight),
-      cubeLiftProps.get.switchTolerance
+      cubeLiftProps.get.liftPositionTolerance
     )(cubeLiftComp)
   }
   

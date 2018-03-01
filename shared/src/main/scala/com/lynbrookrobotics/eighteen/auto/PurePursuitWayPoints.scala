@@ -8,7 +8,7 @@ object StartingPose {
   val robotWidth = Feet(3)
   val startingPose = Point(-robotWidth / 2, robotLength / 2)
 
-  val smallRoomFactor = Feet(5)
+  val smallRoomFactor = Feet(0)
 }
 
 object SameSideSwitchAndScalePoints {
@@ -21,6 +21,7 @@ object SameSideSwitchAndScalePoints {
       Inches(285.2) - smallRoomFactor
     )
   )
+
   val backupPostScalePoints = Seq(
     toScalePoints.last,
     Point(

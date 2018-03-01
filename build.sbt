@@ -21,7 +21,7 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-commons" % potassiumVersion,
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-frc" % potassiumVersion,
     libraryDependencies += "com.lynbrookrobotics" %%% "potassium-config" % potassiumVersion,
-    libraryDependencies += "com.lynbrookrobotics" %%% "funky-dashboard" % "0.3.0"
+    libraryDependencies += "com.lynbrookrobotics" %%% "funky-dashboard" % "0.3.1"
   )
   .jvmSettings(
     scalaVersion := "2.12.4",

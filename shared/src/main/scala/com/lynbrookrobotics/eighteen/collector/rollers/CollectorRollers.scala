@@ -19,7 +19,7 @@ class CollectorRollers(val coreTicks: Stream[Unit])(
   }
 
   override def applySignal(signal: (Dimensionless, Dimensionless)): Unit = {
-    hardware.rollerLeft.set(ControlMode.PercentOutput, signal._1.toEach)
-    hardware.rollerRight.set(ControlMode.PercentOutput, signal._2.toEach)
+    hardware.rollerLeft.set(signal._1.toEach)
+    hardware.rollerRight.set(signal._2.toEach)
   }
 }

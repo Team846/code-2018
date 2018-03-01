@@ -120,17 +120,12 @@ object DrivetrainHardware {
       coreTicks,
       new TalonSRX(config.ports.leftPort),
       new TalonSRX(config.ports.rightPort),
-<<<<<<< HEAD
       new VictorSPX(config.ports.leftFollowerPort),
       if (config.ports.practiceSpeedControllers) {
         new TalonSRX(config.ports.rightFollowerPort)
       } else {
         new VictorSPX(config.ports.rightFollowerPort)
       },
-=======
-      new /*VictorSPX*/TalonSRX(config.ports.leftFollowerPort),
-      new /*VictorSPX*/TalonSRX(config.ports.rightFollowerPort),
->>>>>>> Add 3 cube autos starting from the side
       new ADIS16448(new SPI(SPI.Port.kMXP), null),
       driverHardware,
       config.props

@@ -113,61 +113,55 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   println(" before adding ")
   for {
     drivetrain <- drivetrain
+    collectorRollers <- collectorRollers
+    collectorClamp <- collectorClamp
+    collectorPivot <- collectorPivot
+    cubeLiftComp <- cubeLiftComp
   } {
     addAutonomousRoutine(3) {
       generator.SameSideSwitchAndScale.scaleSwitch3Cube(
         drivetrain,
-        null,
-        null,
-        null,
-        null/*collectorRollers,
+        collectorRollers,
         collectorClamp,
-        collectorPivot*/).toContinuous
+        collectorPivot,
+        cubeLiftComp).toContinuous
     }
 
     addAutonomousRoutine(4) {
       generator.SameSideSwitchOppositeScale.scaleSwitch3CubeAuto(
         drivetrain,
-        null,
-        null,
-        null,
-        null
-        /*collectorRollers,
+        collectorRollers,
         collectorClamp,
-        collectorPivot*/).toContinuous
+        collectorPivot,
+        cubeLiftComp).toContinuous
     }
 
     addAutonomousRoutine(5) {
       generator.OppositeSideSwitchSameSideScale.scaleSwitch3CubeAuto(
         drivetrain,
-        null,
-        null,
-        null,
-        null
-        /*collectorRollers,
-        collectorClamp*/).toContinuous
+        collectorRollers,
+        collectorClamp,
+        collectorPivot,
+        cubeLiftComp).toContinuous
     }
 
     addAutonomousRoutine(6) {
       generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
         drivetrain,
-        null,
-        null,
-        null,
-        null
-        /*collectorRollers,
-        collectorClamp*/).toContinuous
+        collectorRollers,
+        collectorClamp,
+        collectorPivot,
+        cubeLiftComp).toContinuous
     }
 
-    println("adding?")
     import generator._
     addAutonomousRoutine(7) {
-      printTask("before drive ").then(new DriveDistanceStraight(
+      new DriveDistanceStraight(
         Feet(10),
         Inches(10),
         Degrees(10),
         Percent(50)
-      )(drivetrain)).then(printTask("ended driving straight")).toContinuous
+      )(drivetrain).toContinuous
     }
 
     addAutonomousRoutine(8) {
@@ -257,23 +251,26 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         ).map(
         p => p + generator.sideStartingPose
       ).preserve
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(pose.map(_.x.toFeet).toTimeSeriesNumeric("x"))
 
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(pose.map(_.y.toFeet).toTimeSeriesNumeric("y"))
-
-
-
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(drivetrainHardware.leftVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("forward Velocity"))
       board
         .datasetGroup("Drivetrain/Velocity")
         .addDataset(
           drivetrainHardware.rightVelocity.derivative.map(_.toFeetPerSecondSquared).toTimeSeriesNumeric("forward acceleration"))
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(
+          drivetrainHardware.turnVelocity.derivative.map(_.toDegreesPerSecondSquared).toTimeSeriesNumeric("forward velocity"))
+      board
+        .datasetGroup("Drivetrain/Current")
+        .addDataset(
+          coreTicks.map(_ => drivetrainHardware.left.t.getOutputCurrent).toTimeSeriesNumeric("left master current")
+        )
+
+      board
+        .datasetGroup("Drivetrain/Current")
+        .addDataset(
+          coreTicks.map(_ => drivetrainHardware.right.t.getOutputCurrent).toTimeSeriesNumeric("right master current")
+        )
 
       board
         .datasetGroup("Drivetrain/Velocity")
@@ -303,9 +300,23 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .addDataset(drivetrainHardware.rightPosition.map(_.toFeet).toTimeSeriesNumeric("Right Ground position"))
 
       board
+        .datasetGroup("Drivetrain/Posiition")
+        .addDataset(pose.map(_.x.toFeet).toTimeSeriesNumeric("x"))
+
+      board
+        .datasetGroup("Drivetrain/Posiition")
+        .addDataset(pose.map(_.y.toFeet).toTimeSeriesNumeric("y"))
+
+      board
           .datasetGroup("Drivetrain/Gyro")
           .addDataset(drivetrainHardware.turnPosition.map(_.toDegrees).toTimeSeriesNumeric("angular position"))
 
+    }
+
+    collectorClamp.foreach { clamp  =>
+      board
+          .datasetGroup("CollectorClamp/ir")
+            .addDataset(collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity sensor voltage"))
     }
 
     cubeLiftComp.foreach { l =>
