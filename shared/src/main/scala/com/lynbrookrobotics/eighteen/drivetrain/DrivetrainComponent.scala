@@ -43,22 +43,13 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     }
   }
 
-  private val checkLM = new SingleOutputChecker(
-    "Drivetrain Left Master Talon",
-    hardware.left.getLastCommand
+  private val check = new SingleOutputChecker(
+    "Drivetrain Left Master Talon (left, right)",
+    (hardware.left.getLastCommand, hardware.right.getLastCommand)
   )
 
-  private val checkRM = new SingleOutputChecker(
-    "Drivetrain Right Master Talon",
-    hardware.right.getLastCommand
-  )
-
-  override def applySignal(signal: TwoSided[OffloadedSignal]) =
-    checkLM.assertSingleOutput(
-      () =>
-        checkRM.assertSingleOutput { () =>
-          hardware.left.applyCommand(signal.left)
-          hardware.right.applyCommand(signal.right)
-      }
-    )
+  override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput { () =>
+    hardware.left.applyCommand(signal.left)
+    hardware.right.applyCommand(signal.right)
+  }
 }
