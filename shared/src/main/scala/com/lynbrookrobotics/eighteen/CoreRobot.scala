@@ -188,7 +188,9 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     collectorClamp.foreach { c =>
       board
         .datasetGroup("Collector/Proximity")
-        .addDataset(collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity Sensor Voltage"))
+        .addDataset(
+          collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity Sensor Voltage")
+        )
     }
   }
 }
