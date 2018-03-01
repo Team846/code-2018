@@ -7,7 +7,10 @@ final case class CollectorPivotHardware(pivotSolenoid: Solenoid)
 object CollectorPivotHardware {
   def apply(config: CollectorPivotConfig): CollectorPivotHardware = {
     CollectorPivotHardware(
-      new Solenoid(config.pneumaticPort)
+      {
+        println(s"[DEBUG] Creating pivot solenoid on port ${config.pneumaticPort}")
+        new Solenoid(config.pneumaticPort)
+      }
     )
   }
 }
