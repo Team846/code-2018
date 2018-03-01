@@ -37,23 +37,15 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
     nativeReading.map(props.fromNative)
 
   private val sensors = talon.t.getSensorCollection
-  val potVoltage: Stream[ElectricPotential] =
-    coreTicks.map(_ => props.talonOverVoltage.recip * Each(sensors.getAnalogInRaw))
+  def readPotentiometerVoltage: ElectricPotential = props.talonOverVoltage.recip * Each(sensors.getAnalogInRaw)
+  val potentiometerVoltage: Stream[ElectricPotential] =
+    coreTicks.map(_ => readPotentiometerVoltage)
 }
 
 object CubeLiftHardware {
   def apply(config: CubeLiftConfig, coreTicks: Stream[Unit]): CubeLiftHardware = {
     CubeLiftHardware(
-      new LazyTalon(
-        t = {
-          println(s"Creating TalonSRX (motor) on Port ${config.ports.motorPort}")
-          new TalonSRX(config.ports.motorPort)
-        },
-        idx = 0,
-        timeout = 0,
-        defaultPeakOutputReverse = -1,
-        defaultPeakOutputForward = +1
-      )
+      new LazyTalon(new TalonSRX(config.ports.motorPort))
     )(coreTicks, config.props)
   }
 }

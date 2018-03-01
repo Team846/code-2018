@@ -39,9 +39,9 @@ final case class DrivetrainHardware(
   val escTout = 0
 
   val left /*Back*/ =
-    new LazyTalon(leftSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
+    new LazyTalon(leftSRX)
   val right /*Back*/ =
-    new LazyTalon(rightSRX, escIdx, escTout, defaultPeakOutputReverse = -1.0, defaultPeakOutputForward = 1.0)
+    new LazyTalon(rightSRX)
 
   leftFollowerSRX.follow(left.t)
   rightFollowerSRX.follow(right.t)

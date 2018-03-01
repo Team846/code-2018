@@ -168,7 +168,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     cubeLiftComp.foreach { l =>
       board
         .datasetGroup("CubeLift/Position")
-        .addDataset(cubeLiftHardware.potVoltage.map(_.toVolts).toTimeSeriesNumeric("Potentiometer Voltage"))
+        .addDataset(cubeLiftHardware.potentiometerVoltage.map(_.toVolts).toTimeSeriesNumeric("Potentiometer Voltage"))
 
       board
         .datasetGroup("CubeLift/Position")
@@ -182,6 +182,14 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .datasetGroup("CubeLift/Current")
         .addDataset(
           coreTicks.map(_ => cubeLiftHardware.talon.t.getOutputCurrent).toTimeSeriesNumeric("TalonSRX Current Draw")
+        )
+    }
+
+    collectorClamp.foreach { c =>
+      board
+        .datasetGroup("Collector/Proximity")
+        .addDataset(
+          collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity Sensor Voltage")
         )
     }
   }
