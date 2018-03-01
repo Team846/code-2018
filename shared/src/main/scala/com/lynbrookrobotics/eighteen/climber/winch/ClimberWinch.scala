@@ -1,26 +1,26 @@
 package com.lynbrookrobotics.eighteen.climber.winch
 
-import com.ctre.phoenix.motorcontrol.ControlMode
 import com.lynbrookrobotics.eighteen.SingleOutputChecker
 import com.lynbrookrobotics.potassium.Component
-import squants.{Dimensionless, Each, Percent}
+import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal.OpenLoop
 import com.lynbrookrobotics.potassium.streams._
+import squants.{Dimensionless, Each, Percent}
 
 class ClimberWinch(val coreTicks: Stream[Unit])(implicit hardware: ClimberWinchHardware)
-    extends Component[Dimensionless] {
+  extends Component[Dimensionless] {
   override def defaultController: Stream[Dimensionless] = coreTicks.mapToConstant(Each(0))
 
   private val check = new SingleOutputChecker(
-    "Cube Lift Talon",
-    (hardware.leftMotor.)
+    "Climber Winch",
+    (hardware.leftMotor.getLastCommand, hardware.middleMotor.getLastCommand, hardware.rightMotor.getLastCommand)
   )
 
-  override def applySignal(signal: Dimensionless): Unit = {
+  override def applySignal(signal: Dimensionless) = check.assertSingleOutput(() =>
     if (signal < Percent(0)) applySignal(Percent(0)) // ratchet
     else {
-      hardware.leftMotor.set(ControlMode.PercentOutput, signal.toEach)
-      hardware.middleMotor.set(ControlMode.PercentOutput, signal.toEach)
-      hardware.rightMotor.set(ControlMode.PercentOutput, signal.toEach)
+      hardware.leftMotor.applyCommand(OpenLoop(signal))
+      hardware.middleMotor.applyCommand(OpenLoop(signal))
+      hardware.rightMotor.applyCommand(OpenLoop(signal))
     }
-  }
+  )
 }
