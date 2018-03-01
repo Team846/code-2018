@@ -124,8 +124,7 @@ object DrivetrainHardware {
       } else {
         println(s"[DEBUG] Creating driver right follower victor on port ${config.ports.rightFollowerPort}")
         new VictorSPX(config.ports.rightFollowerPort)
-      },
-      {
+      }, {
         println(s"[DEBUG] Creating ADIS16448 on port ${SPI.Port.kMXP}")
         new ADIS16448(new SPI(SPI.Port.kMXP), null)
       },
