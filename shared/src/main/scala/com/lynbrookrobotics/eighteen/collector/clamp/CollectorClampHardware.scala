@@ -12,8 +12,14 @@ final case class CollectorClampHardware(solenoid: Solenoid, proximity: Proximity
 object CollectorClampHardware {
   def apply(config: CollectorClampConfig, coreTicks: Stream[Unit]): CollectorClampHardware = {
     new CollectorClampHardware(
-      new Solenoid(config.ports.pneumaticPort),
-      new ProximitySensor(config.ports.proximityPort),
+      {
+        println(s"[DEBUG] Creating clamp solenoid on port ${config.ports.pneumaticPort}")
+        new Solenoid(config.ports.pneumaticPort)
+      },
+      {
+        println(s"[DEBUG] Creating clamp proximity sensor on port ${config.ports.proximityPort}")
+        new ProximitySensor(config.ports.proximityPort)
+      },
       coreTicks
     )
   }
