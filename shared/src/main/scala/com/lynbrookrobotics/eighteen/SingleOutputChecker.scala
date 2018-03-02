@@ -1,7 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
 class SingleOutputChecker[T](hardwareName: String, get: => T) {
-
   private var lastOutput: Option[T] = None
 
   def assertSingleOutput(output: => Unit): Unit = {
