@@ -17,7 +17,7 @@ class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardw
     hardware.talon.getLastCommand
   )
 
-  override def applySignal(signal: OffloadedSignal): Unit = check.assertSingleOutput { () =>
+  override def applySignal(signal: OffloadedSignal): Unit = check.assertSingleOutput {
     signal match {
       case OpenLoop(s) =>
         if (s.abs > Percent(20)) applySignal(OpenLoop(Percent(20) * s.value.signum))

@@ -48,7 +48,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     (hardware.left.getLastCommand, hardware.right.getLastCommand)
   )
 
-  override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput { () =>
+  override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput {
     hardware.left.applyCommand(signal.left)
     hardware.right.applyCommand(signal.right)
   }

@@ -23,7 +23,7 @@ class CollectorRollers(val coreTicks: Stream[Unit])(
     (hardware.rollerLeft.get, hardware.rollerRight.get)
   )
 
-  override def applySignal(signal: (Dimensionless, Dimensionless)): Unit = check.assertSingleOutput { () =>
+  override def applySignal(signal: (Dimensionless, Dimensionless)): Unit = check.assertSingleOutput {
     hardware.rollerLeft.set(signal._1.toEach)
     hardware.rollerRight.set(signal._2.toEach)
   }
