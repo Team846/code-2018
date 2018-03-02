@@ -19,13 +19,13 @@ class Forklift(val coreTicks: Stream[Unit])(implicit hardware: ForkliftHardware)
   )
 
   override def applySignal(signal: ForkliftState): Unit = check.assertSingleOutput {
-        signal match {
-          case ForkliftUp => {
-            hardware.forkliftSolenoid.set(false)
-          }
-          case ForkliftDown => {
-            hardware.forkliftSolenoid.set(true)
-          }
+    signal match {
+      case ForkliftUp => {
+        hardware.forkliftSolenoid.set(false)
+      }
+      case ForkliftDown => {
+        hardware.forkliftSolenoid.set(true)
       }
     }
+  }
 }

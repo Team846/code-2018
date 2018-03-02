@@ -7,7 +7,7 @@ import com.lynbrookrobotics.potassium.streams._
 import squants.{Dimensionless, Each, Percent}
 
 class ClimberWinch(val coreTicks: Stream[Unit])(implicit hardware: ClimberWinchHardware)
-  extends Component[Dimensionless] {
+    extends Component[Dimensionless] {
   override def defaultController: Stream[Dimensionless] = coreTicks.mapToConstant(Each(0))
 
   private val check = new SingleOutputChecker(

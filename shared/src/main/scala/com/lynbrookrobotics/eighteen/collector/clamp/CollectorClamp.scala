@@ -19,9 +19,9 @@ class CollectorClamp(val coreTicks: Stream[Unit])(implicit hardware: CollectorCl
   )
 
   override def applySignal(signal: CollectorClampState): Unit = check.assertSingleOutput {
-        signal match {
-          case ClosedClamp => hardware.solenoid.set(false)
-          case OpenClamp   => hardware.solenoid.set(true)
-      }
+    signal match {
+      case ClosedClamp => hardware.solenoid.set(false)
+      case OpenClamp   => hardware.solenoid.set(true)
     }
+  }
 }
