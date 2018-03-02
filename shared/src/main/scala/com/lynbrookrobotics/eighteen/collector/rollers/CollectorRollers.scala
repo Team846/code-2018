@@ -18,22 +18,13 @@ class CollectorRollers(val coreTicks: Stream[Unit])(
     }
   }
 
-  private val checkL = new SingleOutputChecker(
-    "Collector Rollers Left ESC",
-    hardware.rollerLeft.get
+  private val check = new SingleOutputChecker(
+    "Collector Rollers Talons (left, right)",
+    (hardware.rollerLeft.get, hardware.rollerRight.get)
   )
 
-  private val checkR = new SingleOutputChecker(
-    "Collector Rollers Right ESC",
-    hardware.rollerRight.get
-  )
-
-  override def applySignal(signal: (Dimensionless, Dimensionless)): Unit =
-    checkL.assertSingleOutput(
-      () =>
-        checkR.assertSingleOutput { () =>
-          hardware.rollerLeft.set(signal._1.toEach)
-          hardware.rollerRight.set(signal._2.toEach)
-      }
-    )
+  override def applySignal(signal: (Dimensionless, Dimensionless)): Unit = check.assertSingleOutput {
+    hardware.rollerLeft.set(signal._1.toEach)
+    hardware.rollerRight.set(signal._2.toEach)
+  }
 }

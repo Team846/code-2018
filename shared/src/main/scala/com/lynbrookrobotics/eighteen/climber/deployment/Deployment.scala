@@ -18,7 +18,7 @@ class Deployment(val coreTicks: Stream[Unit])(implicit hardware: DeploymentHardw
     hardware.deploymentSolenoid.get
   )
 
-  override def applySignal(signal: DeploymentState): Unit = check.assertSingleOutput { () =>
+  override def applySignal(signal: DeploymentState): Unit = check.assertSingleOutput {
     signal match {
       case DeploymentOn =>
         hardware.deploymentSolenoid.set(true)

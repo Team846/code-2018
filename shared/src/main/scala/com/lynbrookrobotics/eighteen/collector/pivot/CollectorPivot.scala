@@ -19,11 +19,10 @@ class CollectorPivot(val coreTicks: Stream[Unit])(implicit hardware: CollectorPi
   )
 
   override def applySignal(signal: CollectorPivotState): Unit =
-    check.assertSingleOutput(
-      () =>
-        signal match {
-          case PivotUpState   => hardware.pivotSolenoid.set(false)
-          case PivotDownState => hardware.pivotSolenoid.set(true)
+    check.assertSingleOutput {
+      signal match {
+        case PivotUpState   => hardware.pivotSolenoid.set(false)
+        case PivotDownState => hardware.pivotSolenoid.set(true)
       }
-    )
+    }
 }
