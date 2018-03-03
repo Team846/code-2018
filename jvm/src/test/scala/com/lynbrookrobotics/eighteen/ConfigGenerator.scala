@@ -104,7 +104,9 @@ object ConfigGenerator extends App {
             twistyTotalRange = Feet(1)
           )
         )
-      )
+      ),
+      enableLimelight = false,
+      led = None
     ).jencode(RobotConfig.writer).spaces2
   )
 }

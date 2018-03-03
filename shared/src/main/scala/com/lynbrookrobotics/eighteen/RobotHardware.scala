@@ -9,7 +9,11 @@ import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
 import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
+import squants.time.Seconds
+import com.lynbrookrobotics.potassium.frc.Implicits._
+import com.lynbrookrobotics.potassium.frc.LEDControllerHardware
 import com.lynbrookrobotics.potassium.streams.Stream
+import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],
@@ -20,7 +24,9 @@ final case class RobotHardware(
   driver: DriverHardware,
   drivetrain: Option[DrivetrainHardware],
   forklift: Option[ForkliftHardware],
-  cubeLift: Option[CubeLiftHardware]
+  cubeLift: Option[CubeLiftHardware],
+  camera: Option[LimeLightHardware],
+  ledHardware: Option[LEDControllerHardware]
 )
 
 object RobotHardware {
@@ -38,7 +44,9 @@ object RobotHardware {
       driver = driverHardware,
       drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
-      cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks))
+      cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
+      camera = if (robotConfig.enableLimelight) Some(new LimeLightHardware(Seconds(10))) else None,
+      ledHardware = robotConfig.led.map(l => LEDControllerHardware(l))
     )
   }
 }
