@@ -119,7 +119,13 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     lighting <- lightingComponent
   } {
     val hasTargetEvent: ContinuousEvent = camera.hasTarget.eventWhen(identity)
-    hasTargetEvent.foreach(new LightingTasks.signalDriverForCubePickup(lighting))
+    hasTargetEvent.onStart.foreach(() => {
+      lighting.setController(coreTicks.mapToConstant(Color(0, 255, 0)))
+    })
+
+    hasTargetEvent.onEnd.foreach(() => {
+      lighting.resetToDefault()
+    })
   }
 
   private val inst = NetworkTableInstance.getDefault()
