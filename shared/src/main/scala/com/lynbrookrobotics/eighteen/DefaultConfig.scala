@@ -343,6 +343,6 @@ object DefaultConfig {
                |    }
                |  },
                |  "climberWinch": null,
-               |  led = None
+               |  "led": null
                |}""".stripMargin
 }

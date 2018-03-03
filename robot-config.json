@@ -339,5 +339,6 @@
       ]
     }
   },
-  "climberWinch": null
+  "climberWinch": null,
+  "led": null
 }
