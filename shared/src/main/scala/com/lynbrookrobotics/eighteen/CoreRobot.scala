@@ -123,13 +123,13 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   }
 
 
-  println(" before adding ")
   for {
     drivetrain <- drivetrain
     collectorRollers <- collectorRollers
     collectorClamp <- collectorClamp
     collectorPivot <- collectorPivot
     cubeLiftComp <- cubeLiftComp
+    cameraHardware <- cameraHardware
   } {
     addAutonomousRoutine(3) {
       generator.SameSideSwitchAndScale.scaleSwitch3Cube(
@@ -137,7 +137,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         collectorRollers,
         collectorClamp,
         collectorPivot,
-        cubeLiftComp).toContinuous
+        cubeLiftComp,
+        cameraHardware).toContinuous
     }
 
     addAutonomousRoutine(4) {
