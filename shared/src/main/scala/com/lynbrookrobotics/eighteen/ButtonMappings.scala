@@ -80,7 +80,7 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(TriggerBottom)
       }.foreach( // bottom trigger — lift to collect height
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+          driverHardware.joystickStream.map(_.operator.).map(_ => cubeLiftProps.get.collectHeight),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
