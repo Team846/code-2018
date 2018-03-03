@@ -1,7 +1,9 @@
 package com.lynbrookrobotics.eighteen.auto
+
 import com.lynbrookrobotics.eighteen.CoreRobot
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
+import com.lynbrookrobotics.eighteen.collector.pivot.PivotDown
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
@@ -12,6 +14,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.FeetPerSecondSquared
+import squants.Seconds
 import squants.space.{Degrees, Feet, Inches}
 import squants.{Angle, Percent}
 
@@ -89,6 +92,12 @@ trait SideAutoGenerator extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain).andUntilDone(
          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+      ).then(
+        pickupGroundCube(
+          collectorRollers,
+           collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
+      ).then(
+        new PivotDown(collectorPivot).forDuration(Seconds(1))
       )
     }
 
@@ -110,6 +119,10 @@ trait SideAutoGenerator extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain).andUntilDone(
         pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+      ).then(
+        pickupGroundCube(
+          collectorRollers,
+           collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(1))
       )
     }
 
@@ -120,12 +133,12 @@ trait SideAutoGenerator extends AutoGenerator {
                           cubeLift: CubeLiftComp,
                           pose: Stream[Point],
                           relativeAngle: Stream[Angle]): FiniteTask = {
-     new DriveBeyondStraight(
-       Inches(18),
+     liftElevatorToSwitch(cubeLift).toFinite.then(new DriveBeyondStraight(
+       Inches(6),
        Inches(1),
        Degrees(5),
        Percent(20)
-     )(drivetrain).and(liftElevatorToSwitch(cubeLift).toFinite).then(
+     )(drivetrain)).then(
        dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
      ).then(
        new DriveBeyondStraight(
@@ -228,6 +241,8 @@ trait SideAutoGenerator extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain).andUntilDone(
         pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+      ).then(
+        new PivotDown(collectorPivot).forDuration(Seconds(1))
       )
     }
 
@@ -238,16 +253,16 @@ trait SideAutoGenerator extends AutoGenerator {
                           cubeLift: CubeLiftComp,
                           pose: Stream[Point],
                           relativeAngle: Stream[Angle]): FiniteTask = {
-      new DriveBeyondStraight(
-        Inches(6),
+      new DriveDistanceStraight(
+        Inches(3),
         Inches(1),
         Degrees(5),
         Percent(20)
       )(drivetrain).then(
         dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
       ).then(
-        new DriveBeyondStraight(
-          -Inches(6),
+        new DriveDistanceStraight(
+          -Inches(3),
           Inches(1),
           Degrees(5),
           Percent(20)

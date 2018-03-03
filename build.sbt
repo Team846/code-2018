@@ -152,6 +152,5 @@ lazy val native = robot.native
     teamNumber := 846,
     nativeMode := "debug",
     nativeGC := "boehm",
-    nativeMode := "release",
     crossCompileSettings
   )
