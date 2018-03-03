@@ -40,7 +40,7 @@ object SameSideSwitchAndScalePoints {
       toScalePoints.last.y - Feet(1)
     ),
     Point(
-      -Inches(41.8 - 10),
+      -Inches(41.8) - Inches(10),
       Inches(228.3 + 6) - smallRoomFactor
     )
   )

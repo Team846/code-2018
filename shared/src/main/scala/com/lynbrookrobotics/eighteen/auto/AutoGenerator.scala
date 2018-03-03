@@ -25,7 +25,7 @@ import squants.{Angle, Percent}
 class AutoGenerator(protected val r: CoreRobot) {
   import r._
 
-  val purePursuitCruisingVelocity = FeetPerSecond(5)
+  val purePursuitCruisingVelocity = FeetPerSecond(10)
 
   val robotLength = Feet(3)
   val robotWidth = Feet(3)
@@ -93,7 +93,7 @@ class AutoGenerator(protected val r: CoreRobot) {
                        collectorClamp: CollectorClamp,
                        collectorPivot: CollectorPivot,
                        cubeLift: CubeLiftComp): ContinuousTask = {
-    liftElevatorToCollect(cubeLift).apply(
+    liftElevatorToCollect(cubeLift).toContinuous.and(
       CollectorTasks.collectCube(
         collectorRollers,
         collectorClamp,

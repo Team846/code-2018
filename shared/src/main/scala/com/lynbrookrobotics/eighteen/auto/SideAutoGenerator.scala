@@ -40,7 +40,7 @@ trait SideAutoGenerator extends AutoGenerator {
           cruisingVelocity = purePursuitCruisingVelocity,
           targetTicksWithingTolerance = 10,
           forwardBackwardMode = ForwardsOnly
-        )(drivetrain).then(
+        )(drivetrain).and(liftElevatorToScale(cubeLift).toFinite).then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
     }
@@ -125,7 +125,7 @@ trait SideAutoGenerator extends AutoGenerator {
        Inches(1),
        Degrees(5),
        Percent(20)
-     )(drivetrain).then(
+     )(drivetrain).and(liftElevatorToSwitch(cubeLift).toFinite).then(
        dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
      ).then(
        new DriveBeyondStraight(
@@ -170,7 +170,7 @@ trait SideAutoGenerator extends AutoGenerator {
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 10,
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain).then(
+      )(drivetrain).and(liftElevatorToScale(cubeLift).toFinite).then(
         shootCubeScale(collectorRollers, collectorPivot, cubeLift)
       )
     }
@@ -194,7 +194,7 @@ trait SideAutoGenerator extends AutoGenerator {
         ).preserve.withCheck(_ => {iHateMyLife = true})
 
       startToScaleDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle).then(
-        backOutPostScale(drivetrain, pose, relativeAngle)
+        backOutPostScale(drivetrain, pose, relativeAngle).and(liftElevatorToCollect(cubeLift).toFinite)
       ).then(
         pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
       ).then(
