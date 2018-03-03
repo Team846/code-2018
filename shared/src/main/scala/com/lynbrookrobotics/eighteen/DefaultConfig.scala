@@ -87,6 +87,10 @@ object DefaultConfig {
                |      "minHeight": [
                |        1,
                |        "Inches"
+               |      ],
+               |      "twistyTotalRange": [
+               |        1,
+               |        "Feet"
                |      ]
                |    },
                |    "ports": {
@@ -342,6 +346,8 @@ object DefaultConfig {
                |      ]
                |    }
                |  },
-               |  "climberWinch": null
+               |  "climberWinch": null,
+               |  "enableLimelight": false,
+               |  "led": null
                |}""".stripMargin
 }
