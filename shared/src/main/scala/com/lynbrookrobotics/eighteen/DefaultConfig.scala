@@ -87,6 +87,10 @@ object DefaultConfig {
                |      "minHeight": [
                |        1,
                |        "Inches"
+               |      ],
+               |      "twistyTotalRange": [
+               |        1,
+               |        "Feet"
                |      ]
                |    },
                |    "ports": {
