@@ -17,7 +17,7 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePu
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WaitTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
-import squants.motion.FeetPerSecond
+import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Feet, Inches}
 import squants.time.Seconds
 import squants.{Angle, Percent}
@@ -31,6 +31,14 @@ class AutoGenerator(protected val r: CoreRobot) {
   val robotWidth = Feet(3)
 
   val sideStartingPose = Point(-robotWidth / 2, robotLength / 2)
+
+
+  val liftUpMaxAcceleration = FeetPerSecondSquared(10)
+  val liftDownMaxAcceleration = FeetPerSecondSquared(15)
+
+
+  val driveBeyondFastLimit = Percent(50)
+  val driveBeyondSlowLimit = Percent(10)
 
   def printTask(message: String): FiniteTask = {
     new FiniteTask {

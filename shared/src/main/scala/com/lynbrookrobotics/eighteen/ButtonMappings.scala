@@ -87,8 +87,7 @@ object ButtonMappings {
       }.foreach(
         new WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
-        )(lift).toContinuous
-          and
+        )(lift).toContinuous.and(
             visionCubePickup(
               drivetrainComponent,
               camera,
@@ -96,7 +95,7 @@ object ButtonMappings {
               roller,
               clamp,
               pivot
-            ).toContinuous
+            ).toContinuous)
       )
     }
 

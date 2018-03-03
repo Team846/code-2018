@@ -10,7 +10,7 @@ import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
 import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, CollectorRollersProperties}
 import com.lynbrookrobotics.potassium.Signal
 import squants.Percent
-import squants.space.Length
+import squants.space.{Feet, Length}
 
 object CameraTasks {
   def visionCubePickup(
