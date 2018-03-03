@@ -104,6 +104,7 @@ object ConfigGenerator extends App {
           )
         )
       ),
+      enableLimelight = false,
       led = None
     ).jencode(RobotConfig.writer).spaces2
   )
