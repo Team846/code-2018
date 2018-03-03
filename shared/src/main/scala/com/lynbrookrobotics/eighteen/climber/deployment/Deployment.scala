@@ -1,5 +1,6 @@
 package com.lynbrookrobotics.eighteen.climber.deployment
 
+import com.lynbrookrobotics.eighteen.SingleOutputChecker
 import com.lynbrookrobotics.potassium.Component
 import com.lynbrookrobotics.potassium.streams.Stream
 
@@ -12,14 +13,17 @@ class Deployment(val coreTicks: Stream[Unit])(implicit hardware: DeploymentHardw
     extends Component[DeploymentState] {
   override def defaultController: Stream[DeploymentState] = coreTicks.mapToConstant(DeploymentOff)
 
-  override def applySignal(signal: DeploymentState): Unit = {
+  private val check = new SingleOutputChecker(
+    "Climber Deployment Solenoid",
+    hardware.deploymentSolenoid.get
+  )
+
+  override def applySignal(signal: DeploymentState): Unit = check.assertSingleOutput {
     signal match {
-      case DeploymentOn => {
+      case DeploymentOn =>
         hardware.deploymentSolenoid.set(true)
-      }
-      case DeploymentOff => {
+      case DeploymentOff =>
         hardware.deploymentSolenoid.set(false)
-      }
     }
   }
 }
