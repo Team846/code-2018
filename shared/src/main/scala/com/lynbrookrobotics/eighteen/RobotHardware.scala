@@ -45,8 +45,8 @@ object RobotHardware {
       drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
       cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
-      camera = Some(new LimeLightHardware(Seconds(10))),
-      ledHardware = Some(LEDControllerHardware(robotConfig.led.get))
+      camera = if (robotConfig.enableLimelight) Some(new LimeLightHardware(Seconds(10))) else None,
+      ledHardware = robotConfig.led.map(l => LEDControllerHardware(l))
     )
   }
 }

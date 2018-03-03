@@ -364,5 +364,6 @@
       ]
     }
   },
-  "lighting": null
+  "enableLimelight": false,
+  "led": null
 }

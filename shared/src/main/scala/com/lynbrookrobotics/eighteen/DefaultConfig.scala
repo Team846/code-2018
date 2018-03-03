@@ -343,6 +343,7 @@ object DefaultConfig {
                |    }
                |  },
                |  "climberWinch": null,
+               |  "enableLimelight": false,
                |  "led": null
                |}""".stripMargin
 }
