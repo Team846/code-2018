@@ -6,7 +6,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import edu.wpi.first.wpilibj.{DriverStation, Joystick}
 import squants.Dimensionless
 
-final case class JoystickState(x: Dimensionless, y: Dimensionless)
+final case class JoystickState(x: Dimensionless, y: Dimensionless, z: Dimensionless)
 final case class JoystickValues(driver: JoystickState, driverWheel: JoystickState, operator: JoystickState)
 
 final case class DriverHardware(
@@ -19,9 +19,9 @@ final case class DriverHardware(
   val (driverStationTicks, driverStationUpdate) = Stream.manual[Unit]
   val joystickStream: Stream[JoystickValues] = driverStationTicks.map { _ =>
     JoystickValues(
-      driver = JoystickState(driverJoystick.x, driverJoystick.y),
-      driverWheel = JoystickState(driverWheel.x, driverWheel.y),
-      operator = JoystickState(operatorJoystick.x, operatorJoystick.y)
+      driver = JoystickState(driverJoystick.x, driverJoystick.y, driverJoystick.z),
+      driverWheel = JoystickState(driverWheel.x, driverWheel.y, driverWheel.z),
+      operator = JoystickState(operatorJoystick.x, operatorJoystick.y, operatorJoystick.z)
     )
   }
 

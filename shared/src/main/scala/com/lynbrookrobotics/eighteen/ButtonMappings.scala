@@ -80,7 +80,12 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(TriggerBottom)
       }.foreach( // bottom trigger — lift to collect height
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.collectHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
@@ -89,7 +94,12 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(TriggerLeft)
       }.foreach( // left trigger — lift to switch height
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.switchHeight),
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.switchHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
@@ -98,7 +108,12 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(TriggerRight)
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.lowScaleHeight),
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.lowScaleHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
@@ -107,7 +122,12 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(TriggerRight)
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.lowScaleHeight),
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.lowScaleHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
@@ -116,7 +136,12 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(RightOne)
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.highScaleHeight),
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.highScaleHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )
@@ -125,7 +150,12 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(LeftSix)
       }.foreach( // right trigger — lift to scale height
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.exchangeHeight),
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.exchangeHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous
       )

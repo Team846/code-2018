@@ -22,7 +22,8 @@ final case class CubeLiftProperties(
   liftPositionTolerance: Length,
   maxMotorOutput: Dimensionless,
   maxHeight: Length,
-  minHeight: Length
+  minHeight: Length,
+  twistyTotalRange: Length
 ) extends OffloadedLiftProperties {
   override def positionGains: PIDConfig[
     Length,
