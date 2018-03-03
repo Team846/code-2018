@@ -1,12 +1,12 @@
 package com.lynbrookrobotics.eighteen.drivetrain
 
-import com.lynbrookrobotics.potassium.{Component, Signal}
+import com.lynbrookrobotics.eighteen.SingleOutputChecker
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSided
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.UnicycleSignal
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.streams.Stream
-
+import com.lynbrookrobotics.potassium.{Component, Signal}
 import squants.{Each, Percent}
 
 class DrivetrainComponent(coreTicks: Stream[Unit])(
@@ -43,7 +43,12 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     }
   }
 
-  override def applySignal(signal: TwoSided[OffloadedSignal]) = {
+  private val check = new SingleOutputChecker(
+    "Drivetrain Left Master Talon (left, right)",
+    (hardware.left.getLastCommand, hardware.right.getLastCommand)
+  )
+
+  override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput {
     hardware.left.applyCommand(signal.left)
     hardware.right.applyCommand(signal.right)
   }
