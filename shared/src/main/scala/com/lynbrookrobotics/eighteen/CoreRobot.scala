@@ -73,10 +73,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   implicit val lightingHardware = hardware.ledHardware.orNull
   implicit val lightingComponent: Option[LEDController] =
-    hardware.ledHardware.map(_ => new LEDController(
-      coreTicks,
-      Signal.constant(DriverStation.Alliance))
-    )
+    hardware.ledHardware.map(_ => new LEDController(coreTicks, Signal.constant(DriverStation.Alliance)))
 
   lazy val components: Seq[Component[_]] = Seq(
     climberDeployment,

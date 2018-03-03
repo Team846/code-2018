@@ -89,14 +89,14 @@ object ButtonMappings {
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
         )(lift).toContinuous
           and
-        visionCubePickup(
-            drivetrainComponent,
-            camera,
-            Feet(1.75),
-            roller,
-            clamp,
-            pivot
-          ).toContinuous
+            visionCubePickup(
+              drivetrainComponent,
+              camera,
+              Feet(1.75),
+              roller,
+              clamp,
+              pivot
+            ).toContinuous
       )
     }
 
