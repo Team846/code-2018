@@ -10,6 +10,8 @@ import com.lynbrookrobotics.eighteen.collector.rollers.RollersManualControl
 import com.lynbrookrobotics.eighteen.cubeLift.LiftManualControl
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
 import com.lynbrookrobotics.eighteen.forklift.MoveForkliftDown
+import com.lynbrookrobotics.eighteen.camera.CameraTasks.visionCubePickup
+import squants.space.Feet
 
 // https://team846.slab.com/posts/button-mappings-625f4bf7
 object ButtonMappings {
@@ -69,6 +71,32 @@ object ButtonMappings {
         driverHardware.driverJoystick.getRawButton(LeftOne)
       }.foreach( // left 1 — run climber winch
         new Climb(climber)
+      )
+    }
+
+    for {
+      camera <- cameraHardware
+      drivetrainComponent <- drivetrain
+      roller <- collectorRollers
+      clamp <- collectorClamp
+      pivot <- collectorPivot
+      lift <- cubeLiftComp
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.driverJoystick.getRawButton(LeftSix)
+      }.foreach(
+        new WhileBelowPosition(
+          coreTicks.map(_ => cubeLiftProps.get.collectHeight)
+        )(lift).toContinuous
+          and
+            visionCubePickup(
+              drivetrainComponent,
+              camera,
+              Feet(1.75),
+              roller,
+              clamp,
+              pivot
+            ).toContinuous
       )
     }
 

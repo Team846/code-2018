@@ -339,5 +339,7 @@
       ]
     }
   },
-  "climberWinch": null
+  "climberWinch": null,
+  "enableLimelight": false,
+  "led": null
 }

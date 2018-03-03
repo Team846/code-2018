@@ -12,6 +12,8 @@ import com.lynbrookrobotics.eighteen.forklift.Forklift
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.funkydashboard.{FunkyDashboard, JsonEditor, TimeSeriesNumeric}
 import com.lynbrookrobotics.potassium.clock.Clock
+import com.lynbrookrobotics.potassium.events.ContinuousEvent
+import com.lynbrookrobotics.potassium.frc.{Color, LEDController}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.eighteen.drivetrain.UnicycleControllers._
@@ -19,12 +21,14 @@ import com.lynbrookrobotics.eighteen.drivetrain.UnicycleControllers
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.UnicycleSignal
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
-import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.networktables.NetworkTableInstance
 import squants.{Each, Percent}
 import squants.space.{Degrees, Feet, Inches}
 
 import scala.collection.mutable
+import com.lynbrookrobotics.potassium.{Component, Signal}
+import edu.wpi.first.wpilibj.DriverStation
+
 import scala.util.Try
 
 class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Unit, val coreTicks: Stream[Unit])(
@@ -45,6 +49,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     hardware.collectorRollers.map(_ => new CollectorRollers(coreTicks))
 
   implicit val collectorClampHardware = hardware.collectorClamp.orNull
+  implicit val collectorClampProps = config.map(_.collectorClamp.get.props)
+
   val collectorClamp: Option[CollectorClamp] =
     hardware.collectorClamp.map(_ => new CollectorClamp(coreTicks))
 
@@ -70,6 +76,12 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   val cubeLiftComp: Option[CubeLiftComp] =
     hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
 
+  val cameraHardware = hardware.camera
+
+  implicit val lightingHardware = hardware.ledHardware.orNull
+  implicit val lightingComponent: Option[LEDController] =
+    hardware.ledHardware.map(_ => new LEDController(coreTicks, Signal.constant(DriverStation.Alliance.Red)))
+
   lazy val components: Seq[Component[_]] = Seq(
     climberDeployment,
     climberWinch,
@@ -78,7 +90,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     collectorRollers,
     drivetrain,
     forklift,
-    cubeLiftComp
+    cubeLiftComp,
+    lightingComponent
   ).flatten
 
   private val autonomousRoutines = mutable.Map.empty[Int, () => ContinuousTask]
@@ -170,6 +183,20 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         Degrees(5)
       )(drivetrain).toContinuous
     }
+  }
+
+  for {
+    camera <- cameraHardware
+    lighting <- lightingComponent
+  } {
+    val hasTargetEvent: ContinuousEvent = camera.hasTarget.eventWhen(identity)
+    hasTargetEvent.onStart.foreach(() => {
+      lighting.setController(coreTicks.mapToConstant(Color(0, 255, 0)))
+    })
+
+    hasTargetEvent.onEnd.foreach(() => {
+      lighting.resetToDefault()
+    })
   }
 
   private val inst = NetworkTableInstance.getDefault()

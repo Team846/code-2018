@@ -363,5 +363,7 @@
         "Percent"
       ]
     }
-  }
+  },
+  "enableLimelight": false,
+  "led": null
 }
