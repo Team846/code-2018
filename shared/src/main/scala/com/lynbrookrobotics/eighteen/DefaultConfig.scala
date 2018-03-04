@@ -347,6 +347,10 @@ object DefaultConfig {
                |      "collectSpeed": [
                |        50,
                |        "Percent"
+               |      ],
+               |      "purgeSpeed": [
+               |        70,
+               |        "Percent"
                |      ]
                |    }
                |  },

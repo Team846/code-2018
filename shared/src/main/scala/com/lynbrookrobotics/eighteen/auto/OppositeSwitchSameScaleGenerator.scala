@@ -14,7 +14,9 @@ import com.lynbrookrobotics.potassium.units.Point
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Inches}
 
-trait OppositeSwitchSameScaleGenerator extends AutoGenerator {
+trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitchScaleAutoGenerator {
+  import r._
+  
   object OppositeSideSwitchSameSideScale {
     def pickupSecondCube(drivetrain: DrivetrainComponent,
                          collectorRollers: CollectorRollers,

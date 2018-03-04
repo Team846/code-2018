@@ -68,7 +68,8 @@ object ButtonMappings {
       climber <- climberWinch
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(LeftOne)
+        driverHardware.driverJoystick.getRawButton(LeftOne) &&
+          !driverHardware.operatorJoystick.getRawButton(LeftOne)
       }.foreach( // left 1 — run climber winch
         new Climb(climber)
       )
@@ -203,9 +204,22 @@ object ButtonMappings {
       climber <- climberDeployment
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftOne)
+        driverHardware.operatorJoystick.getRawButton(LeftOne) &&
+          !driverHardware.driverJoystick.getRawButton(LeftOne)
       }.foreach( // left 1 — deploy climber
         new DeployClimber(climber)
+      )
+    }
+
+    for {
+      winch <- climberWinch
+      climber <- climberDeployment
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(LeftOne) &&
+          driverHardware.driverJoystick.getRawButton(LeftOne)
+      }.foreach( // left 1 — deploy climber
+        new Climb(winch).and(new DeployClimber(climber))
       )
     }
 

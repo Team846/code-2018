@@ -11,6 +11,7 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePu
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.FiniteTask
+import com.lynbrookrobotics.potassium.tasks.WaitTask
 import com.lynbrookrobotics.potassium.units.Point
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
@@ -19,7 +20,6 @@ import squants.space.{Degrees, Feet, Inches}
 trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
   import  r._
   object SameSideSwitchAndScale {
-    // vé al scale y caigas el cubo
     def startToScaleDropOff(drivetrain: DrivetrainComponent,
                             collectorRollers: CollectorRollers,
                             collectorClamp: CollectorClamp,
@@ -36,7 +36,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 10,
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain).and(liftElevatorToScale(cubeLift).toFinite).then(
+      )(drivetrain).and(new WaitTask(Seconds(2)).then(liftElevatorToScale(cubeLift).toFinite)).then(
         shootCubeScale(collectorRollers, collectorPivot, cubeLift)
       )
     }
@@ -75,7 +75,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
                          limeLightHardware: LimeLightHardware,
                          pose: Stream[Point],
                          relativeAngle: Stream[Angle]): FiniteTask = {
-      /*new FollowWayPointsWithPosition(
+      new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchAndScalePoints.pickupSecondCubePoints,
         tolerance = Inches(3),
         position = pose,
@@ -86,13 +86,6 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain).andUntilDone(
         pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-      )*/CameraTasks.visionCubePickup(
-        drivetrain,
-        limeLightHardware,
-        Feet(4),
-        collectorRollers,
-        collectorClamp,
-        collectorPivot
       ).then(
         pickupGroundCube(
           collectorRollers,
@@ -110,7 +103,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
                         limeLightHardware: LimeLightHardware,
                         pose: Stream[Point],
                         relativeAngle: Stream[Angle]): FiniteTask = {
-      /*new FollowWayPointsWithPosition(
+      new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchAndScalePoints.pickupThirdCubePoints,
         tolerance = Inches(3),
         position = pose,
@@ -121,14 +114,6 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain).andUntilDone(
         pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-      )*/
-      CameraTasks.visionCubePickup(
-        drivetrain,
-        limeLightHardware,
-        Feet(4),
-        collectorRollers,
-        collectorClamp,
-        collectorPivot
       ).then(
         pickupGroundCube(
           collectorRollers,

@@ -32,7 +32,7 @@
         },
         "kp": {
           "den": [
-            0.8,
+            0.7,
             "Feet"
           ],
           "num": [
@@ -46,7 +46,7 @@
         "Inches"
       ],
       "voltageAtBottom": [
-        0.306,
+        0.26,
         "Volts"
       ],
       "liftPositionTolerance": [
@@ -63,16 +63,16 @@
       ],
       "voltageOverHeight": {
         "den": [
-          80.25,
+          34.83,
           "Inches"
         ],
         "num": [
-          2.5,
+          0.71,
           "Volts"
         ]
       },
       "maxMotorOutput": [
-        100,
+        70,
         "Percent"
       ],
       "talonOverVoltage": {
@@ -92,6 +92,10 @@
       "minHeight": [
         0.25,
         "Inches"
+      ],
+      "twistyTotalRange": [
+        1,
+        "Feet"
       ]
     },
     "ports": {
@@ -114,7 +118,7 @@
     },
     "props": {
       "maxLeftVelocity": [
-        17.7,
+        13.3,
         "FeetPerSecond"
       ],
       "turnVelocityGains": {
@@ -162,7 +166,7 @@
         "Amperes"
       ],
       "maxRightVelocity": [
-        17.7,
+        13.5,
         "FeetPerSecond"
       ],
       "track": [
@@ -206,7 +210,7 @@
         },
         "kp": {
           "den": [
-            4,
+            3,
             "FeetPerSecond"
           ],
           "num": [
@@ -242,7 +246,7 @@
             "Degrees"
           ],
           "num": [
-            50,
+            100,
             "Percent"
           ]
         }
@@ -271,7 +275,7 @@
         },
         "kp": {
           "den": [
-            4,
+            3,
             "FeetPerSecond"
           ],
           "num": [
@@ -303,11 +307,11 @@
         },
         "kp": {
           "den": [
-            5,
+            3,
             "Feet"
           ],
           "num": [
-            50,
+            100,
             "Percent"
           ]
         }
@@ -364,6 +368,6 @@
       ]
     }
   },
-  "enableLimelight": false,
+  "enableLimelight": true,
   "led": null
 }

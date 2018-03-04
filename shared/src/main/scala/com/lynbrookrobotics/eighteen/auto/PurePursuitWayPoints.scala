@@ -17,9 +17,21 @@ object SameSideSwitchAndScalePoints {
   val toScalePoints = Seq(
     startingPose,
     Point(
+      startingPose.x,
+      Inches(164)
+    ),
+    Point(
+      -Inches(45) - Inches(6) + Inches(16),
+      Inches(217.1)
+    ),
+    Point(
+      -Inches(45) - Inches(6) + Inches(8),
+      Inches(285.2) - smallRoomFactor
+    )/*
+    Point(
       -Inches(41.3),
       Inches(285.2) - smallRoomFactor - Inches(6)
-    )
+    )*/
   )
 
   val backupPostScalePoints = Seq(
@@ -103,7 +115,7 @@ object SameSideSwitchOppositeScalePoints {
   val toSwitchPoints = Seq(
     startingPose,
     Point(
-      -Inches(18),
+      -Inches(20),
       Inches(133.5)
     ),
     Point(
@@ -111,7 +123,7 @@ object SameSideSwitchOppositeScalePoints {
       Inches(155.3)
     ),
     Point(
-      -Inches(37.6),
+      -Inches(30),
       Inches(155.3)
     )
   )

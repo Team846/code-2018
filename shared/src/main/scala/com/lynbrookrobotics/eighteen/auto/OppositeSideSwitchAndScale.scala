@@ -14,7 +14,7 @@ import squants.{Angle, Percent}
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import squants.space.Inches
 
-trait OppositeSideSwitchAndScale extends AutoGenerator {
+trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOppositeScaleAutoGenerator {
   import r._
 
   object OppositeSideSwitchAndScale {

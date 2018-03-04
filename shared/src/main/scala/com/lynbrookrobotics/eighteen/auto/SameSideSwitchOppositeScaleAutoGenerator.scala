@@ -49,11 +49,11 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
                             collectorClamp: CollectorClamp,
                             pose: Stream[Point],
                             relativeAngle: Stream[Angle]): FiniteTask = {
-      new DriveBeyondStraight(
+      new DriveDistanceStraight(
         -Inches(12),
-        toleranceForward = Inches(1),
+        toleranceForward = Inches(3),
         Degrees(5),
-        Percent(50))(drivetrain).then(
+        Percent(10))(drivetrain).then(
         new FollowWayPointsWithPosition(
           wayPoints = SameSideSwitchOppositeScalePoints.driveBackPostSwitch,
           tolerance = Inches(3),
