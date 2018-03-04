@@ -7,6 +7,7 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.UnicycleSignal
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.{Component, Signal}
+import squants.motion.FeetPerSecond
 import squants.{Each, Percent}
 
 class DrivetrainComponent(coreTicks: Stream[Unit])(
@@ -47,6 +48,11 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     "Drivetrain Left Master Talon (left, right)",
     (hardware.left.getLastCommand, hardware.right.getLastCommand)
   )
+
+  val notMoving = hardware.leftVelocity.zip(hardware.rightVelocity)
+    .map { t => (t._1 + t._2) / 2 }
+    .scanLeft(FeetPerSecond(0)) { (acc, v) => (acc + v) / 2 }
+    .eventWhen(it => it ~= FeetPerSecond(0))
 
   override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput {
     hardware.left.applyCommand(signal.left)

@@ -27,7 +27,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(Trigger) &&
-        driverHardware.driverJoystick.getRawButton(TriggerBottom)
+          driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach(
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight),
@@ -43,7 +43,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(Trigger) &&
-        !driverHardware.driverJoystick.getRawButton(TriggerBottom)
+          !driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach(
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight),
@@ -58,7 +58,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(TriggerBottom) &&
-        !driverHardware.driverJoystick.getRawButton(Trigger)
+          !driverHardware.driverJoystick.getRawButton(Trigger)
       }.foreach(
         new OpenCollector(clamp) and new PivotDown(pivot)
       )
@@ -271,7 +271,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftFive) &&
-        !driverHardware.operatorJoystick.getRawButton(LeftTwo)
+          !driverHardware.operatorJoystick.getRawButton(LeftTwo)
       }.foreach(
         new LiftManualControl(
           driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
@@ -285,7 +285,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftTwo) &&
-        driverHardware.operatorJoystick.getRawButton(LeftFive)
+          driverHardware.operatorJoystick.getRawButton(LeftFive)
       }.foreach(
         new PivotDown(pivot) and new LiftManualControl(
           driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
@@ -320,7 +320,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftTwo) &&
-        !driverHardware.operatorJoystick.getRawButton(LeftFive)
+          !driverHardware.operatorJoystick.getRawButton(LeftFive)
       }.foreach(
         new PivotDown(pivot)
       )
