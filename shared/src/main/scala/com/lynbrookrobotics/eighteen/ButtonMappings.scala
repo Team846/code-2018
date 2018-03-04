@@ -13,12 +13,11 @@ import com.lynbrookrobotics.eighteen.forklift.MoveForkliftDown
 import com.lynbrookrobotics.eighteen.camera.CameraTasks.visionCubePickup
 import squants.space.Feet
 
-// https://team846.slab.com/posts/button-mappings-625f4bf7
+// team846.slab.com/posts/button-mappings-625f4bf7
 object ButtonMappings {
   def setup(robot: CoreRobot): Unit = {
     import robot._
 
-    // DRIVER
     for {
       lift <- cubeLiftComp
       pivot <- collectorPivot
@@ -28,7 +27,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(Trigger) &&
         driverHardware.driverJoystick.getRawButton(TriggerBottom)
-      }.foreach( // trigger & bottom trigger — [bottom trigger] + [trigger]
+      }.foreach(
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight),
           cubeLiftProps.get.liftPositionTolerance
@@ -44,7 +43,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(Trigger) &&
         !driverHardware.driverJoystick.getRawButton(TriggerBottom)
-      }.foreach( // trigger — pivot down, spin rollers in, lift to collect height
+      }.foreach( 
         new WhileAtPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight),
           cubeLiftProps.get.liftPositionTolerance
@@ -59,7 +58,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(TriggerBottom) &&
         !driverHardware.driverJoystick.getRawButton(Trigger)
-      }.foreach( // bottom trigger — open clamp, pivot down
+      }.foreach( 
         new OpenCollector(clamp) and new PivotDown(pivot)
       )
     }
@@ -69,7 +68,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(LeftOne)
-      }.foreach( // left 1 — run climber winch
+      }.foreach( 
         new Climb(climber)
       )
     }
@@ -100,13 +99,13 @@ object ButtonMappings {
       )
     }
 
-    // OPERATOR
+    
     for {
       lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(TriggerBottom)
-      }.foreach( // bottom trigger — lift to collect height
+      }.foreach( 
         new WhileAtPosition(
           driverHardware.joystickStream
             .map(_.operator.z)
@@ -120,7 +119,7 @@ object ButtonMappings {
 
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(TriggerLeft)
-      }.foreach( // left trigger — lift to switch height
+      }.foreach( 
         new WhileAtPosition(
           driverHardware.joystickStream
             .map(_.operator.z)
@@ -134,7 +133,7 @@ object ButtonMappings {
 
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(TriggerRight)
-      }.foreach( // right trigger — lift to scale height
+      }.foreach( 
         new WhileAtPosition(
           driverHardware.joystickStream
             .map(_.operator.z)
@@ -148,7 +147,7 @@ object ButtonMappings {
 
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(TriggerRight)
-      }.foreach( // right trigger — lift to scale height
+      }.foreach( 
         new WhileAtPosition(
           driverHardware.joystickStream
             .map(_.operator.z)
@@ -162,7 +161,7 @@ object ButtonMappings {
 
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightOne)
-      }.foreach( // right trigger — lift to scale height
+      }.foreach( 
         new WhileAtPosition(
           driverHardware.joystickStream
             .map(_.operator.z)
@@ -176,7 +175,7 @@ object ButtonMappings {
 
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftSix)
-      }.foreach( // right trigger — lift to scale height
+      }.foreach( 
         new WhileAtPosition(
           driverHardware.joystickStream
             .map(_.operator.z)
@@ -195,7 +194,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(Trigger)
-      }.foreach( // trigger — pivot down, spin rollers out
+      }.foreach( 
         CollectorTasks.purgeCube(rollers, pivot)
       )
     }
@@ -205,7 +204,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftOne)
-      }.foreach( // left 1 — deploy climber
+      }.foreach( 
         new DeployClimber(climber)
       )
     }
@@ -215,7 +214,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftTwo)
-      }.foreach( // left 2 — deploy forklift
+      }.foreach( 
         new MoveForkliftDown(forklift)
       )
     }
@@ -226,7 +225,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(LeftThree)
-      }.foreach( // left 3 — open clamp, pivot down
+      }.foreach( 
         new OpenCollector(clamp) and new PivotDown(pivot)
       )
     }
@@ -236,7 +235,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightFour)
-      }.foreach( // right 4 & joystick — manually control rollers
+      }.foreach( 
         new RollersManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(rollers.coreTicks)
         )(rollers)
@@ -249,7 +248,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightFive) &&
         !driverHardware.operatorJoystick.getRawButton(RightTwo)
-      }.foreach( // right 5 & joystick — manually control lift
+      }.foreach( 
         new LiftManualControl(
           driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
         )(lift)
@@ -263,7 +262,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightTwo) &&
         driverHardware.operatorJoystick.getRawButton(RightFive)
-      }.foreach( // right 2 — pivot down
+      }.foreach( 
         new PivotDown(pivot) and new LiftManualControl(
           driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
         )(lift)
@@ -275,7 +274,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightSix)
-      }.foreach( // right 6 & joystick — manually control winch
+      }.foreach( 
         new WinchManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(winch.coreTicks)
         )(winch)
@@ -287,7 +286,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightThree)
-      }.foreach( // right 1 — clamp open
+      }.foreach( 
         new OpenCollector(clamp)
       )
     }
@@ -298,7 +297,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightTwo) &&
         !driverHardware.operatorJoystick.getRawButton(RightFive)
-      }.foreach( // right 2 — pivot down
+      }.foreach( 
         new PivotDown(pivot)
       )
     }
