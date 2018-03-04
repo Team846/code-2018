@@ -18,15 +18,15 @@ object SameSideSwitchAndScalePoints {
     startingPose,
     Point(
       startingPose.x,
-      Inches(164)
+      Inches(162)
     ),
     Point(
-      -Inches(45) - Inches(6) + Inches(16),
-      Inches(217.1)
+      -Inches(46.7),
+      Inches(241)
     ),
     Point(
-      -Inches(45) - Inches(6) + Inches(8),
-      Inches(285.2) - smallRoomFactor
+      -Inches(45.7),
+      Inches(280.9) - smallRoomFactor
     )/*
     Point(
       -Inches(41.3),

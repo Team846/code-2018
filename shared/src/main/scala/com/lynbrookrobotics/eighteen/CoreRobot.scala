@@ -28,6 +28,7 @@ import squants.space.{Degrees, Feet, Inches}
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.wpilibj.DriverStation
+import squants.motion.FeetPerSecond
 
 import scala.util.Try
 
@@ -122,6 +123,20 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     }
   }
 
+  for {
+    drivetrain <- drivetrain
+  } {
+    addAutonomousRoutine(10) {
+      new DriveDistanceWithTrapezoidalProfile(
+        FeetPerSecond(15),
+        FeetPerSecond(0),
+        drivetrainProps.get.maxAcceleration,
+        Feet(10),
+        Inches(3),
+        Degrees(5)
+      )(drivetrain)
+    }
+  }
 
   for {
     drivetrain <- drivetrain
