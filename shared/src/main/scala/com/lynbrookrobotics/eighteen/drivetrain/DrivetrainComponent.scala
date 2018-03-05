@@ -65,7 +65,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
   StallChecker
     .timeAboveThreshold(
       hardware.rightVelocity.zip(hardware.rightDutyCycle).map {
-        case (currVelocity, dutyCycle) => (props.get.maxLeftVelocity * dutyCycle.toEach) - currVelocity
+        case (currVelocity, dutyCycle) => (props.get.maxRightVelocity * dutyCycle.toEach) - currVelocity
       },
       props.get.deltaVelocityStallThreshold
     )

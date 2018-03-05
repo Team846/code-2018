@@ -10,7 +10,7 @@ import squants.electro.Volts
 import squants.{Each, Percent}
 
 class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardware, props: Signal[CubeLiftProperties])
-  extends Component[OffloadedSignal] {
+    extends Component[OffloadedSignal] {
   override def defaultController: Stream[OffloadedSignal] = coreTicks.mapToConstant(OpenLoop(Each(0)))
 
   private val check = new SingleOutputChecker(
@@ -18,10 +18,11 @@ class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardw
     hardware.talon.getLastCommand
   )
 
-  StallChecker.timeAboveThreshold(
-    hardware.currentDraw,
-    props.get.maxCurrentDraw
-  )
+  StallChecker
+    .timeAboveThreshold(
+      hardware.currentDraw,
+      props.get.maxCurrentDraw
+    )
     .filter(_ > props.get.stallTimeout)
     .foreach { stallTime =>
       println(s"[ERROR] CUBE LIFT STALLED FOR $stallTime. ABORTING TASK.")
