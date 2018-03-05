@@ -177,6 +177,10 @@
         35,
         "Amperes"
       ],
+      "parallelMotorCurrentThreshold" : [
+        5,
+        "Amperes"
+      ],
       "maxRightVelocity": [
         13.3,
         "FeetPerSecond"

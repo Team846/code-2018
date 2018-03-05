@@ -78,6 +78,7 @@ object ConfigGenerator extends App {
               Turns(18),
               Turns(74)
             ),
+            parallelMotorCurrentThreshold = Amperes(5),
             deltaVelocityStallThreshold = FeetPerSecond(10),
             stallTimeout = Seconds(3)
           )
