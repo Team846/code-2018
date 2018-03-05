@@ -5,7 +5,7 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.offloaded.OffloadedDriv
 import com.lynbrookrobotics.potassium.control.offload.EscConfig
 import com.lynbrookrobotics.potassium.units._
 import squants.electro.ElectricCurrent
-import squants.{Acceleration, Angle, Dimensionless, Each, Length, Velocity}
+import squants.{Acceleration, Angle, Dimensionless, Each, Length, Time, Velocity}
 import squants.motion.RadiansPerSecond
 import squants.space.Turns
 import squants.time.Seconds

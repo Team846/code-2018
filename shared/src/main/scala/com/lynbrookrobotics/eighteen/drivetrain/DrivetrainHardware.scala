@@ -13,7 +13,7 @@ import com.lynbrookrobotics.potassium.units.{Ratio, Value3D}
 import edu.wpi.first.wpilibj.SPI
 import squants.motion.AngularVelocity
 import squants.time.{Milliseconds, Seconds}
-import squants.{Angle, Length, Velocity}
+import squants.{Angle, Dimensionless, Each, Length, Velocity}
 
 final case class DrivetrainData(
   leftEncoderVelocity: AngularVelocity,
@@ -100,6 +100,9 @@ final case class DrivetrainHardware(
   override val rightPosition: Stream[Length] = rootDataStream.map(_.rightEncoderRotation).map { ar =>
     (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
   }
+
+  val leftDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(left.t.getMotorOutputPercent))
+  val rightDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(right.t.getMotorOutputPercent))
 
   override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
   override lazy val turnPosition: Stream[Angle] = turnVelocity.integral
