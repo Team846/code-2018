@@ -26,8 +26,8 @@ class SingleOutputChecker[T](hardwareName: String, get: => T) {
 }
 
 object StallChecker {
-  def timeAboveThreshold[Q<:Quantity[Q]](stream: Stream[Q], threshold: Q): Stream[Time] = stream
-      .zipWithDt
+  def timeAboveThreshold[Q <: Quantity[Q]](stream: Stream[Q], threshold: => Q): Stream[Time] =
+    stream.zipWithDt
       .scanLeft(Seconds(0)) {
         case (stallTime, (value, dt)) =>
           if (value > threshold) {

@@ -49,16 +49,26 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     (hardware.left.getLastCommand, hardware.right.getLastCommand)
   )
 
-  new StallChecker(props.get.deltaVelocityStallThreshold, props.get.maxLeftVelocity)
-    .checkStall(hardware.leftVelocity.zip(hardware.leftDutyCycle))
+  StallChecker
+    .timeAboveThreshold(
+      hardware.leftVelocity.zip(hardware.leftDutyCycle).map {
+        case (currVelocity, dutyCycle) => (props.get.maxLeftVelocity * dutyCycle.toEach) - currVelocity
+      },
+      props.get.deltaVelocityStallThreshold
+    )
     .filter(_ > props.get.stallTimeout)
     .foreach { time =>
       println(s"[ERROR] LEFT SIDE OF DRIVETRAIN STALLED FOR $time. ABORTING TASK.")
       Task.abortCurrentTask()
     }
 
-  new StallChecker(props.get.deltaVelocityStallThreshold, props.get.maxRightVelocity)
-    .checkStall(hardware.rightVelocity.zip(hardware.rightDutyCycle))
+  StallChecker
+    .timeAboveThreshold(
+      hardware.rightVelocity.zip(hardware.rightDutyCycle).map {
+        case (currVelocity, dutyCycle) => (props.get.maxLeftVelocity * dutyCycle.toEach) - currVelocity
+      },
+      props.get.deltaVelocityStallThreshold
+    )
     .filter(_ > props.get.stallTimeout)
     .foreach { time =>
       println(s"[ERROR] RIGHT SIDE OF DRIVETRAIN STALLED FOR $time. ABORTING TASK.")
