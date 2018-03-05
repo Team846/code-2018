@@ -128,13 +128,14 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   } {
     addAutonomousRoutine(10) {
       new DriveDistanceWithTrapezoidalProfile(
-        FeetPerSecond(15),
+        FeetPerSecond(5),
         FeetPerSecond(0),
         drivetrainProps.get.maxAcceleration,
+        drivetrainProps.get.maxDeceleration,
         Feet(10),
         Inches(3),
         Degrees(5)
-      )(drivetrain)
+      )(drivetrain).toContinuous
     }
   }
 
@@ -298,42 +299,52 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("Drivetrain/Velocity")
         .addDataset(
-          drivetrainHardware.rightVelocity.derivative.map(_.toFeetPerSecondSquared).toTimeSeriesNumeric("forward acceleration"))
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(
-          drivetrainHardware.turnVelocity.derivative.map(_.toDegreesPerSecondSquared).toTimeSeriesNumeric("forward velocity"))
-      board
-        .datasetGroup("Drivetrain/Current")
-        .addDataset(
-          coreTicks.map(_ => drivetrainHardware.left.t.getOutputCurrent).toTimeSeriesNumeric("left master current")
-        )
-
-      board
-        .datasetGroup("Drivetrain/Current")
-        .addDataset(
-          coreTicks.map(_ => drivetrainHardware.right.t.getOutputCurrent).toTimeSeriesNumeric("right master current")
-        )
-
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(
-          drivetrainHardware.forwardPosition.map(_ => drivetrainHardware.right.t.getMotorOutputPercent).toTimeSeriesNumeric("Right output")
-        )
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(
-          drivetrainHardware.forwardPosition.map(_ => drivetrainHardware.left.t.getMotorOutputPercent).toTimeSeriesNumeric("Left output")
-        )
-
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(
           drivetrainHardware.leftVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Left velocity"))
       board
         .datasetGroup("Drivetrain/Velocity")
         .addDataset(
           drivetrainHardware.rightVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Right velocity"))
+
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(
+          drivetrainHardware.forwardVelocity.derivative.map(_.toFeetPerSecondSquared).toTimeSeriesNumeric("Forward acceleration"))
+
+      board
+        .datasetGroup("Drivetrain/Outputs")
+        .addDataset(
+          drivetrainHardware.forwardPosition.map(_ => drivetrainHardware.right.t.getMotorOutputPercent).toTimeSeriesNumeric("Right output")
+        )
+
+      board
+        .datasetGroup("Drivetrain/Outputs")
+        .addDataset(
+          drivetrainHardware.forwardPosition.map(_ => drivetrainHardware.left.t.getMotorOutputPercent).toTimeSeriesNumeric("Left output")
+        )
+
+      board
+        .datasetGroup("Drivetrain/Current")
+        .addDataset(
+          coreTicks.map(_ => drivetrainHardware.left.t.getOutputCurrent).toTimeSeriesNumeric("Left master current")
+        )
+
+      board
+        .datasetGroup("Drivetrain/Current")
+        .addDataset(
+          coreTicks.map(_ => drivetrainHardware.leftFollowerSRX.getOutputCurrent).toTimeSeriesNumeric("Left follower current")
+        )
+
+      board
+        .datasetGroup("Drivetrain/Current")
+        .addDataset(
+          coreTicks.map(_ => drivetrainHardware.right.t.getOutputCurrent).toTimeSeriesNumeric("Right master current")
+        )
+
+      board
+        .datasetGroup("Drivetrain/Current")
+        .addDataset(
+          coreTicks.map(_ => drivetrainHardware.rightFollowerSRX.getOutputCurrent).toTimeSeriesNumeric("Right follower current")
+        )
 
       board
         .datasetGroup("Drivetrain/Position")
@@ -347,16 +358,16 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .addDataset(drivetrainHardware.forwardPosition.map(_.toFeet).toTimeSeriesNumeric("forward position"))
 
       board
-        .datasetGroup("Drivetrain/Posiition")
+        .datasetGroup("Drivetrain/XY Position")
         .addDataset(pose.map(_.x.toFeet).toTimeSeriesNumeric("x"))
 
       board
-        .datasetGroup("Drivetrain/Posiition")
+        .datasetGroup("Drivetrain/XY Position")
         .addDataset(pose.map(_.y.toFeet).toTimeSeriesNumeric("y"))
 
       board
-          .datasetGroup("Drivetrain/Gyro")
-          .addDataset(drivetrainHardware.turnPosition.map(_.toDegrees).toTimeSeriesNumeric("angular position"))
+        .datasetGroup("Drivetrain/Gyro")
+        .addDataset(drivetrainHardware.turnPosition.map(_.toDegrees).toTimeSeriesNumeric("angular position"))
 
     }
 

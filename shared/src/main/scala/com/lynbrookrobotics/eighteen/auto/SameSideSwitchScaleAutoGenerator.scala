@@ -29,12 +29,12 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
                             relativeAngle: Stream[Angle]): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchAndScalePoints.toScalePoints,
-        tolerance = Inches(3),
+        tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 10,
+        targetTicksWithingTolerance = 5,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain).and(new WaitTask(Seconds(2)).then(liftElevatorToScale(cubeLift).toFinite)).then(
         shootCubeScale(collectorRollers, collectorPivot, cubeLift)
@@ -49,8 +49,8 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         Inches(12)
       )(drivetrain).then(
         new RotateByAngle(
-          -Degrees(135),
-          Degrees(20),
+          -Degrees(155),
+          Degrees(90),
           1
         )(drivetrain)
       )
@@ -77,7 +77,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
                          relativeAngle: Stream[Angle]): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchAndScalePoints.pickupSecondCubePoints,
-        tolerance = Inches(3),
+        tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
@@ -89,9 +89,9 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       ).then(
         pickupGroundCube(
           collectorRollers,
-          collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
+          collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.25))
       ).then(
-        new PivotDown(collectorPivot).forDuration(Seconds(1))
+        new PivotDown(collectorPivot).forDuration(Seconds(0.25))
       )
     }
 
@@ -105,7 +105,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
                         relativeAngle: Stream[Angle]): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchAndScalePoints.pickupThirdCubePoints,
-        tolerance = Inches(3),
+        tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
@@ -117,7 +117,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       ).then(
         pickupGroundCube(
           collectorRollers,
-          collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(1))
+          collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.25))
       )
     }
 
@@ -129,7 +129,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
                           pose: Stream[Point],
                           relativeAngle: Stream[Angle]): FiniteTask = {
       liftElevatorToSwitch(cubeLift).toFinite.then(new DriveBeyondStraight(
-        Inches(6),
+        Inches(3),
         Inches(1),
         Degrees(5),
         Percent(20)
@@ -137,7 +137,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
       ).then(
         new DriveBeyondStraight(
-          -Inches(18),
+          -Inches(15),
           Inches(1),
           Degrees(5),
           Percent(20)
@@ -148,6 +148,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
     def backUpPreThirdCubeDropOff(drivetrain: DrivetrainComponent,
                                   collectorRollers: CollectorRollers,
                                   collectorClamp: CollectorClamp,
+                                  collectorPivot: CollectorPivot,
                                   pose: Stream[Point],
                                   relativeAngle: Stream[Angle]): FiniteTask = {
       new FollowWayPointsWithPosition(
@@ -159,7 +160,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 1,
         forwardBackwardMode = BackwardsOnly
-      )(drivetrain)
+      )(drivetrain).and(new PivotDown(collectorPivot).forDuration(Seconds(0.5)))
     }
 
     def dropOffThirdCube(drivetrain: DrivetrainComponent,
@@ -171,12 +172,12 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
                          relativeAngle: Stream[Angle]): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchAndScalePoints.dropOffThirdCubePoints,
-        tolerance = Inches(3),
+        tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 10,
+        targetTicksWithingTolerance = 5,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain).and(liftElevatorToScale(cubeLift).toFinite).then(
         shootCubeScale(collectorRollers, collectorPivot, cubeLift)
@@ -211,7 +212,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       ).then(
         pickupThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, limeLightHardware, pose, relativeAngle)
       ).then(
-        backUpPreThirdCubeDropOff(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle)
+        backUpPreThirdCubeDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, pose, relativeAngle)
       ).then(
         dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
       )

@@ -25,7 +25,7 @@ import squants.{Angle, Percent}
 class AutoGenerator(protected val r: CoreRobot) {
   import r._
 
-  val purePursuitCruisingVelocity = FeetPerSecond(5)
+  val purePursuitCruisingVelocity = FeetPerSecond(13)
 
   val robotLength = Feet(3)
   val robotWidth = Feet(3)

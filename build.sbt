@@ -10,7 +10,7 @@ resolvers in ThisBuild += "Funky-Repo" at "http://lynbrookrobotics.com/repo"
 resolvers in ThisBuild += "WPILib-Maven" at "http://lynbrookrobotics.com/wpilib-maven"
 resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/development"
 
-val potassiumVersion = "0.1.0-8e7d95b8"
+val potassiumVersion = "0.1.0-a19dcfa2"
 val wpiVersion = "2018.2.2"
 
 lazy val robot = crossProject(JVMPlatform, NativePlatform)
@@ -105,11 +105,11 @@ val crossCompileSettings = Seq(
 
     outpath
   },
-  nativeTarget := "arm-frc-linux-gnueabi",
+  nativeTarget := "armv7-frc-linux-gnueabi",
   nativeCompileOptions ++= Seq(
     "-funwind-tables",
     "-target",
-    "armv7a-frc-linux-gnueabi",
+    "armv7-frc-linux-gnueabi",
     "-mfpu=neon",
     "-mfloat-abi=soft",
     s"--sysroot=${CrossSettings.toolchainPath.abs}",

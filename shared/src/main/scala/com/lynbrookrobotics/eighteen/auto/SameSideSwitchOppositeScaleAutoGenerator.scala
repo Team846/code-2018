@@ -32,12 +32,12 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
                         relativeAngle: Stream[Angle]): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchOppositeScalePoints.toSwitchPoints,
-        tolerance = Inches(3),
+        tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 10,
+        targetTicksWithingTolerance = 5,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain).then(
         dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)

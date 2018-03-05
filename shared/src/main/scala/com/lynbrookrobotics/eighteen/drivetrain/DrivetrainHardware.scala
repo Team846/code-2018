@@ -43,16 +43,6 @@ final case class DrivetrainHardware(
   val right /*Back*/ =
     new LazyTalon(rightSRX)
 
-  left.t.enableCurrentLimit(true)
-  left.t.configContinuousCurrentLimit(20, 0)
-  left.t.configPeakCurrentDuration(0, 0)
-
-
-  right.t.enableCurrentLimit(true)
-  right.t.configContinuousCurrentLimit(20, 0)
-  right.t.configPeakCurrentDuration(0, 0)
-
-
   leftFollowerSRX.follow(left.t)
   rightFollowerSRX.follow(right.t)
 
@@ -74,6 +64,7 @@ final case class DrivetrainHardware(
   Set(left, right).foreach { it =>
     TalonManager.configMaster(it.t)
 
+    it.t.configVelocityMeasurementWindow(32, escTout)
     it.t.configContinuousCurrentLimit(maxCurrent.toAmperes.toInt, 0)
     it.t.configPeakCurrentLimit(maxCurrent.toAmperes.toInt, 0)
     it.t.configPeakCurrentDuration(0, 0)

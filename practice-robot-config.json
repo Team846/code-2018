@@ -32,8 +32,8 @@
         },
         "kp": {
           "den": [
-            0.7,
-            "Feet"
+            8,
+            "Inches"
           ],
           "num": [
             100,
@@ -72,7 +72,7 @@
         ]
       },
       "maxMotorOutput": [
-        70,
+        100,
         "Percent"
       ],
       "talonOverVoltage": {
@@ -94,7 +94,7 @@
         "Inches"
       ],
       "twistyTotalRange": [
-        1,
+        -1.5,
         "Feet"
       ]
     },
@@ -110,7 +110,7 @@
   },
   "drivetrain": {
     "ports": {
-      "practiceSpeedControllers": true,
+      "practiceSpeedControllers": false,
       "rightFollowerPort": 14,
       "leftFollowerPort": 12,
       "rightPort": 13,
@@ -158,7 +158,11 @@
         "Feet"
       ],
       "maxAcceleration": [
-        5,
+        8,
+        "FeetPerSecondSquared"
+      ],
+      "maxDeceleration": [
+        3,
         "FeetPerSecondSquared"
       ],
       "maxCurrent": [
@@ -214,7 +218,7 @@
             "FeetPerSecond"
           ],
           "num": [
-            80,
+            50,
             "Percent"
           ]
         }
@@ -246,7 +250,7 @@
             "Degrees"
           ],
           "num": [
-            100,
+            110,
             "Percent"
           ]
         }
@@ -279,7 +283,7 @@
             "FeetPerSecond"
           ],
           "num": [
-            80,
+            50,
             "Percent"
           ]
         }

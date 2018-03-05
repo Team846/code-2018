@@ -52,7 +52,7 @@ object SameSideSwitchAndScalePoints {
       toScalePoints.last.y - Feet(1)
     ),
     Point(
-      -Inches(41.8) - Inches(6),
+      -Inches(41.8) - Inches(6) - Inches(4),
       Inches(228.3 + 6 + 4) - smallRoomFactor
     )
   )
@@ -77,7 +77,7 @@ object SameSideSwitchAndScalePoints {
   val dropOffThirdCubePoints = Seq(
     backupPreThirdCubeDropOffPoints.last,
     Point(
-      -Inches(41.8),
+      -Inches(41.8) + Feet(2),
       Inches(285.0) - smallRoomFactor - Inches(12) // change later, accumulating error
     )
   )
