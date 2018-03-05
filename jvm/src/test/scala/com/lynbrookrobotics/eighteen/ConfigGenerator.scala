@@ -77,7 +77,9 @@ object ConfigGenerator extends App {
             wheelOverEncoderGears = Ratio(
               Turns(18),
               Turns(74)
-            )
+            ),
+            deltaVelocityStallThreshold = FeetPerSecond(10),
+            stallTimeout = Seconds(3)
           )
         )
       ),
@@ -103,7 +105,9 @@ object ConfigGenerator extends App {
             maxMotorOutput = Percent(20),
             maxHeight = Inches(35),
             minHeight = Inches(10),
-            twistyTotalRange = Feet(1)
+            twistyTotalRange = Feet(1),
+            maxCurrentDraw = Amperes(20),
+            stallTimeout = Seconds(3)
           )
         )
       ),
