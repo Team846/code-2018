@@ -15,9 +15,16 @@ final case class ClimberWinchHardware(leftMotor: LazyTalon, middleMotor: LazyTal
 object ClimberWinchHardware {
   def apply(config: ClimberWinchConfig): ClimberWinchHardware = {
     new ClimberWinchHardware(
-      new LazyTalon(new TalonSRX(config.ports.leftMotorPort)),
-      new LazyTalon(new TalonSRX(config.ports.middleMotorPort)),
-      new LazyTalon(new TalonSRX(config.ports.rightMotorPort))
+      {
+        println(s"[DEBUG] Creating climber winch left talon on port ${config.ports.leftMotorPort}")
+        new LazyTalon(new TalonSRX(config.ports.leftMotorPort))
+      }, {
+        println(s"[DEBUG] Creating climber winch middle talon on port ${config.ports.middleMotorPort}")
+        new LazyTalon(new TalonSRX(config.ports.middleMotorPort))
+      }, {
+        println(s"[DEBUG] Creating climber winch right talon on port ${config.ports.rightMotorPort}")
+        new LazyTalon(new TalonSRX(config.ports.rightMotorPort))
+      }
     )
   }
 }
