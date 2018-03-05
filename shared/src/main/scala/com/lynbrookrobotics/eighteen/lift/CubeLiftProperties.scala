@@ -25,7 +25,7 @@ final case class CubeLiftProperties(
   minHeight: Length,
   twistyTotalRange: Length,
   maxCurrentDraw: ElectricCurrent,
-  stallTimeout: ElectricCurrent
+  stallTimeout: Time
 ) extends OffloadedLiftProperties {
   override def positionGains: PIDConfig[
     Length,

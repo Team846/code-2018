@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen.lift
 
-import com.lynbrookrobotics.eighteen.SingleOutputChecker
+import com.lynbrookrobotics.eighteen.{SingleOutputChecker, StallChecker}
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal.OpenLoop
 import com.lynbrookrobotics.potassium.streams.Stream
@@ -10,13 +10,23 @@ import squants.electro.Volts
 import squants.{Each, Percent}
 
 class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardware, props: Signal[CubeLiftProperties])
-    extends Component[OffloadedSignal] {
+  extends Component[OffloadedSignal] {
   override def defaultController: Stream[OffloadedSignal] = coreTicks.mapToConstant(OpenLoop(Each(0)))
 
   private val check = new SingleOutputChecker(
     "Cube Lift Talon",
     hardware.talon.getLastCommand
   )
+
+  StallChecker.timeAboveThreshold(
+    hardware.currentDraw,
+    props.get.maxCurrentDraw
+  )
+    .filter(_ > props.get.stallTimeout)
+    .foreach { stallTime =>
+      println(s"[ERROR] CUBE LIFT STALLED FOR $stallTime. ABORTING TASK.")
+      Task.abortCurrentTask()
+    }
 
   override def applySignal(signal: OffloadedSignal): Unit = check.assertSingleOutput {
     signal match {
