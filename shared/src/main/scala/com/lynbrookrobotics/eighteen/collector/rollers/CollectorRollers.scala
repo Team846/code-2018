@@ -27,13 +27,13 @@ class CollectorRollers(val coreTicks: Stream[Unit])(
 
   override def setController(controller: Stream[(Dimensionless, Dimensionless)]): Unit = {
     val l = CurrentLimiting.slewRate(
-      Each(hardware.rollerLeft.get()),
+      Each(hardware.rollerLeft.get),
       controller.map(_._1),
       Percent(100) / Seconds(0.3)
     )
 
     val r = CurrentLimiting.slewRate(
-      Each(hardware.rollerRight.get()),
+      Each(hardware.rollerRight.get),
       controller.map(_._2),
       Percent(100) / Seconds(0.3)
     )
