@@ -11,6 +11,7 @@ import com.lynbrookrobotics.potassium.sensors.imu.{ADIS16448, DigitalGyro}
 import com.lynbrookrobotics.potassium.streams._
 import com.lynbrookrobotics.potassium.units.{Ratio, Value3D}
 import edu.wpi.first.wpilibj.SPI
+import squants.electro.{Amperes, ElectricCurrent}
 import squants.motion.AngularVelocity
 import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Dimensionless, Each, Length, Velocity}
@@ -103,6 +104,11 @@ final case class DrivetrainHardware(
 
   val leftDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(left.t.getMotorOutputPercent))
   val rightDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(right.t.getMotorOutputPercent))
+
+  val leftMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(left.t.getOutputCurrent))
+  val rightMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(right.t.getOutputCurrent))
+  val leftFollowerCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(leftFollowerSRX.getOutputCurrent))
+  val rightFollowerCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(rightFollowerSRX.getOutputCurrent))
 
   override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
   override lazy val turnPosition: Stream[Angle] = turnVelocity.integral
