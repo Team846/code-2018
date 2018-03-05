@@ -78,8 +78,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
 
   StallChecker
     .timeAboveThreshold(
-      hardware.rightMasterCurrent.zip(hardware.rightFollowerCurrent)
-        .map { case (m, f) => (m - f).abs },
+      hardware.rightMasterCurrent.zip(hardware.rightFollowerCurrent).map { case (m, f) => (m - f).abs },
       props.get.parallelMotorCurrentThreshold
     )
     .filter(_ <= Seconds(0))
@@ -89,8 +88,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
 
   StallChecker
     .timeAboveThreshold(
-      hardware.leftMasterCurrent.zip(hardware.leftFollowerCurrent)
-        .map { case (m, f) => (m - f).abs },
+      hardware.leftMasterCurrent.zip(hardware.leftFollowerCurrent).map { case (m, f) => (m - f).abs },
       props.get.parallelMotorCurrentThreshold
     )
     .filter(_ <= Seconds(0))
