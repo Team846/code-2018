@@ -28,6 +28,7 @@ final case class DrivetrainProperties(
   track: Length,
   wheelDiameter: Length,
   wheelOverEncoderGears: Ratio[Angle, Angle],
+  parallelMotorCurrentThreshold: ElectricCurrent,
   deltaVelocityStallThreshold: Velocity,
   stallTimeout: Time
 ) extends OffloadedDriveProperties {

@@ -8,6 +8,7 @@ import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.Task
 import com.lynbrookrobotics.potassium.{Component, Signal}
+import squants.time.Seconds
 import squants.{Each, Percent}
 
 class DrivetrainComponent(coreTicks: Stream[Unit])(
@@ -73,6 +74,28 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     .foreach { time =>
       println(s"[ERROR] RIGHT SIDE OF DRIVETRAIN STALLED FOR $time. ABORTING TASK.")
       Task.abortCurrentTask()
+    }
+
+  StallChecker
+    .timeAboveThreshold(
+      hardware.rightMasterCurrent.zip(hardware.rightFollowerCurrent)
+        .map { case (m, f) => (m - f).abs },
+      props.get.parallelMotorCurrentThreshold
+    )
+    .filter(_ <= Seconds(0))
+    .foreach { time =>
+      println(s"[WARNING] RIGHT MASTER AND RIGHT FOLLOWER HAVE DIFFERENT CURRENT DRAWS. CHECK FUNKY DASHBOARD.")
+    }
+
+  StallChecker
+    .timeAboveThreshold(
+      hardware.leftMasterCurrent.zip(hardware.leftFollowerCurrent)
+        .map { case (m, f) => (m - f).abs },
+      props.get.parallelMotorCurrentThreshold
+    )
+    .filter(_ <= Seconds(0))
+    .foreach { time =>
+      println(s"[WARNING] LEFT MASTER AND LEFT FOLLOWER HAVE DIFFERENT CURRENT DRAWS. CHECK FUNKY DASHBOARD.")
     }
 
   override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput {
