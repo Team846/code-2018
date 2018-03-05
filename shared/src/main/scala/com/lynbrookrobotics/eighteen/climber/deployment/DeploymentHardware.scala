@@ -7,7 +7,10 @@ final case class DeploymentHardware(deploymentSolenoid: Solenoid)
 object DeploymentHardware {
   def apply(config: DeploymentConfig): DeploymentHardware = {
     DeploymentHardware(
-      new Solenoid(config.solenoidPort)
+      {
+        println(s"[DEBUG] Creating climber deployment solenoid on port ${config.solenoidPort}")
+        new Solenoid(config.solenoidPort)
+      }
     )
   }
 }
