@@ -96,6 +96,14 @@
       "twistyTotalRange": [
         0.75,
         "Feet"
+      ],
+      "maxCurrentDraw": [
+        20,
+        "Amperes"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
       ]
     },
     "ports": {
@@ -319,7 +327,15 @@
             "Percent"
           ]
         }
-      }
+      },
+      "deltaVelocityStallThreshold": [
+        10,
+        "FeetPerSecond"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
+      ]
     }
   },
   "driver": {
