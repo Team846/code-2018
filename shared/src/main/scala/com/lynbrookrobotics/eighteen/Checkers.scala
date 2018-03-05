@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.potassium.streams._
 import squants.time.Seconds
-import squants.{Dimensionless, Time, Velocity}
+import squants.{Dimensionless, Quantity, Time, Velocity}
 
 class SingleOutputChecker[T](hardwareName: String, get: => T) {
   private var lastOutput: Option[T] = None
@@ -25,14 +25,12 @@ class SingleOutputChecker[T](hardwareName: String, get: => T) {
   }
 }
 
-class StallChecker(deltaVelocityStallThreshold: => Velocity, maxVelocity: => Velocity) {
-  def checkStall(velocityAndDc: Stream[(Velocity, Dimensionless)]): Stream[Time] =
-    velocityAndDc.map { case (actual, dc) => (actual, maxVelocity * dc.toEach) }.map {
-      case (actual, expected) => expected - actual
-    }.zipWithDt
+object StallChecker {
+  def timeAboveThreshold[Q<:Quantity[Q]](stream: Stream[Q], threshold: Q): Stream[Time] = stream
+      .zipWithDt
       .scanLeft(Seconds(0)) {
-        case (stallTime, (velocityDiff, dt)) =>
-          if (velocityDiff > deltaVelocityStallThreshold) {
+        case (stallTime, (value, dt)) =>
+          if (value > threshold) {
             stallTime + dt
           } else Seconds(0)
       }
