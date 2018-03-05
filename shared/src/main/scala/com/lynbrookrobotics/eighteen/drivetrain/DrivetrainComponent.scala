@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen.drivetrain
 
-import com.lynbrookrobotics.eighteen.SingleOutputChecker
+import com.lynbrookrobotics.eighteen.{SingleOutputChecker, StallChecker}
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSided
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.UnicycleSignal

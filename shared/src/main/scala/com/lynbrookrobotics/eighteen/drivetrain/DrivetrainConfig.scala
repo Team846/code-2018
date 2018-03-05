@@ -27,7 +27,9 @@ final case class DrivetrainProperties(
   blendExponent: Double,
   track: Length,
   wheelDiameter: Length,
-  wheelOverEncoderGears: Ratio[Angle, Angle]
+  wheelOverEncoderGears: Ratio[Angle, Angle],
+  deltaVelocityStallThreshold: Velocity,
+  stallTimeout: Time
 ) extends OffloadedDriveProperties {
   override val encoderAngleOverTicks: Ratio[Angle, Dimensionless] = Ratio(Turns(1), Each(4096))
   override val escConfig: EscConfig[Length] = EscConfig(
