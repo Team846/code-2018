@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.potassium.streams._
 import squants.time.Seconds
-import squants.{Dimensionless, Quantity, Time, Velocity}
+import squants.{Quantity, Time}
 
 class SingleOutputChecker[T](hardwareName: String, get: => T) {
   private var lastOutput: Option[T] = None
