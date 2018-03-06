@@ -146,37 +146,33 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     cubeLiftComp <- cubeLiftComp
     cameraHardware <- cameraHardware
   } {
-
-
-    val fmsBasedAuto = DriverStation.getInstance().getGameSpecificMessage match {
-      case "LLL" | "LLR" =>  generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
-        drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLiftComp).toContinuous
-      case "RLL" | "RLR" => generator.SameSideSwitchOppositeScale.scaleSwitch3CubeAuto(
-        drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLiftComp).toContinuous // same op
-      case "LRL" | "LRR" => generator.OppositeSideSwitchSameSideScale.scaleSwitch3CubeAuto(drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLiftComp).toContinuous // op same
-      case "RRL" | "RRR" => generator.SameSideSwitchAndScale.scaleSwitch3Cube(
-        drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLiftComp,
-        cameraHardware).toContinuous // same same
-    }
-
     addAutonomousRoutine(3) {
-      fmsBasedAuto
+      DriverStation.getInstance().getGameSpecificMessage match {
+        case "LLL" | "LLR" =>  generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLiftComp).toContinuous
+        case "RLL" | "RLR" => generator.SameSideSwitchOppositeScale.scaleSwitch3CubeAuto(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLiftComp).toContinuous // same op
+        case "LRL" | "LRR" => generator.OppositeSideSwitchSameSideScale.scaleSwitch3CubeAuto(drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLiftComp).toContinuous // op same
+        case "RRL" | "RRR" => generator.SameSideSwitchAndScale.scaleSwitch3Cube(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLiftComp,
+          cameraHardware).toContinuous // same same
+      }
     }
 
     addAutonomousRoutine(4) {
