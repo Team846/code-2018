@@ -31,7 +31,8 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
     libraryDependencies += "edu.wpi.first" % "ntcore" % wpiVersion,
     libraryDependencies += "edu.wpi.first" % "wpiutil" % wpiVersion,
     libraryDependencies += "com.ctre" % "phoenix" % "5.1.3.1",
-    libraryDependencies += "org.opencv" % "opencv-java" % "3.2.0"
+    libraryDependencies += "org.opencv" % "opencv-java" % "3.2.0",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
   )
   .nativeSettings(
     libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.2",
