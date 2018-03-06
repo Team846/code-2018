@@ -24,17 +24,25 @@ class LaunchRobot extends RobotBase {
 
   val configFile = new File("/home/lvuser/robot-config.json")
 
-  var configString = Try(
+  var configString: String = Try(
     Source.fromFile(configFile).mkString
   ).getOrElse("")
 
   implicit var configJson = configString
-    .decodeOption[RobotConfig](RobotConfig.reader)
-    .getOrElse {
-      println("ERROR DEFAULTING CONFIG")
-      configString = DefaultConfig.json
-      DefaultConfig.json.decodeOption[RobotConfig](RobotConfig.reader).get
-    }
+    .decodeEither[RobotConfig](RobotConfig.reader)
+    .fold(
+      (e: String) => {
+        println("ERROR DEFAULTING CONFIG")
+        println(s"ERROR: $e")
+        configString = DefaultConfig.json
+        DefaultConfig.json
+          .decodeEither[RobotConfig](RobotConfig.reader)
+          .fold((e: String) => {
+            throw new Exception(s"Could not parse default config: $e")
+          }, identity)
+      },
+      identity
+    )
 
   implicit val configSig = Signal(configJson)
 
@@ -44,11 +52,11 @@ class LaunchRobot extends RobotBase {
     coreRobot = new CoreRobot(
       Signal(configString),
       newS => {
-        val parsed = newS.decodeOption[RobotConfig](RobotConfig.reader)
-        if (parsed.isEmpty) {
-          println("COULD NOT PARSE NEW CONFIG")
+        val parsed = newS.decodeEither[RobotConfig](RobotConfig.reader)
+        if (parsed.isLeft) {
+          println(s"COULD NOT PARSE NEW CONFIG ${parsed.left.get}")
         } else {
-          parsed.foreach { it =>
+          parsed.right.foreach { it =>
             println("writing to robot-config.json")
             configString = newS
             configJson = it
