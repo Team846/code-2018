@@ -70,8 +70,6 @@ object ButtonMappings {
         driverHardware.driverJoystick.getRawButton(LeftOne) &&
         !driverHardware.operatorJoystick.getRawButton(LeftOne)
       }.foreach(
-        driverHardware.driverJoystick.getRawButton(LeftOne)
-      }.foreach(
         new Climb(climber)
       )
     }
