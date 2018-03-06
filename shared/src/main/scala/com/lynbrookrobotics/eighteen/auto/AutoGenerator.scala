@@ -5,9 +5,6 @@ import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
-import com.lynbrookrobotics.eighteen.cubeLift
-import com.lynbrookrobotics.potassium.commons.lift
-import com.lynbrookrobotics.potassium.commons.lift.offloaded.OffloadedLift
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
@@ -15,7 +12,7 @@ import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.{BackwardsOnly, ForwardsOnly}
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WaitTask, WrapperTask}
+import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Feet, Inches}

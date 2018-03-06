@@ -10,8 +10,6 @@ import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
 import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
 import com.lynbrookrobotics.potassium.Signal
-import squants.time.Seconds
-import com.lynbrookrobotics.potassium.frc.Implicits._
 import com.lynbrookrobotics.potassium.frc.{LEDControllerHardware, WPIClock}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.vision.VisionProperties

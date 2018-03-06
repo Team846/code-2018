@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.auto.{AutoGenerator, FullAutoGenerator}
+import com.lynbrookrobotics.eighteen.auto.FullAutoGenerator
 import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
 import com.lynbrookrobotics.eighteen.climber.winch.ClimberWinch
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
@@ -16,13 +16,10 @@ import com.lynbrookrobotics.potassium.events.ContinuousEvent
 import com.lynbrookrobotics.potassium.frc.{Color, LEDController}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
-import com.lynbrookrobotics.eighteen.drivetrain.UnicycleControllers._
-import com.lynbrookrobotics.eighteen.drivetrain.UnicycleControllers
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
-import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.UnicycleSignal
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import edu.wpi.first.networktables.NetworkTableInstance
-import squants.{Each, Percent}
+import squants.Percent
 import squants.space.{Degrees, Feet, Inches}
 
 import scala.collection.mutable
@@ -220,7 +217,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .toContinuous
     }
 
-    import generator._
     addAutonomousRoutine(8) {
       new DriveDistanceStraight(
         Feet(10),
@@ -298,7 +294,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       curr - init
     })
 
-    val pose = XYPosition
+    XYPosition
       .circularTracking(
         relativeAngle.map(compassToTrigonometric),
         drivetrainHardware.forwardPosition

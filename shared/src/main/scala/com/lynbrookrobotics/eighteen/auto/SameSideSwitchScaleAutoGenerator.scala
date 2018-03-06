@@ -1,6 +1,5 @@
 package com.lynbrookrobotics.eighteen.auto
 
-import com.lynbrookrobotics.eighteen.camera.CameraTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
