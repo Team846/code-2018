@@ -9,11 +9,10 @@ import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.forklift.Forklift
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
-import com.lynbrookrobotics.eighteen.lighting.LightingTasks
 import com.lynbrookrobotics.funkydashboard.{FunkyDashboard, JsonEditor, TimeSeriesNumeric}
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.events.ContinuousEvent
-import com.lynbrookrobotics.potassium.frc.LEDController
+import com.lynbrookrobotics.potassium.frc.{Color, LEDController}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import edu.wpi.first.networktables.NetworkTableInstance
@@ -70,12 +69,15 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
 
   val cameraHardware = hardware.camera
+  implicit val camera = config.map(_.limelight)
 
   implicit val lightingHardware = hardware.ledHardware.orNull
   implicit val lightingComponent: Option[LEDController] =
-    hardware.ledHardware.map(_ => new LEDController(
-      coreTicks,
-      Signal.constant(DriverStation.Alliance))
+    hardware.ledHardware.map(_ =>
+      new LEDController(
+        coreTicks,
+        Signal.constant(DriverStation.Alliance.Red)
+      )
     )
 
   lazy val components: Seq[Component[_]] = Seq(
@@ -94,7 +96,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   def addAutonomousRoutine(id: Int)(task: => ContinuousTask): Unit = {
     if (autonomousRoutines.contains(id)) {
-      println(s"WARNING: overriding autonomous routine $id")
+      println(s"[WARNING] overriding autonomous routine $id")
     }
 
     autonomousRoutines(id) = () => task
@@ -122,7 +124,13 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     lighting <- lightingComponent
   } {
     val hasTargetEvent: ContinuousEvent = camera.hasTarget.eventWhen(identity)
-    hasTargetEvent.foreach(new LightingTasks.signalDriverForCubePickup(lighting))
+    hasTargetEvent.onStart.foreach(() => {
+      lighting.setController(coreTicks.mapToConstant(Color(0, 255, 0)))
+    })
+
+    hasTargetEvent.onEnd.foreach(() => {
+      lighting.resetToDefault()
+    })
   }
 
   private val inst = NetworkTableInstance.getDefault()
@@ -134,7 +142,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
     autonomousRoutines
       .getOrElse(autoID, {
-        println(s"ERROR: autonomous routine $autoID not found")
+        println(s"[ERROR] autonomous routine $autoID not found")
         () =>
           FiniteTask.empty.toContinuous
       })

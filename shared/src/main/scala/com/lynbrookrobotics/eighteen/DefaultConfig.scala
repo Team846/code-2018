@@ -4,14 +4,18 @@ object DefaultConfig {
   val json = """{
                |  "cubeLift": {
                |    "props": {
-               |      "scaleHeight": [
-               |        30,
+               |      "lowScaleHeight": [
+               |        66,
+               |        "Inches"
+               |      ],
+               |      "highScaleHeight": [
+               |        68,
                |        "Inches"
                |      ],
                |      "pidConfig": {
                |        "kd": {
                |          "den": [
-               |            5,
+               |            1,
                |            "FeetPerSecond"
                |          ],
                |          "num": [
@@ -31,17 +35,17 @@ object DefaultConfig {
                |        },
                |        "kp": {
                |          "den": [
-               |            5,
+               |            0.8,
                |            "Feet"
                |          ],
                |          "num": [
-               |            0,
+               |            100,
                |            "Percent"
                |          ]
                |        }
                |      },
                |      "collectHeight": [
-               |        2,
+               |        0.5,
                |        "Inches"
                |      ],
                |      "voltageAtBottom": [
@@ -53,7 +57,11 @@ object DefaultConfig {
                |        "Inches"
                |      ],
                |      "switchHeight": [
-               |        20,
+               |        25,
+               |        "Inches"
+               |      ],
+               |      "exchangeHeight": [
+               |        4,
                |        "Inches"
                |      ],
                |      "voltageOverHeight": {
@@ -67,7 +75,7 @@ object DefaultConfig {
                |        ]
                |      },
                |      "maxMotorOutput": [
-               |        80,
+               |        100,
                |        "Percent"
                |      ],
                |      "talonOverVoltage": {
@@ -81,12 +89,16 @@ object DefaultConfig {
                |        ]
                |      },
                |      "maxHeight": [
-               |        75,
+               |        73,
                |        "Inches"
                |      ],
                |      "minHeight": [
-               |        1,
+               |        0.25,
                |        "Inches"
+               |      ],
+               |      "twistyTotalRange": [
+               |        1.5,
+               |        "Feet"
                |      ]
                |    },
                |    "ports": {
@@ -109,7 +121,7 @@ object DefaultConfig {
                |    },
                |    "props": {
                |      "maxLeftVelocity": [
-               |        18.8,
+               |        17.7,
                |        "FeetPerSecond"
                |      ],
                |      "turnVelocityGains": {
@@ -135,11 +147,11 @@ object DefaultConfig {
                |        },
                |        "kp": {
                |          "den": [
-               |            1,
+               |            360,
                |            "DegreesPerSecond"
                |          ],
                |          "num": [
-               |            0,
+               |            50,
                |            "Percent"
                |          ]
                |        }
@@ -149,15 +161,15 @@ object DefaultConfig {
                |        "Feet"
                |      ],
                |      "maxAcceleration": [
-               |        0,
+               |        5,
                |        "FeetPerSecondSquared"
                |      ],
                |      "maxCurrent": [
-               |        25,
+               |        35,
                |        "Amperes"
                |      ],
                |      "maxRightVelocity": [
-               |        19.25,
+               |        17.7,
                |        "FeetPerSecond"
                |      ],
                |      "track": [
@@ -170,7 +182,7 @@ object DefaultConfig {
                |      ],
                |      "wheelOverEncoderGears": {
                |        "num": [
-               |          17,
+               |          18,
                |          "Turns"
                |        ],
                |        "den": [
@@ -201,11 +213,11 @@ object DefaultConfig {
                |        },
                |        "kp": {
                |          "den": [
-               |            5,
+               |            4,
                |            "FeetPerSecond"
                |          ],
                |          "num": [
-               |            0,
+               |            80,
                |            "Percent"
                |          ]
                |        }
@@ -233,11 +245,11 @@ object DefaultConfig {
                |        },
                |        "kp": {
                |          "den": [
-               |            1,
+               |            360,
                |            "Degrees"
                |          ],
                |          "num": [
-               |            0,
+               |            50,
                |            "Percent"
                |          ]
                |        }
@@ -266,11 +278,11 @@ object DefaultConfig {
                |        },
                |        "kp": {
                |          "den": [
-               |            5,
+               |            4,
                |            "FeetPerSecond"
                |          ],
                |          "num": [
-               |            0,
+               |            80,
                |            "Percent"
                |          ]
                |        }
@@ -302,7 +314,7 @@ object DefaultConfig {
                |            "Feet"
                |          ],
                |          "num": [
-               |            0,
+               |            50,
                |            "Percent"
                |          ]
                |        }
@@ -339,10 +351,25 @@ object DefaultConfig {
                |      "collectSpeed": [
                |        50,
                |        "Percent"
+               |      ],
+               |      "purgeSpeed": [
+               |        70,
+               |        "Percent"
                |      ]
                |    }
                |  },
                |  "climberWinch": null,
-               |  led = None
+               |  "enableLimelight": false,
+               |  "limelight": {
+               |    "cameraAngleRelativeToFront": [
+               |      0,
+               |      "Degrees"
+               |    ],
+               |    "reciprocalRootAreaToDistanceConversion": [
+               |      12.0176,
+               |      "Feet"
+               |    ]
+               |  }
+               |  "led": null
                |}""".stripMargin
 }

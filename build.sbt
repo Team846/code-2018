@@ -10,7 +10,7 @@ resolvers in ThisBuild += "Funky-Repo" at "http://lynbrookrobotics.com/repo"
 resolvers in ThisBuild += "WPILib-Maven" at "http://lynbrookrobotics.com/wpilib-maven"
 resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/development"
 
-val potassiumVersion = "0.1.0-11187030"
+val potassiumVersion = "0.1.0-f83d71b4"
 val wpiVersion = "2018.2.2"
 
 lazy val robot = crossProject(JVMPlatform, NativePlatform)
@@ -31,7 +31,8 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
     libraryDependencies += "edu.wpi.first" % "ntcore" % wpiVersion,
     libraryDependencies += "edu.wpi.first" % "wpiutil" % wpiVersion,
     libraryDependencies += "com.ctre" % "phoenix" % "5.1.3.1",
-    libraryDependencies += "org.opencv" % "opencv-java" % "3.2.0"
+    libraryDependencies += "org.opencv" % "opencv-java" % "3.2.0",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
   )
   .nativeSettings(
     libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.2",

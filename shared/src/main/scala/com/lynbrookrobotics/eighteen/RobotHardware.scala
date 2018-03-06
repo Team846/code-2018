@@ -9,9 +9,9 @@ import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
 import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
-import squants.time.Seconds
+import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.frc.Implicits._
-import com.lynbrookrobotics.potassium.frc.LEDControllerHardware
+import com.lynbrookrobotics.potassium.frc.{LEDControllerHardware, WPIClock}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 
@@ -45,8 +45,9 @@ object RobotHardware {
       drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
       cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
-      camera = Some(new LimeLightHardware(Seconds(10))),
-      ledHardware = Some(LEDControllerHardware(robotConfig.led.get))
+      camera = if (robotConfig.enableLimelight) Some(new LimeLightHardware(true)
+                (WPIClock, Signal.constant(robotConfig.limelight.get))) else None,
+      ledHardware = robotConfig.led.map(l => LEDControllerHardware(l))
     )
   }
 }

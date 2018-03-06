@@ -92,6 +92,10 @@
       "minHeight": [
         0.25,
         "Inches"
+      ],
+      "twistyTotalRange": [
+        1.5,
+        "Feet"
       ]
     },
     "ports": {
@@ -106,7 +110,7 @@
   },
   "drivetrain": {
     "ports": {
-      "practiceSpeedControllers": true,
+      "practiceSpeedControllers": false,
       "rightFollowerPort": 14,
       "leftFollowerPort": 12,
       "rightPort": 13,
@@ -363,5 +367,7 @@
         "Percent"
       ]
     }
-  }
+  },
+  "enableLimelight": false,
+  "led": null
 }

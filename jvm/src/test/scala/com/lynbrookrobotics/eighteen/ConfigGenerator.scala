@@ -100,10 +100,15 @@ object ConfigGenerator extends App {
             liftPositionTolerance = Inches(2),
             maxMotorOutput = Percent(20),
             maxHeight = Inches(35),
-            minHeight = Inches(10)
+            minHeight = Inches(10),
+            twistyTotalRange = Feet(1)
           )
         )
       ),
+<<<<<<< HEAD
+=======
+      enableLimelight = false,
+>>>>>>> master
       led = None
     ).jencode(RobotConfig.writer).spaces2
   )

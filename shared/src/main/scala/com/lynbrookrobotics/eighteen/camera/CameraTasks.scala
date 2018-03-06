@@ -27,7 +27,6 @@ object CameraTasks {
     collectorRollerProps: Signal[CollectorRollersProperties],
     collectorClampHardware: CollectorClampHardware
   ): FiniteTask = {
-
     new DriveToTargetWithConstantSpeed(
       drivetrain,
       camera.distanceToTarget,
