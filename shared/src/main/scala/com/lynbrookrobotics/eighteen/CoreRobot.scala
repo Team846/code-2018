@@ -178,11 +178,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     addAutonomousRoutine(4) {
       val switchPosition = DriverStation.getInstance().getGameSpecificMessage.head
       switchPosition match {
-        case 'L' =>
+        case "L" =>
           generator
             .leftCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
-        case 'R' =>
+        case "R" =>
           generator
             .rightCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
