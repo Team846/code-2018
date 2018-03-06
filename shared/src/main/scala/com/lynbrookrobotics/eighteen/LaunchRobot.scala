@@ -29,14 +29,20 @@ class LaunchRobot extends RobotBase {
   ).getOrElse("")
 
   implicit var configJson = configString
-    .decodeEither[RobotConfig](RobotConfig.reader).fold((e: String) => {
-      println("ERROR DEFAULTING CONFIG")
-      println(s"ERROR: $e")
-      configString = DefaultConfig.json
-      DefaultConfig.json.decodeEither[RobotConfig](RobotConfig.reader).fold((e: String) => {
-        throw new Exception(s"Could not parse default config: $e")
-      }, identity)
-    }, identity)
+    .decodeEither[RobotConfig](RobotConfig.reader)
+    .fold(
+      (e: String) => {
+        println("ERROR DEFAULTING CONFIG")
+        println(s"ERROR: $e")
+        configString = DefaultConfig.json
+        DefaultConfig.json
+          .decodeEither[RobotConfig](RobotConfig.reader)
+          .fold((e: String) => {
+            throw new Exception(s"Could not parse default config: $e")
+          }, identity)
+      },
+      identity
+    )
 
   implicit val configSig = Signal(configJson)
 
