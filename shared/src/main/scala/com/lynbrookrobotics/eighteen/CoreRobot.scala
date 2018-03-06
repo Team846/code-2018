@@ -147,7 +147,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     cameraHardware <- cameraHardware
   } {
     addAutonomousRoutine(3) {
-      DriverStation.getInstance().getGameSpecificMessage match {
+      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
+      switchScalePattern match {
         case "LLL" | "LLR" =>  generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
           drivetrain,
           collectorRollers,
@@ -172,6 +173,31 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
           collectorPivot,
           cubeLiftComp,
           cameraHardware).toContinuous // same same
+        case _ =>
+          println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
+          ContinuousTask.empty
+      }
+    }
+
+    addAutonomousRoutine(4) {
+      val switchPosition = DriverStation.getInstance().getGameSpecificMessage.head
+      switchPosition match {
+        case 'L' =>  generator.leftCenterSwitch(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLiftComp).toContinuous
+        case 'R' => generator.rightCenterSwitch(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLiftComp).toContinuous
+        case _ =>
+          println(s"Switch position didn't match what was expected. Was $switchPosition")
+          ContinuousTask.empty
+
       }
     }
 

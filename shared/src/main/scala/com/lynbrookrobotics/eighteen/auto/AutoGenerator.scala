@@ -338,25 +338,58 @@ class AutoGenerator(protected val r: CoreRobot) {
     )(drivetrain)
   }
 
-  def centerSwitch(drivetrain: DrivetrainComponent): FiniteTask = {
+  def leftCenterSwitch(drivetrain: DrivetrainComponent,
+                       collectorRollers: CollectorRollers,
+                       collectorClamp: CollectorClamp,
+                       collectorPivot: CollectorPivot,
+                       cubeLiftComp: CubeLiftComp): FiniteTask = {
     new FollowWayPoints(
       Seq(
         Point.origin,
         Point(
-          Inches(-55.393),
-          Inches(111.993)
+          -Inches(61),
+          Inches(72.7)
         ),
         Point(
-          Inches(-55.393),
-          Inches(143.993)
+          -Inches(61),
+          Inches(107.8)
         )
       ),
       tolerance = Inches(6),
       maxTurnOutput = Percent(100),
-      cruisingVelocity = FeetPerSecond(20),
-      targetTicksWithingTolerance = 10,
+      cruisingVelocity = purePursuitCruisingVelocity,
+      targetTicksWithingTolerance = 1,
       forwardBackwardMode = ForwardsOnly
-    )(drivetrain)
+    )(drivetrain).then(
+      dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+    )
+  }
+
+  def rightCenterSwitch(drivetrain: DrivetrainComponent,
+                        collectorRollers: CollectorRollers,
+                        collectorClamp: CollectorClamp,
+                        collectorPivot: CollectorPivot,
+                        cubeLiftComp: CubeLiftComp): FiniteTask = {
+    new FollowWayPoints(
+      Seq(
+        Point.origin,
+        Point(
+          Inches(38.5),
+          Inches(66.6)
+        ),
+        Point(
+          Inches(38.5),
+          Inches(107.8)
+        )
+      ),
+      tolerance = Inches(6),
+      maxTurnOutput = Percent(100),
+      cruisingVelocity = purePursuitCruisingVelocity,
+      targetTicksWithingTolerance = 1,
+      forwardBackwardMode = ForwardsOnly
+    )(drivetrain).then(
+      dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+    )
   }
 
   val centerStartingPose = Point(Inches(139.473), Inches(0))
