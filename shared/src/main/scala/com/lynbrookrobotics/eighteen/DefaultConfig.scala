@@ -96,8 +96,16 @@ object DefaultConfig {
                |        0.25,
                |        "Inches"
                |      ],
+               |      "maxCurrentDraw": [
+               |        20,
+               |        "Amperes"
+               |      ],
+               |      "stallTimeout": [
+               |        3,
+               |        "Seconds"
+               |      ],
                |      "twistyTotalRange": [
-               |        1.5,
+               |        -1.5,
                |        "Feet"
                |      ]
                |    },
@@ -170,6 +178,10 @@ object DefaultConfig {
                |      ],
                |      "maxCurrent": [
                |        35,
+               |        "Amperes"
+               |      ],
+               |      "parallelMotorCurrentThreshold" : [
+               |        5,
                |        "Amperes"
                |      ],
                |      "maxRightVelocity": [
@@ -322,7 +334,15 @@ object DefaultConfig {
                |            "Percent"
                |          ]
                |        }
-               |      }
+               |      },
+               |      "deltaVelocityStallThreshold": [
+               |        10,
+               |        "FeetPerSecond"
+               |      ],
+               |      "stallTimeout": [
+               |        3,
+               |        "Seconds"
+               |      ]
                |    }
                |  },
                |  "driver": {

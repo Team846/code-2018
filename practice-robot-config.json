@@ -93,6 +93,14 @@
         0.25,
         "Inches"
       ],
+      "maxCurrentDraw": [
+        20,
+        "Amperes"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
+      ],
       "twistyTotalRange": [
         -1.5,
         "Feet"
@@ -167,6 +175,10 @@
       ],
       "maxCurrent": [
         35,
+        "Amperes"
+      ],
+      "parallelMotorCurrentThreshold": [
+        5,
         "Amperes"
       ],
       "maxRightVelocity": [
@@ -319,7 +331,15 @@
             "Percent"
           ]
         }
-      }
+      },
+      "deltaVelocityStallThreshold": [
+        10,
+        "FeetPerSecond"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
+      ]
     }
   },
   "driver": {
