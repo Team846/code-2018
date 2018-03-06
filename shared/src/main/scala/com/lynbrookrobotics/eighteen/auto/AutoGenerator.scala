@@ -466,8 +466,8 @@ class AutoGenerator(protected val r: CoreRobot) {
           xyPosition,
           relativeAngle
         ).then(
-            printTask("ended scale drop!")
-          )
+          printTask("ended scale drop!")
+        )
       )
   }
 
