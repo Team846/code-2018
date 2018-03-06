@@ -122,7 +122,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   for {
     drivetrain <- drivetrain
   } {
-    addAutonomousRoutine(10) {
+    addAutonomousRoutine(11) {
       new DriveDistanceWithTrapezoidalProfile(
         FeetPerSecond(5),
         FeetPerSecond(0),
@@ -193,31 +193,31 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       }
     }
 
-    addAutonomousRoutine(4) {
+    addAutonomousRoutine(5) {
       generator.SameSideSwitchAndScale
         .scaleSwitch3Cube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp, cameraHardware)
         .toContinuous
     }
 
-    addAutonomousRoutine(5) {
+    addAutonomousRoutine(6) {
       generator.SameSideSwitchOppositeScale
         .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
         .toContinuous
     }
 
-    addAutonomousRoutine(6) {
+    addAutonomousRoutine(7) {
       generator.OppositeSideSwitchSameSideScale
         .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
         .toContinuous
     }
 
-    addAutonomousRoutine(7) {
+    addAutonomousRoutine(8) {
       generator.OppositeSideSwitchAndScale
         .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
         .toContinuous
     }
 
-    addAutonomousRoutine(8) {
+    addAutonomousRoutine(9) {
       new DriveDistanceStraight(
         Feet(10),
         Inches(10),
@@ -226,7 +226,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       )(drivetrain).toContinuous
     }
 
-    addAutonomousRoutine(9) {
+    addAutonomousRoutine(10) {
       new RotateToAngle(
         Degrees(-10),
         Degrees(5)
