@@ -219,7 +219,6 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         curr - init
       })
 
-      var iHateMyLife = false
       val pose = XYPosition
         .circularTracking(
           relativeAngle.map(compassToTrigonometric),
@@ -229,7 +228,6 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
           p => p + sideStartingPose
         )
         .preserve
-        .withCheck(_ => { iHateMyLife = true })
 
       startToScaleDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
         .then(
