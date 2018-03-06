@@ -105,7 +105,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     autonomousRoutines(id) = () => task
   }
 
-  println("hi?")
   val generator = new FullAutoGenerator(this)
   for {
     drivetrain <- drivetrain
@@ -147,7 +146,40 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     cubeLiftComp <- cubeLiftComp
     cameraHardware <- cameraHardware
   } {
+
+
+    val fmsBasedAuto = DriverStation.getInstance().getGameSpecificMessage match {
+      case "LLL" | "LLR" =>  generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
+        drivetrain,
+        collectorRollers,
+        collectorClamp,
+        collectorPivot,
+        cubeLiftComp).toContinuous
+      case "RLL" | "RLR" => generator.SameSideSwitchOppositeScale.scaleSwitch3CubeAuto(
+        drivetrain,
+        collectorRollers,
+        collectorClamp,
+        collectorPivot,
+        cubeLiftComp).toContinuous // same op
+      case "LRL" | "LRR" => generator.OppositeSideSwitchSameSideScale.scaleSwitch3CubeAuto(drivetrain,
+        collectorRollers,
+        collectorClamp,
+        collectorPivot,
+        cubeLiftComp).toContinuous // op same
+      case "RRL" | "RRR" => generator.SameSideSwitchAndScale.scaleSwitch3Cube(
+        drivetrain,
+        collectorRollers,
+        collectorClamp,
+        collectorPivot,
+        cubeLiftComp,
+        cameraHardware).toContinuous // same same
+    }
+
     addAutonomousRoutine(3) {
+      fmsBasedAuto
+    }
+
+    addAutonomousRoutine(4) {
       generator.SameSideSwitchAndScale.scaleSwitch3Cube(
         drivetrain,
         collectorRollers,
@@ -157,7 +189,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         cameraHardware).toContinuous
     }
 
-    addAutonomousRoutine(4) {
+    addAutonomousRoutine(5) {
       generator.SameSideSwitchOppositeScale.scaleSwitch3CubeAuto(
         drivetrain,
         collectorRollers,
@@ -166,7 +198,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         cubeLiftComp).toContinuous
     }
 
-    addAutonomousRoutine(5) {
+    addAutonomousRoutine(6) {
       generator.OppositeSideSwitchSameSideScale.scaleSwitch3CubeAuto(
         drivetrain,
         collectorRollers,
@@ -175,7 +207,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         cubeLiftComp).toContinuous
     }
 
-    addAutonomousRoutine(6) {
+    addAutonomousRoutine(7) {
       generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
         drivetrain,
         collectorRollers,
@@ -185,7 +217,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     }
 
     import generator._
-    addAutonomousRoutine(7) {
+    addAutonomousRoutine(8) {
       new DriveDistanceStraight(
         Feet(10),
         Inches(10),
@@ -194,7 +226,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       )(drivetrain).toContinuous
     }
 
-    addAutonomousRoutine(8) {
+    addAutonomousRoutine(9) {
       new RotateToAngle(
         Degrees(-10),
         Degrees(5)
