@@ -18,13 +18,15 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
   import r._
 
   object OppositeSideSwitchAndScale {
-    def dropOffToScale(drivetrain: DrivetrainComponent,
-                       collectorRollers: CollectorRollers,
-                       collectorClamp: CollectorClamp,
-                       collectorPivot: CollectorPivot,
-                       cubeLift: CubeLiftComp,
-                       pose: Stream[Point],
-                       relativeAngle: Stream[Angle]): FiniteTask = {
+    def dropOffToScale(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = OppositeSideSwitchScalePoints.toScalePoints,
         tolerance = Inches(3),
@@ -39,32 +41,72 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
       )
     }
 
-    def scaleSwitch3CubeAuto(drivetrain: DrivetrainComponent,
-                             collectorRollers: CollectorRollers,
-                             collectorClamp: CollectorClamp,
-                             collectorPivot: CollectorPivot,
-                             cubeLift: CubeLiftComp): FiniteTask = {
+    def scaleSwitch3CubeAuto(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp
+    ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
       })
 
-      val pose = XYPosition.circularTracking(
-        relativeAngle.map(compassToTrigonometric),
-        drivetrainHardware.forwardPosition
-      ).map(
-        p => p + sideStartingPose
-      ).preserve
+      val pose = XYPosition
+        .circularTracking(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardPosition
+        )
+        .map(
+          p => p + sideStartingPose
+        )
+        .preserve
 
-
-      dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle).then(
-        SameSideSwitchOppositeScale.pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      ).then(
-        SameSideSwitchOppositeScale.dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      ).then(
-        SameSideSwitchOppositeScale.pickUpThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      ).then(
-        SameSideSwitchOppositeScale.dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      )
+      dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .then(
+          SameSideSwitchOppositeScale.pickupSecondCube(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          )
+        )
+        .then(
+          SameSideSwitchOppositeScale.dropOffSecondCube(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          )
+        )
+        .then(
+          SameSideSwitchOppositeScale.pickUpThirdCube(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          )
+        )
+        .then(
+          SameSideSwitchOppositeScale.dropOffThirdCube(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          )
+        )
     }
   }
 

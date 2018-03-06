@@ -22,7 +22,6 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
         .map(v => -v.driver.y)
         .map(s => Each(Math.copySign((s * s).toEach, s.toEach)))
 
-
       val turn = hardware.driverHardware.joystickStream
         .map(v => v.driverWheel.x)
         .map(s => Each(Math.copySign((s * s).toEach, s.toEach)))

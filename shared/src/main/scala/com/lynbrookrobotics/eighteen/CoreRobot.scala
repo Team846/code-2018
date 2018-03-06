@@ -149,30 +149,29 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     addAutonomousRoutine(3) {
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
-        case "LLL" | "LLR" =>  generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
-          drivetrain,
-          collectorRollers,
-          collectorClamp,
-          collectorPivot,
-          cubeLiftComp).toContinuous
-        case "RLL" | "RLR" => generator.SameSideSwitchOppositeScale.scaleSwitch3CubeAuto(
-          drivetrain,
-          collectorRollers,
-          collectorClamp,
-          collectorPivot,
-          cubeLiftComp).toContinuous // same op
-        case "LRL" | "LRR" => generator.OppositeSideSwitchSameSideScale.scaleSwitch3CubeAuto(drivetrain,
-          collectorRollers,
-          collectorClamp,
-          collectorPivot,
-          cubeLiftComp).toContinuous // op same
-        case "RRL" | "RRR" => generator.SameSideSwitchAndScale.scaleSwitch3Cube(
-          drivetrain,
-          collectorRollers,
-          collectorClamp,
-          collectorPivot,
-          cubeLiftComp,
-          cameraHardware).toContinuous // same same
+        case "LLL" | "LLR" =>
+          generator.OppositeSideSwitchAndScale
+            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous
+        case "RLL" | "RLR" =>
+          generator.SameSideSwitchOppositeScale
+            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous // same op
+        case "LRL" | "LRR" =>
+          generator.OppositeSideSwitchSameSideScale
+            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous // op same
+        case "RRL" | "RRR" =>
+          generator.SameSideSwitchAndScale
+            .scaleSwitch3Cube(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // same same
         case _ =>
           println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
           ContinuousTask.empty
@@ -182,18 +181,14 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     addAutonomousRoutine(4) {
       val switchPosition = DriverStation.getInstance().getGameSpecificMessage.head
       switchPosition match {
-        case 'L' =>  generator.leftCenterSwitch(
-          drivetrain,
-          collectorRollers,
-          collectorClamp,
-          collectorPivot,
-          cubeLiftComp).toContinuous
-        case 'R' => generator.rightCenterSwitch(
-          drivetrain,
-          collectorRollers,
-          collectorClamp,
-          collectorPivot,
-          cubeLiftComp).toContinuous
+        case 'L' =>
+          generator
+            .leftCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous
+        case 'R' =>
+          generator
+            .rightCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous
         case _ =>
           println(s"Switch position didn't match what was expected. Was $switchPosition")
           ContinuousTask.empty
@@ -202,40 +197,27 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     }
 
     addAutonomousRoutine(4) {
-      generator.SameSideSwitchAndScale.scaleSwitch3Cube(
-        drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLiftComp,
-        cameraHardware).toContinuous
+      generator.SameSideSwitchAndScale
+        .scaleSwitch3Cube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp, cameraHardware)
+        .toContinuous
     }
 
     addAutonomousRoutine(5) {
-      generator.SameSideSwitchOppositeScale.scaleSwitch3CubeAuto(
-        drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLiftComp).toContinuous
+      generator.SameSideSwitchOppositeScale
+        .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+        .toContinuous
     }
 
     addAutonomousRoutine(6) {
-      generator.OppositeSideSwitchSameSideScale.scaleSwitch3CubeAuto(
-        drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLiftComp).toContinuous
+      generator.OppositeSideSwitchSameSideScale
+        .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+        .toContinuous
     }
 
     addAutonomousRoutine(7) {
-      generator.OppositeSideSwitchAndScale.scaleSwitch3CubeAuto(
-        drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLiftComp).toContinuous
+      generator.OppositeSideSwitchAndScale
+        .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+        .toContinuous
     }
 
     import generator._
@@ -320,9 +302,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       .circularTracking(
         relativeAngle.map(compassToTrigonometric),
         drivetrainHardware.forwardPosition
-      ).map(
-      p => p + generator.sideStartingPose
-    ).preserve
+      )
+      .map(
+        p => p + generator.sideStartingPose
+      )
+      .preserve
 
     import CoreRobot.ToTimeSeriesNumeric
 
@@ -335,8 +319,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         )
       )
 
-
-
     drivetrain.foreach { d =>
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
@@ -346,34 +328,41 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .circularTracking(
           relativeAngle.map(compassToTrigonometric),
           drivetrainHardware.forwardPosition
-        ).map(
-        p => p + generator.sideStartingPose
-      ).preserve
+        )
+        .map(
+          p => p + generator.sideStartingPose
+        )
+        .preserve
+
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(drivetrainHardware.leftVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Left velocity"))
+      board
+        .datasetGroup("Drivetrain/Velocity")
+        .addDataset(drivetrainHardware.rightVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Right velocity"))
 
       board
         .datasetGroup("Drivetrain/Velocity")
         .addDataset(
-          drivetrainHardware.leftVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Left velocity"))
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(
-          drivetrainHardware.rightVelocity.map(_.toFeetPerSecond).toTimeSeriesNumeric("Right velocity"))
-
-      board
-        .datasetGroup("Drivetrain/Velocity")
-        .addDataset(
-          drivetrainHardware.forwardVelocity.derivative.map(_.toFeetPerSecondSquared).toTimeSeriesNumeric("Forward acceleration"))
-
-      board
-        .datasetGroup("Drivetrain/Outputs")
-        .addDataset(
-          drivetrainHardware.forwardPosition.map(_ => drivetrainHardware.right.t.getMotorOutputPercent).toTimeSeriesNumeric("Right output")
+          drivetrainHardware.forwardVelocity.derivative
+            .map(_.toFeetPerSecondSquared)
+            .toTimeSeriesNumeric("Forward acceleration")
         )
 
       board
         .datasetGroup("Drivetrain/Outputs")
         .addDataset(
-          drivetrainHardware.forwardPosition.map(_ => drivetrainHardware.left.t.getMotorOutputPercent).toTimeSeriesNumeric("Left output")
+          drivetrainHardware.forwardPosition
+            .map(_ => drivetrainHardware.right.t.getMotorOutputPercent)
+            .toTimeSeriesNumeric("Right output")
+        )
+
+      board
+        .datasetGroup("Drivetrain/Outputs")
+        .addDataset(
+          drivetrainHardware.forwardPosition
+            .map(_ => drivetrainHardware.left.t.getMotorOutputPercent)
+            .toTimeSeriesNumeric("Left output")
         )
 
       board
@@ -385,7 +374,9 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("Drivetrain/Current")
         .addDataset(
-          coreTicks.map(_ => drivetrainHardware.leftFollowerSRX.getOutputCurrent).toTimeSeriesNumeric("Left follower current")
+          coreTicks
+            .map(_ => drivetrainHardware.leftFollowerSRX.getOutputCurrent)
+            .toTimeSeriesNumeric("Left follower current")
         )
 
       board
@@ -397,7 +388,9 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("Drivetrain/Current")
         .addDataset(
-          coreTicks.map(_ => drivetrainHardware.rightFollowerSRX.getOutputCurrent).toTimeSeriesNumeric("Right follower current")
+          coreTicks
+            .map(_ => drivetrainHardware.rightFollowerSRX.getOutputCurrent)
+            .toTimeSeriesNumeric("Right follower current")
         )
 
       board
@@ -425,10 +418,12 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
     }
 
-    collectorClamp.foreach { clamp  =>
+    collectorClamp.foreach { clamp =>
       board
-          .datasetGroup("CollectorClamp/ir")
-            .addDataset(collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity sensor voltage"))
+        .datasetGroup("CollectorClamp/ir")
+        .addDataset(
+          collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity sensor voltage")
+        )
     }
 
     cubeLiftComp.foreach { l =>

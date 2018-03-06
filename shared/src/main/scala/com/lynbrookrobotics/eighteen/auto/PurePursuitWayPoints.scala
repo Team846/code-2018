@@ -27,7 +27,7 @@ object SameSideSwitchAndScalePoints {
     Point(
       -Inches(45.7),
       Inches(280.9) - smallRoomFactor
-    )/*
+    ) /*
     Point(
       -Inches(41.3),
       Inches(285.2) - smallRoomFactor - Inches(6)
@@ -154,9 +154,7 @@ object SameSideSwitchOppositeScalePoints {
     )
   )
 
-  val preDropOffPoint = Point(
-    -Inches(266.7),
-    Inches(218.6))
+  val preDropOffPoint = Point(-Inches(266.7), Inches(218.6))
   val backUpToDropOffSecondCube = Seq(
     pickupSecondCube.last,
     preDropOffPoint

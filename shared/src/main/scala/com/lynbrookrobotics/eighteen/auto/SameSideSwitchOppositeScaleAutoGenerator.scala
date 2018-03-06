@@ -23,13 +23,15 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
       Inches(232.3)
     )
 
-    def dropOffToSwitch(drivetrain: DrivetrainComponent,
-                        collectorRollers: CollectorRollers,
-                        collectorClamp: CollectorClamp,
-                        collectorPivot: CollectorPivot,
-                        cubeLift: CubeLiftComp,
-                        pose: Stream[Point],
-                        relativeAngle: Stream[Angle]): FiniteTask = {
+    def dropOffToSwitch(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchOppositeScalePoints.toSwitchPoints,
         tolerance = Inches(6),
@@ -44,16 +46,14 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
       )
     }
 
-    def driveBackPostSwitch(drivetrain: DrivetrainComponent,
-                            collectorRollers: CollectorRollers,
-                            collectorClamp: CollectorClamp,
-                            pose: Stream[Point],
-                            relativeAngle: Stream[Angle]): FiniteTask = {
-      new DriveDistanceStraight(
-        -Inches(12),
-        toleranceForward = Inches(3),
-        Degrees(5),
-        Percent(10))(drivetrain).then(
+    def driveBackPostSwitch(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
+      new DriveDistanceStraight(-Inches(12), toleranceForward = Inches(3), Degrees(5), Percent(10))(drivetrain).then(
         new FollowWayPointsWithPosition(
           wayPoints = SameSideSwitchOppositeScalePoints.driveBackPostSwitch,
           tolerance = Inches(3),
@@ -67,13 +67,15 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
       )
     }
 
-    def pickupSecondCube(drivetrain: DrivetrainComponent,
-                         collectorRollers: CollectorRollers,
-                         collectorClamp: CollectorClamp,
-                         collectorPivot: CollectorPivot,
-                         cubeLift: CubeLiftComp,
-                         pose: Stream[Point],
-                         relativeAngle: Stream[Angle]): FiniteTask = {
+    def pickupSecondCube(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchOppositeScalePoints.pickupSecondCube,
         tolerance = Inches(3),
@@ -88,13 +90,15 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
       )
     }
 
-    def pickUpThirdCube(drivetrain: DrivetrainComponent,
-                        collectorRollers: CollectorRollers,
-                        collectorClamp: CollectorClamp,
-                        collectorPivot: CollectorPivot,
-                        cubeLift: CubeLiftComp,
-                        pose: Stream[Point],
-                        relativeAngle: Stream[Angle]): FiniteTask = {
+    def pickUpThirdCube(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchOppositeScalePoints.backUpToPickupThirdCube,
         tolerance = Inches(3),
@@ -104,28 +108,33 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 10,
         forwardBackwardMode = BackwardsOnly
-      )(drivetrain).then(
-        new FollowWayPointsWithPosition(
-          wayPoints = SameSideSwitchOppositeScalePoints.pickupThirdCube,
-          tolerance = Inches(3),
-          position = pose,
-          turnPosition = relativeAngle,
-          maxTurnOutput = Percent(100),
-          cruisingVelocity = purePursuitCruisingVelocity,
-          targetTicksWithingTolerance = 10,
-          forwardBackwardMode = ForwardsOnly
-        )(drivetrain)).andUntilDone(
-        pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-      )
+      )(drivetrain)
+        .then(
+          new FollowWayPointsWithPosition(
+            wayPoints = SameSideSwitchOppositeScalePoints.pickupThirdCube,
+            tolerance = Inches(3),
+            position = pose,
+            turnPosition = relativeAngle,
+            maxTurnOutput = Percent(100),
+            cruisingVelocity = purePursuitCruisingVelocity,
+            targetTicksWithingTolerance = 10,
+            forwardBackwardMode = ForwardsOnly
+          )(drivetrain)
+        )
+        .andUntilDone(
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+        )
     }
 
-    def dropOffSecondCube(drivetrain: DrivetrainComponent,
-                          collectorRollers: CollectorRollers,
-                          collectorClamp: CollectorClamp,
-                          collectorPivot: CollectorPivot,
-                          cubeLift: CubeLiftComp,
-                          pose: Stream[Point],
-                          relativeAngle: Stream[Angle]): FiniteTask = {
+    def dropOffSecondCube(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchOppositeScalePoints.backUpToDropOffSecondCube,
         tolerance = Inches(6),
@@ -135,30 +144,36 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 1,
         forwardBackwardMode = BackwardsOnly
-      )(drivetrain).andUntilDone(
-        collectCubeDrivingBack(collectorRollers, collectorPivot)
-      ).then(
-        new FollowWayPointsWithPosition(
-          wayPoints = SameSideSwitchOppositeScalePoints.forwardsDropOffSecondCube,
-          tolerance = Inches(6),
-          position = pose,
-          turnPosition = relativeAngle,
-          maxTurnOutput = Percent(100),
-          cruisingVelocity = purePursuitCruisingVelocity,
-          targetTicksWithingTolerance = 1,
-          forwardBackwardMode = ForwardsOnly
-        )(drivetrain)).then(
-        dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-      )
+      )(drivetrain)
+        .andUntilDone(
+          collectCubeDrivingBack(collectorRollers, collectorPivot)
+        )
+        .then(
+          new FollowWayPointsWithPosition(
+            wayPoints = SameSideSwitchOppositeScalePoints.forwardsDropOffSecondCube,
+            tolerance = Inches(6),
+            position = pose,
+            turnPosition = relativeAngle,
+            maxTurnOutput = Percent(100),
+            cruisingVelocity = purePursuitCruisingVelocity,
+            targetTicksWithingTolerance = 1,
+            forwardBackwardMode = ForwardsOnly
+          )(drivetrain)
+        )
+        .then(
+          dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+        )
     }
 
-    def dropOffThirdCube(drivetrain: DrivetrainComponent,
-                         collectorRollers: CollectorRollers,
-                         collectorClamp: CollectorClamp,
-                         collectorPivot: CollectorPivot,
-                         cubeLift: CubeLiftComp,
-                         pose: Stream[Point],
-                         relativeAngle: Stream[Angle]): FiniteTask = {
+    def dropOffThirdCube(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchOppositeScalePoints.backUpToDropOffThirdCube,
         tolerance = Inches(6),
@@ -168,52 +183,64 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 1,
         forwardBackwardMode = BackwardsOnly
-      )(drivetrain).andUntilDone(
-        collectCubeDrivingBack(collectorRollers, collectorPivot)
-      ).then(
-        new FollowWayPointsWithPosition(
-          wayPoints = SameSideSwitchOppositeScalePoints.forwardsDropOffThirdCube,
-          tolerance = Inches(6),
-          position = pose,
-          turnPosition = relativeAngle,
-          maxTurnOutput = Percent(100),
-          cruisingVelocity = purePursuitCruisingVelocity,
-          targetTicksWithingTolerance = 1,
-          forwardBackwardMode = ForwardsOnly
-        )(drivetrain)
-      ).then(
-        shootCubeScale(collectorRollers, collectorPivot, cubeLift)
-      )
+      )(drivetrain)
+        .andUntilDone(
+          collectCubeDrivingBack(collectorRollers, collectorPivot)
+        )
+        .then(
+          new FollowWayPointsWithPosition(
+            wayPoints = SameSideSwitchOppositeScalePoints.forwardsDropOffThirdCube,
+            tolerance = Inches(6),
+            position = pose,
+            turnPosition = relativeAngle,
+            maxTurnOutput = Percent(100),
+            cruisingVelocity = purePursuitCruisingVelocity,
+            targetTicksWithingTolerance = 1,
+            forwardBackwardMode = ForwardsOnly
+          )(drivetrain)
+        )
+        .then(
+          shootCubeScale(collectorRollers, collectorPivot, cubeLift)
+        )
     }
 
-
-    def scaleSwitch3CubeAuto(drivetrain: DrivetrainComponent,
-                             collectorRollers: CollectorRollers,
-                             collectorClamp: CollectorClamp,
-                             collectorPivot: CollectorPivot,
-                             cubeLift: CubeLiftComp): FiniteTask = {
+    def scaleSwitch3CubeAuto(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp
+    ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
       })
 
-      val pose = XYPosition.circularTracking(
-        relativeAngle.map(compassToTrigonometric),
-        drivetrainHardware.forwardPosition
-      ).map(
-        p => p + sideStartingPose
-      ).preserve
+      val pose = XYPosition
+        .circularTracking(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardPosition
+        )
+        .map(
+          p => p + sideStartingPose
+        )
+        .preserve
 
-      dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle).then(
-        driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle)
-      ).then(
-        pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      ).then(
-        dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      ).then(
-        pickUpThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      ).then(
-        dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      )
+      dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .then(
+          driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle)
+        )
+        .then(
+          pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        )
+        .then(
+          dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        )
+        .then(
+          pickUpThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        )
+        .then(
+          dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        )
     }
   }
 

@@ -32,10 +32,8 @@ class AutoGenerator(protected val r: CoreRobot) {
 
   val sideStartingPose = Point(-robotWidth / 2, robotLength / 2)
 
-
   val liftUpMaxAcceleration = FeetPerSecondSquared(10)
   val liftDownMaxAcceleration = FeetPerSecondSquared(15)
-
 
   val driveBeyondFastLimit = Percent(50)
   val driveBeyondSlowLimit = Percent(10)
@@ -57,36 +55,41 @@ class AutoGenerator(protected val r: CoreRobot) {
       cubeLiftProps.get.liftPositionTolerance
     )(cubeLiftComp)
   }
-  
+
   def liftElevatorToSwitch(cubeLiftComp: CubeLiftComp): WrapperTask = {
     new WhileAtPosition(
       cubeLiftHardware.position.map(_ => cubeLiftProps.get.switchHeight),
       cubeLiftProps.get.liftPositionTolerance
     )(cubeLiftComp)
   }
-  
-  def shootCubeScale(collectorRollers: CollectorRollers,
-                     collectorPivot: CollectorPivot,
-                     cubeLiftComp: CubeLiftComp): FiniteTask = {
+
+  def shootCubeScale(
+    collectorRollers: CollectorRollers,
+    collectorPivot: CollectorPivot,
+    cubeLiftComp: CubeLiftComp
+  ): FiniteTask = {
     liftElevatorToScale(cubeLiftComp).apply(
-      CollectorTasks.purgeCube(
-        collectorRollers,
-        collectorPivot
-      ).forDuration(Seconds(0.25)).then(
-        liftElevatorToCollect(cubeLiftComp).toFinite
-      ).then(printTask("done lowering"))
+      CollectorTasks
+        .purgeCube(
+          collectorRollers,
+          collectorPivot
+        )
+        .forDuration(Seconds(0.25))
+        .then(
+          liftElevatorToCollect(cubeLiftComp).toFinite
+        )
+        .then(printTask("done lowering"))
     )
   }
 
-  def dropCubeSwitch(collectorRollers: CollectorRollers,
-                     collectorClamp: CollectorClamp,
-                     collectorPivot: CollectorPivot,
-                     cubeLiftComp: CubeLiftComp): FiniteTask = {
+  def dropCubeSwitch(
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    collectorPivot: CollectorPivot,
+    cubeLiftComp: CubeLiftComp
+  ): FiniteTask = {
     liftElevatorToSwitch(cubeLiftComp).apply(
-      CollectorTasks.purgeCubeOpen(
-        collectorRollers,
-        collectorClamp,
-        collectorPivot).forDuration(Seconds(0.25))
+      CollectorTasks.purgeCubeOpen(collectorRollers, collectorClamp, collectorPivot).forDuration(Seconds(0.25))
     )
   }
 
@@ -96,16 +99,15 @@ class AutoGenerator(protected val r: CoreRobot) {
       cubeLiftProps.get.liftPositionTolerance
     )(cubeLiftComp)
   }
-  
-  def pickupGroundCube(collectorRollers: CollectorRollers,
-                       collectorClamp: CollectorClamp,
-                       collectorPivot: CollectorPivot,
-                       cubeLift: CubeLiftComp): ContinuousTask = {
+
+  def pickupGroundCube(
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    collectorPivot: CollectorPivot,
+    cubeLift: CubeLiftComp
+  ): ContinuousTask = {
     liftElevatorToCollect(cubeLift).toContinuous.and(
-      CollectorTasks.collectCube(
-        collectorRollers,
-        collectorClamp,
-        collectorPivot)
+      CollectorTasks.collectCube(collectorRollers, collectorClamp, collectorPivot)
     )
   }
 
@@ -145,10 +147,7 @@ class AutoGenerator(protected val r: CoreRobot) {
       position = pose,
       turnPosition = relativeAngle
     )(drivetrain).and(
-      shootCubeScale(
-        collectorRollers,
-        collectorPivot,
-        cubeLift)
+      shootCubeScale(collectorRollers, collectorPivot, cubeLift)
     )
   }
 
@@ -338,11 +337,13 @@ class AutoGenerator(protected val r: CoreRobot) {
     )(drivetrain)
   }
 
-  def leftCenterSwitch(drivetrain: DrivetrainComponent,
-                       collectorRollers: CollectorRollers,
-                       collectorClamp: CollectorClamp,
-                       collectorPivot: CollectorPivot,
-                       cubeLiftComp: CubeLiftComp): FiniteTask = {
+  def leftCenterSwitch(
+    drivetrain: DrivetrainComponent,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    collectorPivot: CollectorPivot,
+    cubeLiftComp: CubeLiftComp
+  ): FiniteTask = {
     new FollowWayPoints(
       Seq(
         Point.origin,
@@ -365,11 +366,13 @@ class AutoGenerator(protected val r: CoreRobot) {
     )
   }
 
-  def rightCenterSwitch(drivetrain: DrivetrainComponent,
-                        collectorRollers: CollectorRollers,
-                        collectorClamp: CollectorClamp,
-                        collectorPivot: CollectorPivot,
-                        cubeLiftComp: CubeLiftComp): FiniteTask = {
+  def rightCenterSwitch(
+    drivetrain: DrivetrainComponent,
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    collectorPivot: CollectorPivot,
+    cubeLiftComp: CubeLiftComp
+  ): FiniteTask = {
     new FollowWayPoints(
       Seq(
         Point.origin,
@@ -394,8 +397,7 @@ class AutoGenerator(protected val r: CoreRobot) {
 
   val centerStartingPose = Point(Inches(139.473), Inches(0))
 
-  def collectCubeDrivingBack(collectorRollers: CollectorRollers,
-                             collectorPivot: CollectorPivot): ContinuousTask = {
+  def collectCubeDrivingBack(collectorRollers: CollectorRollers, collectorPivot: CollectorPivot): ContinuousTask = {
     CollectorTasks
       .collectCubeWithoutOpen(collectorRollers, collectorPivot)
       .forDuration(Seconds(1))
@@ -444,9 +446,10 @@ class AutoGenerator(protected val r: CoreRobot) {
         ).then(printTask("ended post switch"))
       )
       .then(
-        pickupCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, xyPosition, relativeAngle).then(
-          printTask("end cube pickup")
-        )
+        pickupCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, xyPosition, relativeAngle)
+          .then(
+            printTask("end cube pickup")
+          )
       )
       .then(
         driveBackPostCube(drivetrain, xyPosition, relativeAngle)
@@ -454,8 +457,15 @@ class AutoGenerator(protected val r: CoreRobot) {
           .andUntilDone(collectCubeDrivingBack(collectorRollers, collectorPivot))
       )
       .then(
-        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, xyPosition, relativeAngle)
-          .then(
+        driveToScaleForward(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLift,
+          xyPosition,
+          relativeAngle
+        ).then(
             printTask("ended scale drop!")
           )
       )
@@ -522,24 +532,43 @@ class AutoGenerator(protected val r: CoreRobot) {
       )
       .preserve
 
-    twoCubeAutoWithPosition(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, xyPosition, relativeTurn)
-      .then(
+    twoCubeAutoWithPosition(
+      drivetrain,
+      collectorRollers,
+      collectorClamp,
+      collectorPivot,
+      cubeLift,
+      xyPosition,
+      relativeTurn
+    ).then(
         backOutAfterScale(drivetrain, xyPosition, relativeTurn).then(printTask("ended back out!"))
       )
       .then(
-        pickupThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, xyPosition, relativeTurn)
-          .then(printTask("picked up third"))
+        pickupThirdCube(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLift,
+          xyPosition,
+          relativeTurn
+        ).then(printTask("picked up third"))
       )
       .then(
         driveBackPostThirdCube(drivetrain, xyPosition, relativeTurn)
           .then(printTask("picked up third"))
-          .andUntilDone(collectCubeDrivingBack(
-            collectorRollers,
-            collectorPivot))
+          .andUntilDone(collectCubeDrivingBack(collectorRollers, collectorPivot))
       )
       .then(
-        driveToScaleForward(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, xyPosition, relativeTurn)
-          .then(printTask("ended scale drop and done!"))
+        driveToScaleForward(
+          drivetrain,
+          collectorRollers,
+          collectorClamp,
+          collectorPivot,
+          cubeLift,
+          xyPosition,
+          relativeTurn
+        ).then(printTask("ended scale drop and done!"))
       )
   }
 
