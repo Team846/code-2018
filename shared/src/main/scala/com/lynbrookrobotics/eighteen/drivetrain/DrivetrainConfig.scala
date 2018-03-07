@@ -21,6 +21,7 @@ final case class DrivetrainProperties(
   turnVelocityGains: TurnVelocityGains,
   turnPositionGains: TurnPositionGains,
   maxAcceleration: Acceleration,
+  maxDeceleration: Acceleration,
   maxCurrent: ElectricCurrent,
   defaultLookAheadDistance: Length,
   blendExponent: Double,

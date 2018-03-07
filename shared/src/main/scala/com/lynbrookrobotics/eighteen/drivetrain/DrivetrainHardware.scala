@@ -64,6 +64,7 @@ final case class DrivetrainHardware(
   Set(left, right).foreach { it =>
     TalonManager.configMaster(it.t)
 
+    it.t.configVelocityMeasurementWindow(32, escTout)
     it.t.configContinuousCurrentLimit(maxCurrent.toAmperes.toInt, 0)
     it.t.configPeakCurrentLimit(maxCurrent.toAmperes.toInt, 0)
     it.t.configPeakCurrentDuration(0, 0)
@@ -101,7 +102,8 @@ final case class DrivetrainHardware(
   }
 
   override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
-  override lazy val turnPosition: Stream[Angle] = turnVelocity.integral.preserve
+  override lazy val turnPosition: Stream[Angle] = turnVelocity.integral
+  turnPosition.foreach(_ => {})
 }
 
 object DrivetrainHardware {

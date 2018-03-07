@@ -68,6 +68,7 @@ object ConfigGenerator extends App {
             ),
             maxCurrent = Amperes(25),
             maxAcceleration = FeetPerSecondSquared(0),
+            maxDeceleration = FeetPerSecondSquared(0),
             defaultLookAheadDistance = Feet(2.5),
             blendExponent = 0,
             track = Inches(21.75),

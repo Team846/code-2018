@@ -1,130 +1,23 @@
 {
-  "cubeLift": {
-    "props": {
-      "lowScaleHeight": [
-        66,
-        "Inches"
-      ],
-      "highScaleHeight": [
-        68,
-        "Inches"
-      ],
-      "pidConfig": {
-        "kd": {
-          "den": [
-            1,
-            "FeetPerSecond"
-          ],
-          "num": [
-            0,
-            "Percent"
-          ]
-        },
-        "ki": {
-          "den": [
-            5,
-            "Feet * s"
-          ],
-          "num": [
-            0,
-            "Percent"
-          ]
-        },
-        "kp": {
-          "den": [
-            0.8,
-            "Feet"
-          ],
-          "num": [
-            100,
-            "Percent"
-          ]
-        }
-      },
-      "collectHeight": [
-        0.5,
-        "Inches"
-      ],
-      "voltageAtBottom": [
-        0.316,
-        "Volts"
-      ],
-      "liftPositionTolerance": [
-        2,
-        "Inches"
-      ],
-      "switchHeight": [
-        25,
-        "Inches"
-      ],
-      "exchangeHeight": [
-        4,
-        "Inches"
-      ],
-      "voltageOverHeight": {
-        "den": [
-          80.25,
-          "Inches"
-        ],
-        "num": [
-          2.5,
-          "Volts"
-        ]
-      },
-      "maxMotorOutput": [
-        100,
-        "Percent"
-      ],
-      "talonOverVoltage": {
-        "den": [
-          3.3,
-          "Volts"
-        ],
-        "num": [
-          1023,
-          "Each"
-        ]
-      },
-      "maxHeight": [
-        73,
-        "Inches"
-      ],
-      "minHeight": [
-        0.25,
-        "Inches"
-      ],
-      "twistyTotalRange": [
-        1.5,
-        "Feet"
-      ]
-    },
-    "ports": {
-      "motorPort": 20
-    }
-  },
-  "forklift": {
-    "solenoidPort": 3
-  },
-  "climberDeployment": {
-    "solenoidPort": 0
-  },
+  "cubeLift": null,
+  "forklift": null,
+  "climberDeployment": null,
   "drivetrain": {
     "ports": {
-      "practiceSpeedControllers": false,
-      "rightFollowerPort": 13,
-      "leftFollowerPort": 14,
-      "rightPort": 11,
-      "leftPort": 12
+      "rightFollowerPort": 40,
+      "leftFollowerPort": 51,
+      "rightPort": 41,
+      "leftPort": 50
     },
     "props": {
       "maxLeftVelocity": [
-        17.7,
+        21.9,
         "FeetPerSecond"
       ],
       "turnVelocityGains": {
         "kd": {
           "den": [
-            1,
+            360,
             "DegreesPerSecond / s"
           ],
           "num": [
@@ -161,36 +54,14 @@
         5,
         "FeetPerSecondSquared"
       ],
-      "maxDeceleration": [
-        3,
-        "FeetPerSecondSquared"
-      ],
-      "maxCurrent": [
-        35,
-        "Amperes"
-      ],
       "maxRightVelocity": [
-        17.7,
+        23.1,
         "FeetPerSecond"
       ],
       "track": [
-        25,
+        21.75,
         "Inches"
       ],
-      "wheelDiameter": [
-        6,
-        "Inches"
-      ],
-      "wheelOverEncoderGears": {
-        "num": [
-          18,
-          "Turns"
-        ],
-        "den": [
-          74,
-          "Turns"
-        ]
-      },
       "rightVelocityGains": {
         "kd": {
           "den": [
@@ -214,11 +85,11 @@
         },
         "kp": {
           "den": [
-            4,
+            5,
             "FeetPerSecond"
           ],
           "num": [
-            80,
+            30,
             "Percent"
           ]
         }
@@ -246,16 +117,20 @@
         },
         "kp": {
           "den": [
-            360,
+            1,
             "Degrees"
           ],
           "num": [
-            50,
+            0,
             "Percent"
           ]
         }
       },
       "blendExponent": 0,
+      "maxTurnVelocity": [
+        90,
+        "DegreesPerSecond"
+      ],
       "leftVelocityGains": {
         "kd": {
           "den": [
@@ -279,11 +154,11 @@
         },
         "kp": {
           "den": [
-            4,
+            5,
             "FeetPerSecond"
           ],
           "num": [
-            80,
+            30,
             "Percent"
           ]
         }
@@ -311,11 +186,11 @@
         },
         "kp": {
           "den": [
-            5,
+            50,
             "Feet"
           ],
           "num": [
-            50,
+            1,
             "Percent"
           ]
         }
@@ -330,7 +205,7 @@
   },
   "collectorClamp": {
     "ports": {
-      "pneumaticPort": 2,
+      "pneumaticPort": 1,
       "proximityPort": 0
     },
     "props": {
@@ -341,25 +216,19 @@
     }
   },
   "collectorPivot": {
-    "pneumaticPort": 1
+    "pneumaticPort": 2
   },
   "collectorRollers": {
     "ports": {
-      "rollerLeftPort": 0,
-      "rollerRightPort": 1
+      "rollerLeftPort": 20,
+      "rollerRightPort": 21
     },
     "props": {
       "collectSpeed": [
         50,
         "Percent"
-      ],
-      "purgeSpeed": [
-        70,
-        "Percent"
       ]
     }
   },
-  "climberWinch": null,
-  "enableLimelight": false,
-  "led": null
+  "climberWinch": null
 }
