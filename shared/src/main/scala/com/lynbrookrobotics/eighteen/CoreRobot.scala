@@ -19,7 +19,6 @@ import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import edu.wpi.first.networktables.NetworkTableInstance
-import squants.Percent
 import squants.space.{Degrees, Feet, Inches}
 
 import scala.collection.mutable
