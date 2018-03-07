@@ -363,7 +363,16 @@ object DefaultConfig {
                |    }
                |  },
                |  "climberWinch": null,
-               |  "enableLimelight": false,
+               |  "limelight": {
+               |    "cameraAngleRelativeToFront": [
+               |      0,
+               |      "Degrees"
+               |    ],
+               |    "reciprocalRootAreaToDistanceConversion": [
+               |      12.0176,
+               |      "Feet"
+               |    ]
+               |  },
                |  "led": null
                |}""".stripMargin
 }

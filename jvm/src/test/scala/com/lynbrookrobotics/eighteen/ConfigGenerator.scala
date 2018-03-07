@@ -12,6 +12,7 @@ import com.lynbrookrobotics.potassium.units._
 import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import squants.electro.{Amperes, Volts}
 import argonaut.Argonaut._
+import com.lynbrookrobotics.potassium.vision.VisionProperties
 
 object ConfigGenerator extends App {
   println(
@@ -106,7 +107,7 @@ object ConfigGenerator extends App {
           )
         )
       ),
-      enableLimelight = false,
+      limelight = Some(VisionProperties(Degrees(0), Feet(12.0176))),
       led = None
     ).jencode(RobotConfig.writer).spaces2
   )

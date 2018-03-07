@@ -12,9 +12,7 @@ import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.frc.{LEDControllerHardware, WPIClock}
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.vision.VisionProperties
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
-import squants.space.{Degrees, Feet}
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],
@@ -36,12 +34,6 @@ object RobotHardware {
 
     val driverHardware = DriverHardware(robotConfig.driver.get) // drivetrain depends on this
 
-    val cameraProps = Signal.constant(
-      VisionProperties(
-        Degrees(0),
-        Feet(12.8)
-      )
-    )
     RobotHardware(
       climberDeployment = climberDeployment.map(DeploymentHardware.apply),
       climberWinch = climberWinch.map(ClimberWinchHardware.apply),
@@ -52,10 +44,8 @@ object RobotHardware {
       drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
       cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
-      camera = if (robotConfig.enableLimelight) {
-        Some(new LimeLightHardware(false)(WPIClock, cameraProps))
-      } else {
-        None
+      camera = robotConfig.limelight.map { l =>
+        new LimeLightHardware(true)(WPIClock, Signal.constant(l))
       },
       ledHardware = robotConfig.led.map(l => LEDControllerHardware(l))
     )

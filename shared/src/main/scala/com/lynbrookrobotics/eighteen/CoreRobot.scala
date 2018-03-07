@@ -74,10 +74,17 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     hardware.cubeLift.map(_ => new CubeLiftComp(coreTicks))
 
   val cameraHardware = hardware.camera
+  implicit val camera = config.map(_.limelight)
 
   implicit val lightingHardware = hardware.ledHardware.orNull
   implicit val lightingComponent: Option[LEDController] =
-    hardware.ledHardware.map(_ => new LEDController(coreTicks, Signal.constant(DriverStation.Alliance.Red)))
+    hardware.ledHardware.map(
+      _ =>
+        new LEDController(
+          coreTicks,
+          Signal.constant(DriverStation.Alliance.Red)
+      )
+    )
 
   lazy val components: Seq[Component[_]] = Seq(
     climberDeployment,

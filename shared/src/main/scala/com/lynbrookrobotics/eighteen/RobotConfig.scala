@@ -10,6 +10,7 @@ import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainConfig
 import com.lynbrookrobotics.eighteen.forklift.ForkliftConfig
 import com.lynbrookrobotics.eighteen.lift.CubeLiftConfig
 import com.lynbrookrobotics.potassium.frc.LEDControllerConfig
+import com.lynbrookrobotics.potassium.vision.VisionProperties
 
 final case class RobotConfig(
   climberDeployment: Option[DeploymentConfig],
@@ -21,7 +22,7 @@ final case class RobotConfig(
   drivetrain: Option[DrivetrainConfig],
   forklift: Option[ForkliftConfig],
   cubeLift: Option[CubeLiftConfig],
-  enableLimelight: Boolean,
+  limelight: Option[VisionProperties],
   led: Option[LEDControllerConfig]
 )
 
