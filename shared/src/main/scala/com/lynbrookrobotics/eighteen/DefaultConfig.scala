@@ -167,7 +167,7 @@ object DefaultConfig {
                |      "maxDeceleration": [
                |        3,
                |        "FeetPerSecondSquared"
-               |      }
+               |      ],
                |      "maxCurrent": [
                |        35,
                |        "Amperes"
