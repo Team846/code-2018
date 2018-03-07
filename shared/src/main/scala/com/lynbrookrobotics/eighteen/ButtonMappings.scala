@@ -217,7 +217,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftOne) &&
         driverHardware.driverJoystick.getRawButton(LeftOne)
-      }.foreach( // left 1 — deploy climber
+      }.foreach(
         new Climb(winch).and(new DeployClimber(climber))
       )
     }
@@ -226,7 +226,8 @@ object ButtonMappings {
       forklift <- forklift
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftTwo)
+        driverHardware.operatorJoystick.getRawButton(LeftTwo) &&
+        driverHardware.driverJoystick.getRawButton(LeftTwo)
       }.foreach(
         new MoveForkliftDown(forklift)
       )
