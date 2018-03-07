@@ -12,6 +12,7 @@ import com.lynbrookrobotics.potassium.units._
 import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import squants.electro.{Amperes, Volts}
 import argonaut.Argonaut._
+import com.lynbrookrobotics.potassium.vision.VisionProperties
 
 object ConfigGenerator extends App {
   println(
@@ -68,6 +69,7 @@ object ConfigGenerator extends App {
             ),
             maxCurrent = Amperes(25),
             maxAcceleration = FeetPerSecondSquared(0),
+            maxDeceleration = FeetPerSecondSquared(0),
             defaultLookAheadDistance = Feet(2.5),
             blendExponent = 0,
             track = Inches(21.75),
@@ -105,10 +107,8 @@ object ConfigGenerator extends App {
           )
         )
       ),
-<<<<<<< HEAD
-=======
       enableLimelight = false,
->>>>>>> master
+      limelight = Some(VisionProperties(Degrees(0), Feet(12.0176))),
       led = None
     ).jencode(RobotConfig.writer).spaces2
   )

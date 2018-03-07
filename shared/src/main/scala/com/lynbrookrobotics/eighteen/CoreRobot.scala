@@ -73,10 +73,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   implicit val lightingHardware = hardware.ledHardware.orNull
   implicit val lightingComponent: Option[LEDController] =
-    hardware.ledHardware.map(_ =>
-      new LEDController(
-        coreTicks,
-        Signal.constant(DriverStation.Alliance.Red)
+    hardware.ledHardware.map(
+      _ =>
+        new LEDController(
+          coreTicks,
+          Signal.constant(DriverStation.Alliance.Red)
       )
     )
 
