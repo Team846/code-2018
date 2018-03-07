@@ -226,7 +226,8 @@ object ButtonMappings {
       forklift <- forklift
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftTwo)
+        driverHardware.operatorJoystick.getRawButton(LeftTwo) &&
+        driverHardware.driverJoystick.getRawButton(LeftTwo)
       }.foreach(
         new MoveForkliftDown(forklift)
       )
