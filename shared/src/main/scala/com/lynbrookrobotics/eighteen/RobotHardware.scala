@@ -36,12 +36,6 @@ object RobotHardware {
 
     val driverHardware = DriverHardware(robotConfig.driver.get) // drivetrain depends on this
 
-    val cameraProps = Signal.constant(
-      VisionProperties(
-        Degrees(0),
-        Feet(12.8)
-      )
-    )
     RobotHardware(
       climberDeployment = climberDeployment.map(DeploymentHardware.apply),
       climberWinch = climberWinch.map(ClimberWinchHardware.apply),
