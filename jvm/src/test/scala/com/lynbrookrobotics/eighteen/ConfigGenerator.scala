@@ -107,7 +107,6 @@ object ConfigGenerator extends App {
           )
         )
       ),
-      enableLimelight = false,
       limelight = Some(VisionProperties(Degrees(0), Feet(12.0176))),
       led = None
     ).jencode(RobotConfig.writer).spaces2

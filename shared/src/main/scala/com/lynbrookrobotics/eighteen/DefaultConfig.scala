@@ -363,7 +363,6 @@ object DefaultConfig {
                |    }
                |  },
                |  "climberWinch": null,
-               |  "enableLimelight": false,
                |  "limelight": {
                |    "cameraAngleRelativeToFront": [
                |      0,

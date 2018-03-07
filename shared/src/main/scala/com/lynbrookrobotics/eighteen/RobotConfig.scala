@@ -22,7 +22,6 @@ final case class RobotConfig(
   drivetrain: Option[DrivetrainConfig],
   forklift: Option[ForkliftConfig],
   cubeLift: Option[CubeLiftConfig],
-  enableLimelight: Boolean,
   limelight: Option[VisionProperties],
   led: Option[LEDControllerConfig]
 )
