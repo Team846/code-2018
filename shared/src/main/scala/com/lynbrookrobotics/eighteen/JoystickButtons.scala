@@ -18,3 +18,10 @@ object JoystickButtons {
   val RightFive = 15
   val RightSix = 14
 }
+/**
+{
+    "ports": {
+      "pneumaticPort": 1,
+      "proximityPort": 0
+    }
+  **/

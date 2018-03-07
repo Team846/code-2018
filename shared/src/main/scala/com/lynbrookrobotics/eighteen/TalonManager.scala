@@ -48,6 +48,7 @@ object TalonManager {
   }
 
   def configSlave(t: BaseMotorController): Unit = {
+    resetTalonToDefaults(t)
     StatusFrame.values().foreach { it =>
       t.setStatusFramePeriod(it, 1000, escTout)
     }

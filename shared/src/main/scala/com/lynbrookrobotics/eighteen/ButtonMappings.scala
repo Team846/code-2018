@@ -67,7 +67,8 @@ object ButtonMappings {
       climber <- climberWinch
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(LeftOne)
+        driverHardware.driverJoystick.getRawButton(LeftOne) &&
+        !driverHardware.operatorJoystick.getRawButton(LeftOne)
       }.foreach(
         new Climb(climber)
       )
@@ -86,16 +87,16 @@ object ButtonMappings {
       }.foreach(
         new WhileBelowPosition(
           coreTicks.map(_ => cubeLiftProps.get.collectHeight)
-        )(lift).toContinuous
-          and
-            visionCubePickup(
-              drivetrainComponent,
-              camera,
-              Feet(1.75),
-              roller,
-              clamp,
-              pivot
-            ).toContinuous
+        )(lift).toContinuous.and(
+          visionCubePickup(
+            drivetrainComponent,
+            camera,
+            Feet(1.75),
+            roller,
+            clamp,
+            pivot
+          ).toContinuous
+        )
       )
     }
 
@@ -202,9 +203,22 @@ object ButtonMappings {
       climber <- climberDeployment
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftOne)
+        driverHardware.operatorJoystick.getRawButton(LeftOne) &&
+        !driverHardware.driverJoystick.getRawButton(LeftOne)
       }.foreach(
         new DeployClimber(climber)
+      )
+    }
+
+    for {
+      winch <- climberWinch
+      climber <- climberDeployment
+    } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(LeftOne) &&
+        driverHardware.driverJoystick.getRawButton(LeftOne)
+      }.foreach( // left 1 — deploy climber
+        new Climb(winch).and(new DeployClimber(climber))
       )
     }
 
