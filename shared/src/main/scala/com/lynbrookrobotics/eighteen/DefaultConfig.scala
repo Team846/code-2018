@@ -373,7 +373,7 @@ object DefaultConfig {
                |      12.0176,
                |      "Feet"
                |    ]
-               |  }
+               |  },
                |  "led": null
                |}""".stripMargin
 }

@@ -161,6 +161,10 @@
         5,
         "FeetPerSecondSquared"
       ],
+      "maxDeceleration": [
+        3,
+        "FeetPerSecondSquared"
+      ],
       "maxCurrent": [
         35,
         "Amperes"
@@ -369,5 +373,15 @@
     }
   },
   "enableLimelight": false,
+  "limelight": {
+    "cameraAngleRelativeToFront": [
+      0,
+      "Degrees"
+    ],
+    "reciprocalRootAreaToDistanceConversion": [
+      12.0176,
+      "Feet"
+    ]
+  },
   "led": null
 }
