@@ -110,11 +110,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     collectorPivot <- collectorPivot
     cubeLiftComp <- cubeLiftComp
   } {
-    addAutonomousRoutine(1) {
+    addAutonomousRoutine(9) {
       generator.twoCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).toContinuous
     }
 
-    addAutonomousRoutine(2) {
+    addAutonomousRoutine(10) {
       generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).toContinuous
     }
   }
@@ -143,7 +143,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     cubeLiftComp <- cubeLiftComp
     cameraHardware <- cameraHardware
   } {
-    addAutonomousRoutine(3) {
+    // Full 3 cube
+    addAutonomousRoutine(1) {
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
         case "LLL" | "LLR" =>
@@ -175,14 +176,49 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       }
     }
 
-    addAutonomousRoutine(4) {
+    // 3 cube when switch on our side, 1 cube in switch
+    // when switch on other side
+    addAutonomousRoutine(2) {
+      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
+      switchScalePattern match {
+        case "LLL" | "LLR" =>
+          generator.OppositeSideSwitchAndScale.oppositeSwitchOnly(
+            drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp
+          ).toContinuous
+        case "RLL" | "RLR" =>
+          generator.SameSideSwitchOppositeScale
+            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous // same op
+        case "LRL" | "LRR" =>
+          generator.OppositeSideSwitchAndScale.oppositeSwitchOnly(
+            drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp
+          ).toContinuous
+        case "RRL" | "RRR" =>
+          generator.SameSideSwitchAndScale
+            .scaleSwitch3Cube(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // same same
+        case _ =>
+          println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
+          ContinuousTask.empty
+      }
+    }
+
+    // center switch
+    addAutonomousRoutine(3) {
       val switchPosition = DriverStation.getInstance().getGameSpecificMessage.head
       switchPosition match {
-        case "L" =>
+        case 'L' =>
           generator
             .leftCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
-        case "R" =>
+        case 'R' =>
           generator
             .rightCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
@@ -193,44 +229,28 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       }
     }
 
-    addAutonomousRoutine(5) {
+    addAutonomousRoutine(4) {
       generator.SameSideSwitchAndScale
         .scaleSwitch3Cube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp, cameraHardware)
         .toContinuous
     }
 
-    addAutonomousRoutine(6) {
+    addAutonomousRoutine(5) {
       generator.SameSideSwitchOppositeScale
         .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
         .toContinuous
     }
 
-    addAutonomousRoutine(7) {
+    addAutonomousRoutine(6) {
       generator.OppositeSideSwitchSameSideScale
         .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
         .toContinuous
     }
 
-    addAutonomousRoutine(8) {
+    addAutonomousRoutine(7) {
       generator.OppositeSideSwitchAndScale
         .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
         .toContinuous
-    }
-
-    addAutonomousRoutine(9) {
-      new DriveDistanceStraight(
-        Feet(10),
-        Inches(10),
-        Degrees(10),
-        Percent(50)
-      )(drivetrain).toContinuous
-    }
-
-    addAutonomousRoutine(10) {
-      new RotateToAngle(
-        Degrees(-10),
-        Degrees(5)
-      )(drivetrain).toContinuous
     }
   }
 
