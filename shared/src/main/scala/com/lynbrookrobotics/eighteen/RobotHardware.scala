@@ -12,9 +12,7 @@ import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.frc.{LEDControllerHardware, WPIClock}
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.vision.VisionProperties
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
-import squants.space.{Degrees, Feet}
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],
