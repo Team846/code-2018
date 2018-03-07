@@ -109,35 +109,36 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         )
     }
 
-    def oppositeSwitchOnly(drivetrain: DrivetrainComponent,
-                            collectorRollers: CollectorRollers,
-                            collectorClamp: CollectorClamp,
-                            collectorPivot: CollectorPivot,
-                            cubeLift: CubeLiftComp): FiniteTask = {
+    def oppositeSwitchOnly(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp
+    ): FiniteTask = {
       val toScalePoints = OppositeSideSwitchScalePoints.toScalePoints
-      val wayPoints = toScalePoints.slice(
-        from = 0,
-        until = 4) ++ Seq(
-          Point(
-            -Inches(226.8),
-            Inches(232)
-          ),
-          Point(
-            -Inches(259.3),
-            Inches(209.6)
-          ),
-          Point(
-            -Inches(259.3),
-            Inches(195.5)
-          ),
-          Point(
-            -Inches(245.2),
-            Inches(181)
-          ),
-          Point(
-            -Inches(228.7),
-            Inches(181)
-          ))
+      val wayPoints = toScalePoints.slice(from = 0, until = 4) ++ Seq(
+        Point(
+          -Inches(226.8),
+          Inches(232)
+        ),
+        Point(
+          -Inches(259.3),
+          Inches(209.6)
+        ),
+        Point(
+          -Inches(259.3),
+          Inches(195.5)
+        ),
+        Point(
+          -Inches(245.2),
+          Inches(181)
+        ),
+        Point(
+          -Inches(228.7),
+          Inches(181)
+        )
+      )
 
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
