@@ -230,8 +230,11 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         .preserve
 
       startToScaleDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .withTimeout(Seconds(5))
         .then(
-          backOutPostScale(drivetrain, pose, relativeAngle).and(liftElevatorToCollect(cubeLift).toFinite)
+          backOutPostScale(drivetrain, pose, relativeAngle)
+            .and(liftElevatorToCollect(cubeLift).toFinite)
+            .withTimeout(Seconds(3))
         )
         .then(
           pickupSecondCube(
@@ -243,10 +246,11 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
             limeLightHardware,
             pose,
             relativeAngle
-          )
+          ).withTimeout(Seconds(3))
         )
         .then(
           dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
           pickupThirdCube(
@@ -258,13 +262,15 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
             limeLightHardware,
             pose,
             relativeAngle
-          )
+          ).withTimeout(Seconds(2))
         )
         .then(
           backUpPreThirdCubeDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, pose, relativeAngle)
+            .withTimeout(Seconds(3))
         )
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(3))
         )
     }
   }

@@ -12,6 +12,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.potassium.units.Point
 import squants.space.{Degrees, Inches}
+import squants.time.Seconds
 import squants.{Angle, Percent}
 
 trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
@@ -23,6 +24,7 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
       Inches(232.3)
     )
 
+    val toSwitchDropOffTimeout = Seconds(5)
     def dropOffToSwitch(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -67,6 +69,7 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
       )
     }
 
+    val cubePickupAndDropOffDriveTimout = Seconds(3)
     def pickupSecondCube(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -226,20 +229,25 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         .preserve
 
       dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .withTimeout(Seconds(5))
         .then(
-          driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle)
+          driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle).withTimeout(Seconds(3))
         )
         .then(
           pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
           dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
           pickUpThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(3))
         )
     }
   }

@@ -142,36 +142,34 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitch
           pose,
           relativeAngle
         )
+        .withTimeout(Seconds(5))
         .then(
-          SameSideSwitchAndScale.backOutPostScale(drivetrain, pose, relativeAngle)
+          SameSideSwitchAndScale
+            .backOutPostScale(drivetrain, pose, relativeAngle)
+            .and(liftElevatorToCollect(cubeLift).toFinite)
+            .withTimeout(Seconds(3))
         )
         .then(
           pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(3))
         )
         .then(
           dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
-          printTask("before third pickup")
-            .then(
-              pickupThirdCube(
-                drivetrain,
-                collectorRollers,
-                collectorClamp,
-                collectorPivot,
-                cubeLift,
-                pose,
-                relativeAngle
-              )
-            )
-            .then(printTask("after pickup second cube"))
+          pickupThirdCube(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          ).withTimeout(Seconds(2))
         )
         .then(
-          printTask("before drop off third")
-            .then(
-              dropOffThirdCube(drivetrain, collectorRollers, collectorPivot, collectorClamp, cubeLift)
-            )
-            .then(printTask("after pickup third cube"))
+          dropOffThirdCube(drivetrain, collectorRollers, collectorPivot, collectorClamp, cubeLift)
         )
     }
   }
