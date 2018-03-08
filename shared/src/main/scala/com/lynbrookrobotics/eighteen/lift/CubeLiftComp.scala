@@ -6,6 +6,7 @@ import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal.OpenLoop
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.Task
 import com.lynbrookrobotics.potassium.{Component, Signal}
+import edu.wpi.first.wpilibj.RobotState
 import squants.electro.Volts
 import squants.{Each, Percent}
 
@@ -23,6 +24,7 @@ class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardw
       hardware.currentDraw,
       props.get.maxCurrentDraw
     )
+    .filter(_ => RobotState.isAutonomous)
     .filter(_ > props.get.stallTimeout)
     .foreach { stallTime =>
       println(s"[ERROR] CUBE LIFT STALLED FOR $stallTime. ABORTING TASK.")

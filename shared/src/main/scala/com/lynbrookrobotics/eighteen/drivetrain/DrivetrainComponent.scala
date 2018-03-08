@@ -8,6 +8,7 @@ import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.Task
 import com.lynbrookrobotics.potassium.{Component, Signal}
+import edu.wpi.first.wpilibj.RobotState
 import squants.time.Seconds
 import squants.{Each, Percent}
 
@@ -57,6 +58,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
       },
       props.get.deltaVelocityStallThreshold
     )
+    .filter(_ => RobotState.isAutonomous)
     .filter(_ > props.get.stallTimeout)
     .foreach { time =>
       println(s"[ERROR] LEFT SIDE OF DRIVETRAIN STALLED FOR $time. ABORTING TASK.")
@@ -70,6 +72,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
       },
       props.get.deltaVelocityStallThreshold
     )
+    .filter(_ => RobotState.isAutonomous)
     .filter(_ > props.get.stallTimeout)
     .foreach { time =>
       println(s"[ERROR] RIGHT SIDE OF DRIVETRAIN STALLED FOR $time. ABORTING TASK.")
