@@ -25,8 +25,8 @@ object SameSideSwitchAndScalePoints {
       Inches(241)
     ),
     Point(
-      -Inches(45.7),
-      Inches(280.9) - smallRoomFactor
+      -Inches(45.7) - Inches(6),
+      Inches(280.9) - Feet(1) - smallRoomFactor
     ) /*
     Point(
       -Inches(41.3),
@@ -196,11 +196,11 @@ object OppositeSideSwitchScalePoints {
     ),
     Point(
       -Inches(96.6),
-      Inches(232.5)
+      Inches(232.5) - Feet(1)
     ),
     Point(
       -Inches(187),
-      Inches(232.5)
+      Inches(232.5) - Feet(1)
     ),
     Point(
       -Inches(222.4),

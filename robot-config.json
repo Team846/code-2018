@@ -2,11 +2,11 @@
   "cubeLift": {
     "props": {
       "lowScaleHeight": [
-        66,
+        54,
         "Inches"
       ],
       "highScaleHeight": [
-        68,
+        60,
         "Inches"
       ],
       "pidConfig": {
@@ -42,11 +42,11 @@
         }
       },
       "collectHeight": [
-        0.5,
+        0,
         "Inches"
       ],
       "voltageAtBottom": [
-        0.316,
+        0.277,
         "Volts"
       ],
       "liftPositionTolerance": [
@@ -67,7 +67,7 @@
           "Inches"
         ],
         "num": [
-          2.5,
+          1.983,
           "Volts"
         ]
       },
@@ -86,15 +86,15 @@
         ]
       },
       "maxHeight": [
-        73,
+        70,
         "Inches"
       ],
       "minHeight": [
-        0.25,
+        0,
         "Inches"
       ],
       "twistyTotalRange": [
-        1.5,
+        0.75,
         "Feet"
       ]
     },
@@ -118,7 +118,7 @@
     },
     "props": {
       "maxLeftVelocity": [
-        17.7,
+        13,
         "FeetPerSecond"
       ],
       "turnVelocityGains": {
@@ -170,7 +170,7 @@
         "Amperes"
       ],
       "maxRightVelocity": [
-        17.7,
+        13.3,
         "FeetPerSecond"
       ],
       "track": [
@@ -345,8 +345,8 @@
   },
   "collectorRollers": {
     "ports": {
-      "rollerLeftPort": 0,
-      "rollerRightPort": 1
+      "rollerLeftPort": 1,
+      "rollerRightPort": 0
     },
     "props": {
       "collectSpeed": [
@@ -359,7 +359,19 @@
       ]
     }
   },
-  "climberWinch": null,
+  "climberWinch": {
+    "ports": {
+      "leftMotorPort": 5,
+      "middleMotorPort": 6,
+      "rightMotorPort": 7
+    },
+    "props": {
+      "climbingSpeed": [
+        85,
+        "Percent"
+      ]
+    }
+  },
   "limelight": {
     "cameraAngleRelativeToFront": [
       0,

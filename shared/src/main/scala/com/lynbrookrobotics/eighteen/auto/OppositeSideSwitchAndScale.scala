@@ -12,7 +12,7 @@ import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.potassium.units.Point
 import squants.{Angle, Percent}
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
-import squants.space.Inches
+import squants.space.{Feet, Inches}
 import squants.time.Seconds
 
 trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOppositeScaleAutoGenerator {
@@ -131,7 +131,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
       val wayPoints = toScalePoints.slice(from = 0, until = 4) ++ Seq(
         Point(
           -Inches(226.8),
-          Inches(232)
+          Inches(232) - Feet(1)
         ),
         Point(
           -Inches(259.3),

@@ -68,7 +68,7 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(LeftOne) &&
-        !driverHardware.operatorJoystick.getRawButton(LeftOne)
+        !driverHardware.operatorJoystick.getRawButton(RightOne)
       }.foreach(
         new Climb(climber)
       )
@@ -160,7 +160,7 @@ object ButtonMappings {
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightOne)
+        driverHardware.operatorJoystick.getRawButton(LeftOne)
       }.foreach(
         new WhileAtPosition(
           driverHardware.joystickStream
@@ -174,7 +174,7 @@ object ButtonMappings {
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftSix)
+        driverHardware.operatorJoystick.getRawButton(RightSix)
       }.foreach(
         new WhileAtPosition(
           driverHardware.joystickStream
@@ -203,7 +203,7 @@ object ButtonMappings {
       climber <- climberDeployment
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftOne) &&
+        driverHardware.operatorJoystick.getRawButton(RightOne) &&
         !driverHardware.driverJoystick.getRawButton(LeftOne)
       }.foreach(
         new DeployClimber(climber)
@@ -215,7 +215,7 @@ object ButtonMappings {
       climber <- climberDeployment
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftOne) &&
+        driverHardware.operatorJoystick.getRawButton(RightOne) &&
         driverHardware.driverJoystick.getRawButton(LeftOne)
       }.foreach( // left 1 — deploy climber
         new Climb(winch).and(new DeployClimber(climber))
@@ -226,7 +226,7 @@ object ButtonMappings {
       forklift <- forklift
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftTwo)
+        driverHardware.operatorJoystick.getRawButton(RightTwo)
       }.foreach(
         new MoveForkliftDown(forklift)
       )
@@ -247,7 +247,7 @@ object ButtonMappings {
       rollers <- collectorRollers
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightFour)
+        driverHardware.operatorJoystick.getRawButton(LeftFour)
       }.foreach(
         new RollersManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(rollers.coreTicks)
@@ -259,8 +259,8 @@ object ButtonMappings {
       lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightFive) &&
-        !driverHardware.operatorJoystick.getRawButton(RightTwo)
+        driverHardware.operatorJoystick.getRawButton(LeftFive) &&
+        !driverHardware.operatorJoystick.getRawButton(LeftTwo)
       }.foreach(
         new LiftManualControl(
           driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
@@ -273,8 +273,8 @@ object ButtonMappings {
       pivot <- collectorPivot
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightTwo) &&
-        driverHardware.operatorJoystick.getRawButton(RightFive)
+        driverHardware.operatorJoystick.getRawButton(LeftTwo) &&
+        driverHardware.operatorJoystick.getRawButton(LeftFive)
       }.foreach(
         new PivotDown(pivot) and new LiftManualControl(
           driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
@@ -286,7 +286,7 @@ object ButtonMappings {
       winch <- climberWinch
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightSix)
+        driverHardware.operatorJoystick.getRawButton(LeftSix)
       }.foreach(
         new WinchManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(winch.coreTicks)
@@ -298,7 +298,7 @@ object ButtonMappings {
       clamp <- collectorClamp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightThree)
+        driverHardware.operatorJoystick.getRawButton(LeftThree)
       }.foreach(
         new OpenCollector(clamp)
       )
@@ -308,8 +308,8 @@ object ButtonMappings {
       pivot <- collectorPivot
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightTwo) &&
-        !driverHardware.operatorJoystick.getRawButton(RightFive)
+        driverHardware.operatorJoystick.getRawButton(LeftTwo) &&
+        !driverHardware.operatorJoystick.getRawButton(LeftFive)
       }.foreach(
         new PivotDown(pivot)
       )
