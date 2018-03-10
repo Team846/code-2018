@@ -207,31 +207,6 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         )
     }
 
-    def justSwitchAuto(
-                              drivetrain: DrivetrainComponent,
-                              collectorRollers: CollectorRollers,
-                              collectorClamp: CollectorClamp,
-                              collectorPivot: CollectorPivot,
-                              cubeLift: CubeLiftComp
-                            ): FiniteTask = {
-      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
-        curr - init
-      })
-
-      val pose = XYPosition
-        .circularTracking(
-          relativeAngle.map(compassToTrigonometric),
-          drivetrainHardware.forwardPosition
-        )
-        .map(
-          p => p + sideStartingPose
-        )
-        .preserve
-
-      dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-        .withTimeout(Seconds(5))
-    }
-
     def scaleSwitch3CubeAuto(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,

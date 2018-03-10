@@ -12,6 +12,7 @@ import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.potassium.units.Point
 import squants.{Angle, Percent}
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
+import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.motion.FeetPerSecond
 import squants.space.{Feet, Inches}
 import squants.time.Seconds
@@ -120,6 +121,82 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         )
     }
 
+    def threeInScale(drivetrain: DrivetrainComponent,
+                      collectorRollers: CollectorRollers,
+                      collectorClamp: CollectorClamp,
+                      collectorPivot: CollectorPivot,
+                      cubeLift: CubeLiftComp
+                    ): FiniteTask = {
+      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
+        curr - init
+      })
+
+      val pose = XYPosition
+        .circularTracking(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardPosition
+        )
+        .map(
+          p => p + sideStartingPose
+        )
+        .preserve
+
+      dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .withTimeout(Seconds(10))
+        .then(
+          SameSideSwitchOppositeScale
+            .pickupSecondCube(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLift,
+              pose,
+              relativeAngle
+            )
+            .withTimeout(Seconds(5))
+        )
+        .then(
+          SameSideSwitchOppositeScale
+            .dropOffThirdCube(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLift,
+              pose,
+              relativeAngle
+            )
+            .withTimeout(Seconds(5))
+        )
+        .then(
+          SameSideSwitchOppositeScale
+            .pickUpThirdCube(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLift,
+              pose,
+              relativeAngle
+            )
+            .withTimeout(Seconds(5))
+        )
+        .then(
+          SameSideSwitchOppositeScale
+            .dropOffThirdCube(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLift,
+              pose,
+              relativeAngle
+            )
+            .withTimeout(Seconds(5))
+        )
+    }
+
     val oppositeSideDriveTimeOut = Seconds(10)
     def oppositeSwitchOnly(
       drivetrain: DrivetrainComponent,
@@ -181,6 +258,58 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
       )
     }
+
+    def justSwitchAuto(
+                        drivetrain: DrivetrainComponent,
+                        collectorRollers: CollectorRollers,
+                        collectorClamp: CollectorClamp,
+                        collectorPivot: CollectorPivot,
+                        cubeLift: CubeLiftComp,
+                        limeLightHardware: LimeLightHardware
+                      ): FiniteTask = {
+      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
+        curr - init
+      })
+
+      val pose = XYPosition
+        .circularTracking(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardPosition
+        )
+        .map(
+          p => p + sideStartingPose
+        )
+        .preserve
+
+      dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .withTimeout(Seconds(10))
+        .then(
+          SameSideSwitchOppositeScale
+            .pickupSecondCube(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLift,
+              pose,
+              relativeAngle
+            )
+            .withTimeout(Seconds(5))
+        ).then(
+        SameSideSwitchOppositeScale
+          .pickupSecondCube(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          )
+          .withTimeout(Seconds(5))
+      )
+    }
+
   }
 
 }
