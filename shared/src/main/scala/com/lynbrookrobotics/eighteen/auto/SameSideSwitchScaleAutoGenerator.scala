@@ -148,7 +148,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
             Degrees(5),
             Percent(20)
           )(drivetrain)
-        )
+        ).andUntilDone(new PivotDown(collectorPivot))
         .then(
           dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
         )

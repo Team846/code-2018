@@ -1,7 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.eighteen.JoystickButtons._
-import com.lynbrookrobotics.eighteen.climber.deployment.DeployClimber
 import com.lynbrookrobotics.eighteen.climber.winch.{Climb, WinchManualControl}
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.OpenCollector
@@ -11,6 +10,8 @@ import com.lynbrookrobotics.eighteen.cubeLift.LiftManualControl
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
 import com.lynbrookrobotics.eighteen.forklift.MoveForkliftDown
 import com.lynbrookrobotics.eighteen.camera.CameraTasks.visionCubePickup
+import com.lynbrookrobotics.potassium.Signal
+import com.lynbrookrobotics.potassium.tasks.ContinuousTask
 import squants.space.Feet
 
 // team846.slab.com/posts/button-mappings-625f4bf7
@@ -67,8 +68,7 @@ object ButtonMappings {
       climber <- climberWinch
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.driverJoystick.getRawButton(LeftOne) &&
-        !driverHardware.operatorJoystick.getRawButton(RightOne)
+        driverHardware.driverJoystick.getRawButton(LeftOne)
       }.foreach(
         new Climb(climber)
       )
@@ -201,32 +201,41 @@ object ButtonMappings {
 
     for {
       climber <- climberDeployment
+      lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightOne) &&
-        !driverHardware.driverJoystick.getRawButton(LeftOne)
-      }.foreach(
-        new DeployClimber(climber)
-      )
-    }
+        driverHardware.operatorJoystick.getRawButton(RightOne)
+      }.foreach(Signal(
+        if (!climber.currentState) {
+          new WhileAtPosition(
+            coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+            cubeLiftProps.get.liftPositionTolerance
+          )(lift).toFinite.then(new ContinuousTask {
+            override protected def onEnd(): Unit = {}
 
-    for {
-      winch <- climberWinch
-      climber <- climberDeployment
-    } {
-      driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightOne) &&
-        driverHardware.driverJoystick.getRawButton(LeftOne)
-      }.foreach( // left 1 — deploy climber
-        new Climb(winch).and(new DeployClimber(climber))
-      )
+            override protected def onStart(): Unit = {
+              climber.resetToDefault()
+              climber.currentState = true
+            }
+          })
+        } else {
+          new ContinuousTask {
+            override protected def onEnd(): Unit = {}
+
+            override protected def onStart(): Unit = {
+              climber.resetToDefault()
+              climber.currentState = false
+            }
+          }
+        }
+      ))
     }
 
     for {
       forklift <- forklift
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightTwo)
+        driverHardware.operatorJoystick.getRawButton(RightThree)
       }.foreach(
         new MoveForkliftDown(forklift)
       )

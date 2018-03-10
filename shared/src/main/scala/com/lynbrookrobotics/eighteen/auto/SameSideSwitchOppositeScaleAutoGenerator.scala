@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
-import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
+import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
@@ -41,9 +41,9 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 5,
+        targetTicksWithingTolerance = 10,
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain).then(
+      )(drivetrain).andUntilDone(new PivotDown(collectorPivot).and(liftElevatorToSwitch(cubeLift).toContinuous)).then(
         dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
       )
     }
