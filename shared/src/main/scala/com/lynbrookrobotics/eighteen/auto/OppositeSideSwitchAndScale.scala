@@ -121,12 +121,13 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         )
     }
 
-    def threeInScale(drivetrain: DrivetrainComponent,
-                      collectorRollers: CollectorRollers,
-                      collectorClamp: CollectorClamp,
-                      collectorPivot: CollectorPivot,
-                      cubeLift: CubeLiftComp
-                    ): FiniteTask = {
+    def threeInScale(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp
+    ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
       })
@@ -252,21 +253,24 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         cruisingVelocity = FeetPerSecond(6),
         targetTicksWithingTolerance = 10,
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain).andUntilDone(
-        new PivotDown(collectorPivot).and(liftElevatorToSwitch(cubeLift).toContinuous)
-      ).withTimeout(Seconds(12)).then(
-        dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-      )
+      )(drivetrain)
+        .andUntilDone(
+          new PivotDown(collectorPivot).and(liftElevatorToSwitch(cubeLift).toContinuous)
+        )
+        .withTimeout(Seconds(12))
+        .then(
+          dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+        )
     }
 
     def justSwitchAuto(
-                        drivetrain: DrivetrainComponent,
-                        collectorRollers: CollectorRollers,
-                        collectorClamp: CollectorClamp,
-                        collectorPivot: CollectorPivot,
-                        cubeLift: CubeLiftComp,
-                        limeLightHardware: LimeLightHardware
-                      ): FiniteTask = {
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      limeLightHardware: LimeLightHardware
+    ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
       })
@@ -295,19 +299,20 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
               relativeAngle
             )
             .withTimeout(Seconds(5))
-        ).then(
-        SameSideSwitchOppositeScale
-          .pickupSecondCube(
-            drivetrain,
-            collectorRollers,
-            collectorClamp,
-            collectorPivot,
-            cubeLift,
-            pose,
-            relativeAngle
-          )
-          .withTimeout(Seconds(5))
-      )
+        )
+        .then(
+          SameSideSwitchOppositeScale
+            .pickupSecondCube(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLift,
+              pose,
+              relativeAngle
+            )
+            .withTimeout(Seconds(5))
+        )
     }
 
   }

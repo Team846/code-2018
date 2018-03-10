@@ -15,7 +15,6 @@ import com.lynbrookrobotics.potassium.units.Point
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Feet, Inches}
-import squants.time.Seconds
 
 trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
   import r._
@@ -149,7 +148,8 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
             Degrees(5),
             Percent(20)
           )(drivetrain)
-        ).andUntilDone(new PivotDown(collectorPivot))
+        )
+        .andUntilDone(new PivotDown(collectorPivot))
         .then(
           dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
         )
@@ -208,7 +208,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         )
     }
 
-    def scaleSwitch3Cube(
+    def threeInScale(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
       collectorClamp: CollectorClamp,
@@ -275,14 +275,14 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         )
     }
 
-    def justSwitchAuto(
-                        drivetrain: DrivetrainComponent,
-                        collectorRollers: CollectorRollers,
-                        collectorClamp: CollectorClamp,
-                        collectorPivot: CollectorPivot,
-                        cubeLift: CubeLiftComp,
-                        limeLightHardware: LimeLightHardware
-                      ): FiniteTask = {
+    def onlySwitch(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      limeLightHardware: LimeLightHardware
+    ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
       })

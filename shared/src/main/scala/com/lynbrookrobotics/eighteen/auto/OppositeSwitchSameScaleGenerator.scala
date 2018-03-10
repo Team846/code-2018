@@ -11,10 +11,12 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.units.Point
+import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Inches}
 
 trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitchScaleAutoGenerator {
+
   import r._
 
   object OppositeSideSwitchSameSideScale {
@@ -172,6 +174,23 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitch
           dropOffThirdCube(drivetrain, collectorRollers, collectorPivot, collectorClamp, cubeLift)
         )
     }
-  }
 
+    def scaleOnly(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      limeLightHardware: LimeLightHardware
+    ): FiniteTask = {
+      SameSideSwitchAndScale.onlySwitch(
+        drivetrain,
+        collectorRollers,
+        collectorClamp,
+        collectorPivot,
+        cubeLift,
+        limeLightHardware
+      )
+    }
+  }
 }

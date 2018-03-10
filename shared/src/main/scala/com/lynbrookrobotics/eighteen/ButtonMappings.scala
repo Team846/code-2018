@@ -205,30 +205,32 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightOne)
-      }.foreach(Signal(
-        if (!climber.currentState) {
-          new WhileAtPosition(
-            coreTicks.map(_ => cubeLiftProps.get.collectHeight),
-            cubeLiftProps.get.liftPositionTolerance
-          )(lift).toFinite.then(new ContinuousTask {
-            override protected def onEnd(): Unit = {}
+      }.foreach(
+        Signal(
+          if (!climber.currentState) {
+            new WhileAtPosition(
+              coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+              cubeLiftProps.get.liftPositionTolerance
+            )(lift).toFinite.then(new ContinuousTask {
+              override protected def onEnd(): Unit = {}
 
-            override protected def onStart(): Unit = {
-              climber.resetToDefault()
-              climber.currentState = true
-            }
-          })
-        } else {
-          new ContinuousTask {
-            override protected def onEnd(): Unit = {}
+              override protected def onStart(): Unit = {
+                climber.resetToDefault()
+                climber.currentState = true
+              }
+            })
+          } else {
+            new ContinuousTask {
+              override protected def onEnd(): Unit = {}
 
-            override protected def onStart(): Unit = {
-              climber.resetToDefault()
-              climber.currentState = false
+              override protected def onStart(): Unit = {
+                climber.resetToDefault()
+                climber.currentState = false
+              }
             }
           }
-        }
-      ))
+        )
+      )
     }
 
     for {
