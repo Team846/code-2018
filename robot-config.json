@@ -2,7 +2,7 @@
   "cubeLift": {
     "props": {
       "lowScaleHeight": [
-        54,
+        64,
         "Inches"
       ],
       "highScaleHeight": [
@@ -250,7 +250,7 @@
             "Degrees"
           ],
           "num": [
-            50,
+            80,
             "Percent"
           ]
         }

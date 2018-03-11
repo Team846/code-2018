@@ -210,7 +210,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
       val wayPoints = toScalePoints.take(3) ++ Seq(
         Point(
           -Inches(226.8),
-          Inches(232) - Feet(2)
+          Inches(232) - Feet(1.25)
         ),
         Point(
           -Inches(259.3),
@@ -222,11 +222,11 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         ),
         Point(
           -Inches(245.2),
-          Inches(181)
+          Inches(181) - Feet(1)
         ),
         Point(
           -Inches(228.7),
-          Inches(181)
+          Inches(181) - Feet(1)
         )
       )
 

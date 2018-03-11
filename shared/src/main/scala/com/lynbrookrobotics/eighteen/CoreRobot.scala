@@ -202,18 +202,18 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.OppositeSideSwitchAndScale
-            .oppositeSwitchOnly(
+          generator.SameSideSwitchAndScale
+            .oneInScale(
               drivetrain,
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp
-            )
-            .toContinuous
+              cubeLiftComp,
+              cameraHardware
+            ).toContinuous
         case "RRL" | "RRR" =>
           generator.SameSideSwitchAndScale
-            .threeInScale(
+            .oneInScale(
               drivetrain,
               collectorRollers,
               collectorClamp,
