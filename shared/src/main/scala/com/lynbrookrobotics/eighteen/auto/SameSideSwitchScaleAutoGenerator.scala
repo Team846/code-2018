@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen.auto
 
-import com.lynbrookrobotics.eighteen.collector.clamp.{CollectorClamp, OpenCollector}
+import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForSlowPurge}
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
@@ -41,7 +41,8 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         .and(new WaitTask(Seconds(2)).then(liftElevatorToScale(cubeLift).toFinite))
         .then(
           new SpinForSlowPurge(collectorRollers).forDuration(Seconds(3))
-        ).andUntilDone(new PivotDown(collectorPivot))
+        )
+        .andUntilDone(new PivotDown(collectorPivot))
     }
 
     def backOutPostScale(
@@ -209,13 +210,13 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
     }
 
     def oneInScale(
-                      drivetrain: DrivetrainComponent,
-                      collectorRollers: CollectorRollers,
-                      collectorClamp: CollectorClamp,
-                      collectorPivot: CollectorPivot,
-                      cubeLift: CubeLiftComp,
-                      limeLightHardware: LimeLightHardware
-                    ): FiniteTask = {
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      limeLightHardware: LimeLightHardware
+    ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
       })
@@ -290,7 +291,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
             pose,
             relativeAngle
           ).withTimeout(Seconds(4))
-        )/*
+        ) /*
         .then(
           backUpPreThirdCubeDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, pose, relativeAngle)
             .withTimeout(Seconds(3))

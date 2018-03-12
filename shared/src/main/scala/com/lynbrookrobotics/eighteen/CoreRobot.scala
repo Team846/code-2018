@@ -210,7 +210,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorPivot,
               cubeLiftComp,
               cameraHardware
-            ).toContinuous
+            )
+            .toContinuous
         case "RRL" | "RRR" =>
           generator.SameSideSwitchAndScale
             .oneInScale(
