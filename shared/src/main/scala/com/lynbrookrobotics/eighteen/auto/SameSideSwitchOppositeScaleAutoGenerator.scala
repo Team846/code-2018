@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
-import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
+import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
@@ -12,9 +12,11 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.potassium.units.Point
 import squants.space.{Degrees, Inches}
+import squants.time.Seconds
 import squants.{Angle, Percent}
 
 trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
+
   import r._
 
   object SameSideSwitchOppositeScale {
@@ -22,6 +24,8 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
       -Inches(264.0),
       Inches(232.3)
     )
+
+    val toSwitchDropOffTimeout = Seconds(5)
 
     def dropOffToSwitch(
       drivetrain: DrivetrainComponent,
@@ -39,11 +43,13 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 5,
+        targetTicksWithingTolerance = 10,
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain).then(
-        dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-      )
+      )(drivetrain)
+        .andUntilDone(new PivotDown(collectorPivot).and(liftElevatorToSwitch(cubeLift).toContinuous))
+        .then(
+          dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+        )
     }
 
     def driveBackPostSwitch(
@@ -66,6 +72,8 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         )(drivetrain)
       )
     }
+
+    val cubePickupAndDropOffDriveTimout = Seconds(3)
 
     def pickupSecondCube(
       drivetrain: DrivetrainComponent,
@@ -226,22 +234,96 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         .preserve
 
       dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .withTimeout(Seconds(5))
         .then(
-          driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle)
+          driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle).withTimeout(Seconds(3))
         )
         .then(
           pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
           dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
           pickUpThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(3))
+        )
+    }
+
+    def justSwitchAuto(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp
+    ): FiniteTask = {
+      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
+        curr - init
+      })
+
+      val pose = XYPosition
+        .circularTracking(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardPosition
+        )
+        .map(
+          p => p + sideStartingPose
+        )
+        .preserve
+
+      dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .withTimeout(Seconds(5))
+    }
+
+    def threeInScale(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp
+    ): FiniteTask = {
+      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
+        curr - init
+      })
+
+      val pose = XYPosition
+        .circularTracking(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardPosition
+        )
+        .map(
+          p => p + sideStartingPose
+        )
+        .preserve
+
+      dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        .withTimeout(Seconds(5))
+        .then(
+          driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle).withTimeout(Seconds(3))
+        )
+        .then(
+          pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
+        )
+        // sketch way to to sacle only
+        .then(
+          dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
+        )
+        .then(
+          pickUpThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
+        )
+        .then(
+          dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(3))
         )
     }
   }
-
 }

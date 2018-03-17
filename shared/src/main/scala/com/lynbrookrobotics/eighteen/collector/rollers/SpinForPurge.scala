@@ -15,3 +15,16 @@ class SpinForPurge(rollers: CollectorRollers)(implicit collectorRollersProps: Si
     rollers.resetToDefault()
   }
 }
+
+class SpinForSlowPurge(rollers: CollectorRollers)(implicit collectorRollersProps: Signal[CollectorRollersProperties])
+    extends ContinuousTask {
+  override protected def onStart(): Unit = {
+    rollers.setController(
+      rollers.coreTicks.map(_ => (-collectorRollersProps.get.purgeSpeed / 2, collectorRollersProps.get.purgeSpeed / 2))
+    )
+  }
+
+  override protected def onEnd(): Unit = {
+    rollers.resetToDefault()
+  }
+}

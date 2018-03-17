@@ -25,8 +25,8 @@ object SameSideSwitchAndScalePoints {
       Inches(241)
     ),
     Point(
-      -Inches(45.7),
-      Inches(280.9) - smallRoomFactor
+      -Inches(45.7) - Inches(6),
+      Inches(280.9) - Feet(1) - smallRoomFactor
     ) /*
     Point(
       -Inches(41.3),
@@ -52,8 +52,8 @@ object SameSideSwitchAndScalePoints {
       toScalePoints.last.y - Feet(1)
     ),
     Point(
-      -Inches(41.8) - Inches(6) - Inches(4),
-      Inches(228.3 + 6 + 4) - smallRoomFactor
+      -Inches(41.8) - Inches(6) - Inches(4) - Feet(1),
+      Inches(228.3 + 6) - smallRoomFactor
     )
   )
   val pickupThirdCubePoints = Seq(
@@ -116,15 +116,15 @@ object SameSideSwitchOppositeScalePoints {
     startingPose,
     Point(
       -Inches(20),
-      Inches(133.5)
+      Inches(133.5) - Inches(6)
     ),
     Point(
       -Inches(25.6),
-      Inches(155.3)
+      Inches(155.3) - Inches(6)
     ),
     Point(
-      -Inches(30),
-      Inches(155.3)
+      -Inches(42),
+      Inches(155.3) - Inches(6)
     )
   )
 
@@ -196,11 +196,11 @@ object OppositeSideSwitchScalePoints {
     ),
     Point(
       -Inches(96.6),
-      Inches(232.5)
+      Inches(232.5) - Feet(1.25)
     ),
     Point(
       -Inches(187),
-      Inches(232.5)
+      Inches(232.5) - Feet(1.25)
     ),
     Point(
       -Inches(222.4),

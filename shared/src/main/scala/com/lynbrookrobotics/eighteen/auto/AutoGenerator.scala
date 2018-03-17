@@ -22,7 +22,7 @@ import squants.{Angle, Percent}
 class AutoGenerator(protected val r: CoreRobot) {
   import r._
 
-  val purePursuitCruisingVelocity = FeetPerSecond(13)
+  val purePursuitCruisingVelocity = FeetPerSecond(6)
 
   val robotLength = Feet(3)
   val robotWidth = Feet(3)
@@ -334,6 +334,7 @@ class AutoGenerator(protected val r: CoreRobot) {
     )(drivetrain)
   }
 
+  val centetSwitchDriveTimeOut = Seconds(5)
   def leftCenterSwitch(
     drivetrain: DrivetrainComponent,
     collectorRollers: CollectorRollers,
@@ -358,9 +359,11 @@ class AutoGenerator(protected val r: CoreRobot) {
       cruisingVelocity = purePursuitCruisingVelocity,
       targetTicksWithingTolerance = 1,
       forwardBackwardMode = ForwardsOnly
-    )(drivetrain).then(
-      dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-    )
+    )(drivetrain)
+      .withTimeout(centetSwitchDriveTimeOut)
+      .then(
+        dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+      )
   }
 
   def rightCenterSwitch(
@@ -387,9 +390,11 @@ class AutoGenerator(protected val r: CoreRobot) {
       cruisingVelocity = purePursuitCruisingVelocity,
       targetTicksWithingTolerance = 1,
       forwardBackwardMode = ForwardsOnly
-    )(drivetrain).then(
-      dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-    )
+    )(drivetrain)
+      .withTimeout(centetSwitchDriveTimeOut)
+      .then(
+        dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+      )
   }
 
   val centerStartingPose = Point(Inches(139.473), Inches(0))

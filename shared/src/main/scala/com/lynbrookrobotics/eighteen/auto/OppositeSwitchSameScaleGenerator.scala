@@ -11,10 +11,12 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.units.Point
+import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Inches}
 
 trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitchScaleAutoGenerator {
+
   import r._
 
   object OppositeSideSwitchSameSideScale {
@@ -142,38 +144,53 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitch
           pose,
           relativeAngle
         )
+        .withTimeout(Seconds(5))
         .then(
-          SameSideSwitchAndScale.backOutPostScale(drivetrain, pose, relativeAngle)
+          SameSideSwitchAndScale
+            .backOutPostScale(drivetrain, pose, relativeAngle)
+            .and(liftElevatorToCollect(cubeLift).toFinite)
+            .withTimeout(Seconds(3))
         )
         .then(
           pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(3))
         )
         .then(
           dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+            .withTimeout(Seconds(5))
         )
         .then(
-          printTask("before third pickup")
-            .then(
-              pickupThirdCube(
-                drivetrain,
-                collectorRollers,
-                collectorClamp,
-                collectorPivot,
-                cubeLift,
-                pose,
-                relativeAngle
-              )
-            )
-            .then(printTask("after pickup second cube"))
+          pickupThirdCube(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          ).withTimeout(Seconds(2))
         )
         .then(
-          printTask("before drop off third")
-            .then(
-              dropOffThirdCube(drivetrain, collectorRollers, collectorPivot, collectorClamp, cubeLift)
-            )
-            .then(printTask("after pickup third cube"))
+          dropOffThirdCube(drivetrain, collectorRollers, collectorPivot, collectorClamp, cubeLift)
         )
     }
-  }
 
+    def scaleOnly(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      limeLightHardware: LimeLightHardware
+    ): FiniteTask = {
+      SameSideSwitchAndScale.onlySwitch(
+        drivetrain,
+        collectorRollers,
+        collectorClamp,
+        collectorPivot,
+        cubeLift,
+        limeLightHardware
+      )
+    }
+  }
 }

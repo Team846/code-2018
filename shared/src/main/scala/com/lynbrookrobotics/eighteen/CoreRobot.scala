@@ -150,37 +150,37 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     cameraHardware <- cameraHardware
   } {
     // Full 3 cube
-    addAutonomousRoutine(1) {
-      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
-      switchScalePattern match {
-        case "LLL" | "LLR" =>
-          generator.OppositeSideSwitchAndScale
-            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-            .toContinuous
-        case "RLL" | "RLR" =>
-          generator.SameSideSwitchOppositeScale
-            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-            .toContinuous // same op
-        case "LRL" | "LRR" =>
-          generator.OppositeSideSwitchSameSideScale
-            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-            .toContinuous // op same
-        case "RRL" | "RRR" =>
-          generator.SameSideSwitchAndScale
-            .scaleSwitch3Cube(
-              drivetrain,
-              collectorRollers,
-              collectorClamp,
-              collectorPivot,
-              cubeLiftComp,
-              cameraHardware
-            )
-            .toContinuous // same same
-        case _ =>
-          println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
-          ContinuousTask.empty
-      }
-    }
+//    addAutonomousRoutine(1) {
+//      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
+//      switchScalePattern match {
+//        case "LLL" | "LLR" =>
+//          generator.OppositeSideSwitchAndScale
+//            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+//            .toContinuous
+//        case "RLL" | "RLR" =>
+//          generator.SameSideSwitchOppositeScale
+//            .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+//            .toContinuous // same op
+//        case "LRL" | "LRR" =>
+//          generator.OppositeSideSwitchSameSideScale
+//            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+//            .toContinuous // op same
+//        case "RRL" | "RRR" =>
+//          generator.SameSideSwitchAndScale
+//            .scaleSwitch3Cube(
+//              drivetrain,
+//              collectorRollers,
+//              collectorClamp,
+//              collectorPivot,
+//              cubeLiftComp,
+//              cameraHardware
+//            )
+//            .toContinuous // same same
+//        case _ =>
+//          println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
+//          ContinuousTask.empty
+//      }
+//    }
 
     // 3 cube when switch on our side, 1 cube in switch
     // when switch on other side
@@ -199,21 +199,22 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             .toContinuous
         case "RLL" | "RLR" =>
           generator.SameSideSwitchOppositeScale
-            .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.OppositeSideSwitchAndScale
-            .oppositeSwitchOnly(
+          generator.SameSideSwitchAndScale
+            .oneInScale(
               drivetrain,
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp
+              cubeLiftComp,
+              cameraHardware
             )
             .toContinuous
         case "RRL" | "RRR" =>
           generator.SameSideSwitchAndScale
-            .scaleSwitch3Cube(
+            .oneInScale(
               drivetrain,
               collectorRollers,
               collectorClamp,
@@ -248,28 +249,49 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     }
 
     addAutonomousRoutine(4) {
-      generator.SameSideSwitchAndScale
-        .scaleSwitch3Cube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp, cameraHardware)
-        .toContinuous
+      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
+      switchScalePattern match {
+        case "LLL" | "LLR" =>
+          generator.OppositeSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp
+            )
+            .toContinuous
+        case "RLL" | "RLR" =>
+          generator.SameSideSwitchOppositeScale
+            .threeInScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous // same op
+        case "LRL" | "LRR" =>
+          generator.OppositeSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp
+            )
+            .toContinuous
+        case "RRL" | "RRR" =>
+          generator.SameSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // same same
+        case _ =>
+          println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
+          ContinuousTask.empty
+      }
     }
 
-    addAutonomousRoutine(5) {
-      generator.SameSideSwitchOppositeScale
-        .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-        .toContinuous
-    }
-
-    addAutonomousRoutine(6) {
-      generator.OppositeSideSwitchSameSideScale
-        .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-        .toContinuous
-    }
-
-    addAutonomousRoutine(7) {
-      generator.OppositeSideSwitchAndScale
-        .scaleSwitch3CubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-        .toContinuous
-    }
   }
 
   for {
