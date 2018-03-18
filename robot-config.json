@@ -122,7 +122,11 @@
       "rightFollowerPort": 13,
       "leftFollowerPort": 14,
       "rightPort": 11,
-      "leftPort": 12
+      "leftPort": 12,
+      "rightFollowerPdpPort": 3,
+      "leftFollowerPdpPort": 1,
+      "rightPdpPort": 2,
+      "leftPdpPort": 0
     },
     "props": {
       "maxLeftVelocity": [

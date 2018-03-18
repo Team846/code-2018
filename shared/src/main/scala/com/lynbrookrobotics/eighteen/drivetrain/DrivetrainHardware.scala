@@ -10,7 +10,7 @@ import com.lynbrookrobotics.potassium.frc.{LazyTalon, TalonEncoder}
 import com.lynbrookrobotics.potassium.sensors.imu.{ADIS16448, DigitalGyro}
 import com.lynbrookrobotics.potassium.streams._
 import com.lynbrookrobotics.potassium.units.{Ratio, Value3D}
-import edu.wpi.first.wpilibj.SPI
+import edu.wpi.first.wpilibj.{PowerDistributionPanel, SPI}
 import squants.electro.{Amperes, ElectricCurrent}
 import squants.motion.AngularVelocity
 import squants.time.{Milliseconds, Seconds}
@@ -25,14 +25,16 @@ final case class DrivetrainData(
 )
 
 final case class DrivetrainHardware(
-  coreTicks: Stream[Unit],
-  leftSRX: TalonSRX,
-  rightSRX: TalonSRX,
-  leftFollowerSRX: BaseMotorController,
-  rightFollowerSRX: BaseMotorController,
-  gyro: DigitalGyro,
-  driverHardware: DriverHardware,
-  props: DrivetrainProperties
+                                     coreTicks: Stream[Unit],
+                                     leftSRX: TalonSRX,
+                                     rightSRX: TalonSRX,
+                                     leftFollower: BaseMotorController,
+                                     rightFollower: BaseMotorController,
+                                     gyro: DigitalGyro,
+                                     driverHardware: DriverHardware,
+                                     props: DrivetrainProperties,
+                                     ports: DrivetrainPorts,
+                                     pdp: PowerDistributionPanel
 ) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
@@ -44,11 +46,11 @@ final case class DrivetrainHardware(
   val right /*Back*/ =
     new LazyTalon(rightSRX)
 
-  leftFollowerSRX.follow(left.t)
-  rightFollowerSRX.follow(right.t)
+  leftFollower.follow(left.t)
+  rightFollower.follow(right.t)
 
   right.t.setInverted(true)
-  rightFollowerSRX.setInverted(true)
+  rightFollower.setInverted(true)
   right.t.setSensorPhase(false)
 
   import props._
@@ -59,7 +61,7 @@ final case class DrivetrainHardware(
   left.t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, escIdx, escTout)
   right.t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, escIdx, escTout)
 
-  Set(leftSRX, rightSRX, leftFollowerSRX, rightFollowerSRX)
+  Set(leftSRX, rightSRX, leftFollower, rightFollower)
     .foreach(it => TalonManager.configSlave(it))
 
   Set(left, right).foreach { it =>
@@ -105,10 +107,10 @@ final case class DrivetrainHardware(
   val leftDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(left.t.getMotorOutputPercent))
   val rightDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(right.t.getMotorOutputPercent))
 
-  val leftMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(left.t.getOutputCurrent))
-  val rightMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(right.t.getOutputCurrent))
-  val leftFollowerCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(leftFollowerSRX.getOutputCurrent))
-  val rightFollowerCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(rightFollowerSRX.getOutputCurrent))
+  val leftMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftPdpPort)))
+  val rightMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.rightPdpPort)))
+  val leftFollowerCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftFollowerPdpPort)))
+  val rightFollowerCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftFollowerPdpPort)))
 
   override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
   override lazy val turnPosition: Stream[Angle] = turnVelocity.integral

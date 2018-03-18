@@ -431,7 +431,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .datasetGroup("Drivetrain/Current")
         .addDataset(
           coreTicks
-            .map(_ => drivetrainHardware.leftFollowerSRX.getOutputCurrent)
+            .map(_ => drivetrainHardware.leftFollower.getOutputCurrent)
             .toTimeSeriesNumeric("Left follower current")
         )
 
@@ -445,7 +445,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .datasetGroup("Drivetrain/Current")
         .addDataset(
           coreTicks
-            .map(_ => drivetrainHardware.rightFollowerSRX.getOutputCurrent)
+            .map(_ => drivetrainHardware.rightFollower.getOutputCurrent)
             .toTimeSeriesNumeric("Right follower current")
         )
 

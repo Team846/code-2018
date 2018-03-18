@@ -47,5 +47,9 @@ final case class DrivetrainPorts(
   leftPort: Int,
   rightPort: Int,
   leftFollowerPort: Int,
-  rightFollowerPort: Int
+  rightFollowerPort: Int,
+  leftPdpPort: Int,
+  rightPdpPort: Int,
+  leftFollowerPdpPort: Int,
+  rightFollowerPdpPort: Int
 )
