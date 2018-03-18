@@ -53,7 +53,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
 
   StallChecker
     .timeAboveThreshold(
-      hardware.leftVelocity.zip(hardware.leftDutyCycle).map {
+      hardware.leftVelocity.zipAsync(hardware.leftDutyCycle).map {
         case (currVelocity, dutyCycle) => (props.get.maxLeftVelocity * dutyCycle.toEach) - currVelocity
       },
       props.get.deltaVelocityStallThreshold
@@ -67,7 +67,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
 
   StallChecker
     .timeAboveThreshold(
-      hardware.rightVelocity.zip(hardware.rightDutyCycle).map {
+      hardware.rightVelocity.zipAsync(hardware.rightDutyCycle).map {
         case (currVelocity, dutyCycle) => (props.get.maxRightVelocity * dutyCycle.toEach) - currVelocity
       },
       props.get.deltaVelocityStallThreshold
@@ -81,20 +81,20 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
 
   StallChecker
     .timeAboveThreshold(
-      hardware.rightMasterCurrent.zip(hardware.rightFollowerCurrent).map { case (m, f) => (m - f).abs },
+      hardware.rightMasterCurrent.zipAsync(hardware.rightFollowerCurrent).map { case (m, f) => (m - f).abs },
       props.get.parallelMotorCurrentThreshold
     )
-    .filter(_ <= Seconds(0))
+    .filter(_ > Seconds(0))
     .foreach { time =>
       println(s"[WARNING] RIGHT MASTER AND RIGHT FOLLOWER HAVE DIFFERENT CURRENT DRAWS. CHECK FUNKY DASHBOARD.")
     }
 
   StallChecker
     .timeAboveThreshold(
-      hardware.leftMasterCurrent.zip(hardware.leftFollowerCurrent).map { case (m, f) => (m - f).abs },
+      hardware.leftMasterCurrent.zipAsync(hardware.leftFollowerCurrent).map { case (m, f) => (m - f).abs },
       props.get.parallelMotorCurrentThreshold
     )
-    .filter(_ <= Seconds(0))
+    .filter(_ > Seconds(0))
     .foreach { time =>
       println(s"[WARNING] LEFT MASTER AND LEFT FOLLOWER HAVE DIFFERENT CURRENT DRAWS. CHECK FUNKY DASHBOARD.")
     }
