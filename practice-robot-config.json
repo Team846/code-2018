@@ -118,7 +118,7 @@
     },
     "props": {
       "maxLeftVelocity": [
-        13.3,
+        12.8,
         "FeetPerSecond"
       ],
       "turnVelocityGains": {
@@ -170,7 +170,7 @@
         "Amperes"
       ],
       "maxRightVelocity": [
-        13.5,
+        12.6,
         "FeetPerSecond"
       ],
       "track": [
@@ -354,7 +354,7 @@
         "Percent"
       ],
       "purgeSpeed": [
-        70,
+        50,
         "Percent"
       ]
     }
