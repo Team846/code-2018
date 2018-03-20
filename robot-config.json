@@ -197,6 +197,8 @@
         6,
         "Inches"
       ],
+      "leftFudge": 1.08,
+      "rightFudge": 1.08,
       "wheelOverEncoderGears": {
         "num": [
           18,

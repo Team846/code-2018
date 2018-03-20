@@ -28,6 +28,8 @@ final case class DrivetrainProperties(
   track: Length,
   wheelDiameter: Length,
   wheelOverEncoderGears: Ratio[Angle, Angle],
+  leftFudge: Double,
+  rightFudge: Double,
   parallelMotorCurrentThreshold: ElectricCurrent,
   deltaVelocityStallThreshold: Velocity,
   stallTimeout: Time

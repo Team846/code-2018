@@ -1,18 +1,18 @@
 package com.lynbrookrobotics.eighteen
 
+import argonaut.Argonaut._
 import com.lynbrookrobotics.eighteen.driver.DriverConfig
 import com.lynbrookrobotics.eighteen.drivetrain.{DrivetrainConfig, DrivetrainPorts, DrivetrainProperties}
+import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
 import com.lynbrookrobotics.potassium.control.PIDConfig
-import squants.{Each, Percent}
+import com.lynbrookrobotics.potassium.units.GenericValue._
+import com.lynbrookrobotics.potassium.units._
+import com.lynbrookrobotics.potassium.vision.VisionProperties
+import squants.electro.{Amperes, Volts}
 import squants.motion.{DegreesPerSecond, FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches, Turns}
 import squants.time.Seconds
-import com.lynbrookrobotics.potassium.units.GenericValue._
-import com.lynbrookrobotics.potassium.units._
-import com.lynbrookrobotics.eighteen.lift.{CubeLiftConfig, CubeLiftPorts, CubeLiftProperties}
-import squants.electro.{Amperes, Volts}
-import argonaut.Argonaut._
-import com.lynbrookrobotics.potassium.vision.VisionProperties
+import squants.{Each, Percent}
 
 object ConfigGenerator extends App {
   println(
@@ -37,7 +37,11 @@ object ConfigGenerator extends App {
             leftPort = 12,
             rightPort = 11,
             leftFollowerPort = 14,
-            rightFollowerPort = 13
+            rightFollowerPort = 13,
+            rightFollowerPdpPort = 3,
+            leftFollowerPdpPort = 1,
+            rightPdpPort = 2,
+            leftPdpPort = 0
           ),
           props = DrivetrainProperties(
             maxLeftVelocity = FeetPerSecond(18.8),

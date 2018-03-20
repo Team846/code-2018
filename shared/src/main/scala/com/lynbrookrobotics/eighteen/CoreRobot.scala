@@ -83,7 +83,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         new LEDController(
           coreTicks,
           Signal.constant(DriverStation.Alliance.Red)
-        )
+      )
     )
 
   lazy val components: Seq[Component[_]] = Seq(
@@ -424,29 +424,25 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("Drivetrain/Current")
         .addDataset(
-          coreTicks.map(_ => drivetrainHardware.left.t.getOutputCurrent).toTimeSeriesNumeric("Left master current")
+          drivetrainHardware.leftMasterCurrent.map(_.toAmperes).toTimeSeriesNumeric("Left master current")
         )
 
       board
         .datasetGroup("Drivetrain/Current")
         .addDataset(
-          coreTicks
-            .map(_ => drivetrainHardware.leftFollower.getOutputCurrent)
-            .toTimeSeriesNumeric("Left follower current")
+            drivetrainHardware.leftFollowerCurrent.map(_.toAmperes).toTimeSeriesNumeric("Left follower current")
         )
 
       board
         .datasetGroup("Drivetrain/Current")
         .addDataset(
-          coreTicks.map(_ => drivetrainHardware.right.t.getOutputCurrent).toTimeSeriesNumeric("Right master current")
+          drivetrainHardware.rightMasterCurrent.map(_.toAmperes).toTimeSeriesNumeric("Right master current")
         )
 
       board
         .datasetGroup("Drivetrain/Current")
         .addDataset(
-          coreTicks
-            .map(_ => drivetrainHardware.rightFollower.getOutputCurrent)
-            .toTimeSeriesNumeric("Right follower current")
+          drivetrainHardware.rightFollowerCurrent.map(_.toAmperes).toTimeSeriesNumeric("Right follower current")
         )
 
       board

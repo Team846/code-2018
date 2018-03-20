@@ -25,16 +25,16 @@ final case class DrivetrainData(
 )
 
 final case class DrivetrainHardware(
-                                     coreTicks: Stream[Unit],
-                                     leftSRX: TalonSRX,
-                                     rightSRX: TalonSRX,
-                                     leftFollower: BaseMotorController,
-                                     rightFollower: BaseMotorController,
-                                     gyro: DigitalGyro,
-                                     driverHardware: DriverHardware,
-                                     props: DrivetrainProperties,
-                                     ports: DrivetrainPorts,
-                                     pdp: PowerDistributionPanel
+  coreTicks: Stream[Unit],
+  leftSRX: TalonSRX,
+  rightSRX: TalonSRX,
+  leftFollower: BaseMotorController,
+  rightFollower: BaseMotorController,
+  gyro: DigitalGyro,
+  driverHardware: DriverHardware,
+  props: DrivetrainProperties,
+  ports: DrivetrainPorts,
+  pdp: PowerDistributionPanel
 ) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
@@ -97,11 +97,11 @@ final case class DrivetrainHardware(
   }
 
   override val leftPosition: Stream[Length] = rootDataStream.map(_.leftEncoderRotation).map { ar =>
-    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
+    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2) * leftFudge
   }
 
   override val rightPosition: Stream[Length] = rootDataStream.map(_.rightEncoderRotation).map { ar =>
-    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
+    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2) * rightFudge
   }
 
   val leftDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(left.t.getMotorOutputPercent))
@@ -109,8 +109,10 @@ final case class DrivetrainHardware(
 
   val leftMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftPdpPort)))
   val rightMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.rightPdpPort)))
-  val leftFollowerCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftFollowerPdpPort)))
-  val rightFollowerCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftFollowerPdpPort)))
+  val leftFollowerCurrent: Stream[ElectricCurrent] =
+    coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftFollowerPdpPort)))
+  val rightFollowerCurrent: Stream[ElectricCurrent] =
+    coreTicks.map(_ => Amperes(pdp.getCurrent(ports.rightFollowerPdpPort)))
 
   override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
   override lazy val turnPosition: Stream[Angle] = turnVelocity.integral
@@ -118,7 +120,12 @@ final case class DrivetrainHardware(
 }
 
 object DrivetrainHardware {
-  def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
+  def apply(
+    config: DrivetrainConfig,
+    coreTicks: Stream[Unit],
+    driverHardware: DriverHardware,
+    pdp: PowerDistributionPanel
+  ): DrivetrainHardware = {
     new DrivetrainHardware(
       coreTicks, {
         println(s"[DEBUG] Creating driver left master talon on port ${config.ports.leftPort}")
@@ -142,7 +149,9 @@ object DrivetrainHardware {
         new ADIS16448(new SPI(SPI.Port.kMXP), null)
       },
       driverHardware,
-      config.props
+      config.props,
+      config.ports,
+      pdp
     )
   }
 }

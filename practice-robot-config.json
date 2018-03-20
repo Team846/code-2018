@@ -207,6 +207,8 @@
           "Turns"
         ]
       },
+      "leftFudge": 1.08,
+      "rightFudge": 1.08,
       "rightVelocityGains": {
         "kd": {
           "den": [
