@@ -380,10 +380,28 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         curr - init
       })
 
-      val pose = XYPosition
+      val circPose = XYPosition
         .circularTracking(
           relativeAngle.map(compassToTrigonometric),
           drivetrainHardware.forwardPosition
+        )
+        .map(
+          p => p + generator.sideStartingPose
+        )
+        .preserve
+      val regPose = XYPosition
+        .apply(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardPosition
+        )
+        .map(
+          p => p + generator.sideStartingPose
+        )
+        .preserve
+ val simpPose = XYPosition
+        .positionWithSimpsons(
+          relativeAngle.map(compassToTrigonometric),
+          drivetrainHardware.forwardVelocity
         )
         .map(
           p => p + generator.sideStartingPose
@@ -460,13 +478,31 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         .datasetGroup("Drivetrain/Position")
         .addDataset(drivetrainHardware.forwardPosition.map(_.toFeet).toTimeSeriesNumeric("forward position"))
 
-      board
-        .datasetGroup("Drivetrain/XY Position")
-        .addDataset(pose.map(_.x.toFeet).toTimeSeriesNumeric("x"))
 
       board
         .datasetGroup("Drivetrain/XY Position")
-        .addDataset(pose.map(_.y.toFeet).toTimeSeriesNumeric("y"))
+        .addDataset(circPose.map(_.x.toFeet).toTimeSeriesNumeric("circ x"))
+
+      board
+        .datasetGroup("Drivetrain/XY Position")
+        .addDataset(circPose.map(_.y.toFeet).toTimeSeriesNumeric("circ y"))
+
+ board
+        .datasetGroup("Drivetrain/XY Position")
+        .addDataset(regPose.map(_.x.toFeet).toTimeSeriesNumeric("reg x"))
+
+      board
+        .datasetGroup("Drivetrain/XY Position")
+        .addDataset(regPose.map(_.y.toFeet).toTimeSeriesNumeric("reg y"))
+
+      board
+        .datasetGroup("Drivetrain/XY Position")
+        .addDataset(simpPose.map(_.x.toFeet).toTimeSeriesNumeric("simp  x"))
+
+
+      board
+        .datasetGroup("Drivetrain/XY Position")
+        .addDataset(simpPose.map(_.y.toFeet).toTimeSeriesNumeric("simp y"))
 
       board
         .datasetGroup("Drivetrain/Gyro")
