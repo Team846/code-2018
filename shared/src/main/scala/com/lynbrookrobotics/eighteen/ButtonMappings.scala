@@ -104,7 +104,7 @@ object ButtonMappings {
       lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(TriggerBottom)
+        driverHardware.operatorJoystick.getRawButton(RightFive)
       }.foreach(
         new WhileAtPosition(
           driverHardware.joystickStream
@@ -132,7 +132,7 @@ object ButtonMappings {
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(TriggerRight)
+        driverHardware.operatorJoystick.getRawButton(LeftFour)
       }.foreach(
         new WhileAtPosition(
           driverHardware.joystickStream
@@ -160,7 +160,7 @@ object ButtonMappings {
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftOne)
+        driverHardware.operatorJoystick.getRawButton(TriggerRight)
       }.foreach(
         new WhileAtPosition(
           driverHardware.joystickStream
@@ -174,7 +174,7 @@ object ButtonMappings {
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightSix)
+        driverHardware.operatorJoystick.getRawButton(TriggerBottom)
       }.foreach(
         new WhileAtPosition(
           driverHardware.joystickStream
@@ -237,7 +237,8 @@ object ButtonMappings {
       forklift <- forklift
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightThree)
+        driverHardware.operatorJoystick.getRawButton(RightThree) &&
+        driverHardware.operatorJoystick.getRawButton(RightFour)
       }.foreach(
         new MoveForkliftDown(forklift)
       )
@@ -250,7 +251,7 @@ object ButtonMappings {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.driverJoystick.getRawButton(LeftThree)
       }.foreach(
-        new OpenCollector(clamp) and new PivotDown(pivot)
+        new OpenCollector(clamp)
       )
     }
 
@@ -258,7 +259,7 @@ object ButtonMappings {
       rollers <- collectorRollers
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftFour)
+        driverHardware.operatorJoystick.getRawButton(LeftSix)
       }.foreach(
         new RollersManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(rollers.coreTicks)
@@ -270,24 +271,9 @@ object ButtonMappings {
       lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftFive) &&
-        !driverHardware.operatorJoystick.getRawButton(LeftTwo)
-      }.foreach(
-        new LiftManualControl(
-          driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
-        )(lift)
-      )
-    }
-
-    for {
-      lift <- cubeLiftComp
-      pivot <- collectorPivot
-    } {
-      driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftTwo) &&
         driverHardware.operatorJoystick.getRawButton(LeftFive)
       }.foreach(
-        new PivotDown(pivot) and new LiftManualControl(
+        new LiftManualControl(
           driverHardware.joystickStream.map(_.operator.y).syncTo(lift.coreTicks)
         )(lift)
       )
@@ -297,7 +283,7 @@ object ButtonMappings {
       winch <- climberWinch
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftSix)
+        driverHardware.operatorJoystick.getRawButton(RightSix)
       }.foreach(
         new WinchManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(winch.coreTicks)
@@ -312,17 +298,6 @@ object ButtonMappings {
         driverHardware.operatorJoystick.getRawButton(LeftThree)
       }.foreach(
         new OpenCollector(clamp)
-      )
-    }
-
-    for {
-      pivot <- collectorPivot
-    } {
-      driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(LeftTwo) &&
-        !driverHardware.operatorJoystick.getRawButton(LeftFive)
-      }.foreach(
-        new PivotDown(pivot)
       )
     }
   }
