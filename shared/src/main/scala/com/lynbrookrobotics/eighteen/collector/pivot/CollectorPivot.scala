@@ -11,11 +11,13 @@ trait CollectorPivotState
 case object PivotUpState extends CollectorPivotState
 case object PivotDownState extends CollectorPivotState
 
-class CollectorPivot(driverHardware: DriverHardware, val coreTicks: Stream[Unit])(implicit hardware: CollectorPivotHardware)
-    extends Component[CollectorPivotState] {
-  override def defaultController: Stream[CollectorPivotState] = coreTicks
-    .map(_ => driverHardware.operatorJoystick.getRawButton(LeftTwo))
-    .map(it => if(it) PivotDownState else PivotUpState)
+class CollectorPivot(driverHardware: DriverHardware, val coreTicks: Stream[Unit])(
+  implicit hardware: CollectorPivotHardware
+) extends Component[CollectorPivotState] {
+  override def defaultController: Stream[CollectorPivotState] =
+    coreTicks
+      .map(_ => driverHardware.operatorJoystick.getRawButton(LeftTwo))
+      .map(it => if (it) PivotDownState else PivotUpState)
 
   private val check = new SingleOutputChecker(
     "Collector Pivot Solenoid",

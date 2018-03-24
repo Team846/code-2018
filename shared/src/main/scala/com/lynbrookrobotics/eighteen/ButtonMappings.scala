@@ -204,7 +204,8 @@ object ButtonMappings {
       lift <- cubeLiftComp
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightOne)
+        driverHardware.operatorJoystick.getRawButton(RightOne) &&
+        driverHardware.operatorJoystick.getRawButton(RightFour)
       }.foreach(
         Signal(
           if (!climber.currentState) {
@@ -237,8 +238,7 @@ object ButtonMappings {
       forklift <- forklift
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightThree) &&
-        driverHardware.operatorJoystick.getRawButton(RightFour)
+        driverHardware.operatorJoystick.getRawButton(RightThree)
       }.foreach(
         new MoveForkliftDown(forklift)
       )
