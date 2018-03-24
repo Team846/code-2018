@@ -13,7 +13,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
   implicit hardware: DrivetrainHardware,
   props: Signal[DrivetrainProperties],
   clock: Clock
-) extends Component[TwoSided[OffloadedSignal]] {
+) extends Component[TwoSided[OffloadedSignal]] with TimingLoggingComponent{
   override def defaultController: Stream[TwoSided[OffloadedSignal]] = {
     import hardware.driverHardware.station.{isEnabled, isOperatorControl}
 
@@ -52,4 +52,5 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     hardware.left.applyCommand(signal.left)
     hardware.right.applyCommand(signal.right)
   }
+
 }
