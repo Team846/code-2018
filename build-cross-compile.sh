@@ -35,7 +35,7 @@ cd ..
 git clone https://github.com/simondlevy/BreezySLAM.git
 cd BreezySLAM
 git checkout 232e4464f77204f1fcd0772c078b0eb946917a85
-git apply ../../breezySLAM-cross.patch
+git apply ../../breezyslam-cross.patch
 cd cpp
 make -j 4 breezyslam.a
 cd ../..
