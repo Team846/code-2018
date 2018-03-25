@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # Make sure you have autoconf, automake, and libtool installed!
+command -v autoconf || { echo "autoconf not installed. Aborting."; exit 1; }
+command -v automake || { echo "automake not installed. Aborting."; exit 1; }
+command -v libtool || { echo "libtool not installed. Aborting."; exit 1; }
 
 mkdir cross-compile
 cd cross-compile
