@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForSlowPurge}
+import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForPurge, SpinForSlowPurge}
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
@@ -40,7 +40,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       )(drivetrain)
         .and(new WaitTask(Seconds(2)).then(liftElevatorToScale(cubeLift).toFinite))
         .then(
-          new SpinForSlowPurge(collectorRollers).forDuration(Seconds(3))
+          new SpinForPurge(collectorRollers).forDuration(Seconds(3))
         )
         .andUntilDone(new PivotDown(collectorPivot))
     }
@@ -257,37 +257,26 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         )
         .preserve
 
-      startToScaleDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-        .withTimeout(Seconds(8))
+      SameSideSwitchAndScale.oneInScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, limeLightHardware)
+          .then(
+            new DriveBeyondStraight(
+              -Feet(1),
+              Inches(3),
+              Degrees(5),
+              Percent(50)
+            )(drivetrain)
+          )
         .then(
-          backOutPostScale(drivetrain, pose, relativeAngle)
-            .and(liftElevatorToCollect(cubeLift).toFinite)
-            .withTimeout(Seconds(3))
-        )
-        .then(
-          pickupSecondCube(
-            drivetrain,
-            collectorRollers,
-            collectorClamp,
-            collectorPivot,
-            cubeLift,
-            limeLightHardware,
-            pose,
-            relativeAngle
-          ).withTimeout(Seconds(5))
-        )
-        .then(
-          dropOffSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+          pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, limeLightHardware, pose, relativeAngle)
             .withTimeout(Seconds(5))
         )
         .then(
-          pickupThirdCube(
+          dropOffSecondCube(
             drivetrain,
             collectorRollers,
             collectorClamp,
             collectorPivot,
             cubeLift,
-            limeLightHardware,
             pose,
             relativeAngle
           ).withTimeout(Seconds(4))

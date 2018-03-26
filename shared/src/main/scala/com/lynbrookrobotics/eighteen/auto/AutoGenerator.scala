@@ -3,7 +3,7 @@ package com.lynbrookrobotics.eighteen.auto
 import com.lynbrookrobotics.eighteen.CoreRobot
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
-import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
+import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
@@ -16,13 +16,13 @@ import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, Wrapper
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Feet, Inches}
-import squants.time.Seconds
+import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Percent}
 
 class AutoGenerator(protected val r: CoreRobot) {
   import r._
 
-  val purePursuitCruisingVelocity = FeetPerSecond(6)
+  val purePursuitCruisingVelocity = FeetPerSecond(10)
 
   val robotLength = Feet(3)
   val robotWidth = Feet(3)
@@ -66,12 +66,14 @@ class AutoGenerator(protected val r: CoreRobot) {
     cubeLiftComp: CubeLiftComp
   ): FiniteTask = {
     liftElevatorToScale(cubeLiftComp).apply(
+      new PivotDown(collectorPivot).forDuration(Milliseconds(500)).then(
       CollectorTasks
         .purgeCube(
           collectorRollers,
           collectorPivot
         )
         .forDuration(Seconds(0.25))
+      )
         .then(
           liftElevatorToCollect(cubeLiftComp).toFinite
         )

@@ -24,7 +24,8 @@ import squants.space.{Degrees, Feet, Inches}
 import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.wpilibj.DriverStation
-import squants.motion.FeetPerSecond
+import squants.Percent
+import squants.motion.{DegreesPerSecond, FeetPerSecond}
 
 import scala.util.Try
 
@@ -137,6 +138,19 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         Feet(10),
         Inches(3),
         Degrees(5)
+      )(drivetrain).toContinuous
+    }
+    addAutonomousRoutine(20) {
+      new ContinuousVelocityDrive(
+        forward = drivetrainHardware.turnPosition.mapToConstant(FeetPerSecond(0)),
+        turn = drivetrainHardware.turnPosition.mapToConstant(DegreesPerSecond(100))
+      )(drivetrain)
+    }
+    addAutonomousRoutine(21) {
+      new RotateByAngle(
+        relativeAngle = Degrees(90),
+        tolerance = Degrees(0),
+        timeWithinTolerance = 100
       )(drivetrain).toContinuous
     }
   }
@@ -342,7 +356,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   ButtonMappings.setup(this)
 
   val dashboard = Try {
-    val dashboard = new FunkyDashboard(100, 8080)
+    val dashboard = new FunkyDashboard(1000, 8080)
     dashboard.start()
     dashboard
   }
@@ -430,23 +444,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("Drivetrain/Current")
         .addDataset(
-          coreTicks
-            .map(_ => drivetrainHardware.leftFollowerSRX.getOutputCurrent)
-            .toTimeSeriesNumeric("Left follower current")
-        )
-
-      board
-        .datasetGroup("Drivetrain/Current")
-        .addDataset(
           coreTicks.map(_ => drivetrainHardware.right.t.getOutputCurrent).toTimeSeriesNumeric("Right master current")
-        )
-
-      board
-        .datasetGroup("Drivetrain/Current")
-        .addDataset(
-          coreTicks
-            .map(_ => drivetrainHardware.rightFollowerSRX.getOutputCurrent)
-            .toTimeSeriesNumeric("Right follower current")
         )
 
       board
@@ -471,6 +469,9 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("Drivetrain/Gyro")
         .addDataset(drivetrainHardware.turnPosition.map(_.toDegrees).toTimeSeriesNumeric("angular position"))
+      board
+        .datasetGroup("Drivetrain/Gyro")
+        .addDataset(drivetrainHardware.turnVelocity.map(_.toDegreesPerSecond).toTimeSeriesNumeric("angular velocity"))
 
     }
 

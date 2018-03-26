@@ -75,6 +75,10 @@
         100,
         "Percent"
       ],
+      "maxCurrent": [
+        30,
+        "Amperes"
+      ],
       "talonOverVoltage": {
         "den": [
           3.3,
@@ -86,7 +90,7 @@
         ]
       },
       "maxHeight": [
-        80,
+        83,
         "Inches"
       ],
       "minHeight": [
@@ -268,7 +272,7 @@
             "Degrees"
           ],
           "num": [
-            80,
+            150,
             "Percent"
           ]
         }
@@ -380,7 +384,7 @@
         "Percent"
       ],
       "purgeSpeed": [
-        35,
+        50,
         "Percent"
       ]
     }
