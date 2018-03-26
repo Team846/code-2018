@@ -140,19 +140,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         Degrees(5)
       )(drivetrain).toContinuous
     }
-    addAutonomousRoutine(20) {
-      new ContinuousVelocityDrive(
-        forward = drivetrainHardware.turnPosition.mapToConstant(FeetPerSecond(0)),
-        turn = drivetrainHardware.turnPosition.mapToConstant(DegreesPerSecond(100))
-      )(drivetrain)
-    }
-    addAutonomousRoutine(21) {
-      new RotateByAngle(
-        relativeAngle = Degrees(90),
-        tolerance = Degrees(0),
-        timeWithinTolerance = 100
-      )(drivetrain).toContinuous
-    }
   }
 
   for {
