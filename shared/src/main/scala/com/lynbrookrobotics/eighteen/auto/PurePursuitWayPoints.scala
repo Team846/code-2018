@@ -208,7 +208,7 @@ object OppositeSideSwitchScalePoints {
     ),
     Point(
       -Inches(222.4) + Inches(6),
-      Inches(275.3)- Inches(12)
+      Inches(275.3) - Inches(12)
     )
   )
 }

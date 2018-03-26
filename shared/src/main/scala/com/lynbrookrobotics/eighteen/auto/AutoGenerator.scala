@@ -66,14 +66,16 @@ class AutoGenerator(protected val r: CoreRobot) {
     cubeLiftComp: CubeLiftComp
   ): FiniteTask = {
     liftElevatorToScale(cubeLiftComp).apply(
-      new PivotDown(collectorPivot).forDuration(Milliseconds(500)).then(
-      CollectorTasks
-        .purgeCube(
-          collectorRollers,
-          collectorPivot
+      new PivotDown(collectorPivot)
+        .forDuration(Milliseconds(500))
+        .then(
+          CollectorTasks
+            .purgeCube(
+              collectorRollers,
+              collectorPivot
+            )
+            .forDuration(Seconds(0.25))
         )
-        .forDuration(Seconds(0.25))
-      )
         .then(
           liftElevatorToCollect(cubeLiftComp).toFinite
         )

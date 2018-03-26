@@ -257,18 +257,27 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         )
         .preserve
 
-      SameSideSwitchAndScale.oneInScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, limeLightHardware)
-          .then(
-            new DriveBeyondStraight(
-              -Feet(1),
-              Inches(3),
-              Degrees(5),
-              Percent(50)
-            )(drivetrain)
-          )
+      SameSideSwitchAndScale
+        .oneInScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, limeLightHardware)
         .then(
-          pickupSecondCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, limeLightHardware, pose, relativeAngle)
-            .withTimeout(Seconds(5))
+          new DriveBeyondStraight(
+            -Feet(1),
+            Inches(3),
+            Degrees(5),
+            Percent(50)
+          )(drivetrain)
+        )
+        .then(
+          pickupSecondCube(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            limeLightHardware,
+            pose,
+            relativeAngle
+          ).withTimeout(Seconds(5))
         )
         .then(
           dropOffSecondCube(

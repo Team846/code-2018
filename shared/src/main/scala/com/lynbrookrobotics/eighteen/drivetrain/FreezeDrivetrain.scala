@@ -10,13 +10,12 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSided
 import squants.Angle
 import squants.space.Feet
 
-class FreezeDrivetrain(drive: DrivetrainComponent)
-                      (implicit hardware: DrivetrainHardware,
-                       props: Signal[DrivetrainProperties]) extends ContinuousTask {
+class FreezeDrivetrain(drive: DrivetrainComponent)(
+  implicit hardware: DrivetrainHardware,
+  props: Signal[DrivetrainProperties]
+) extends ContinuousTask {
   override def onStart(): Unit = {
-    drive.setController(positionControl(hardware.rootDataStream.map(_ =>
-      TwoSided(Feet(0), Feet(0))
-    )))
+    drive.setController(positionControl(hardware.rootDataStream.map(_ => TwoSided(Feet(0), Feet(0)))))
   }
 
   override def onEnd(): Unit = {
