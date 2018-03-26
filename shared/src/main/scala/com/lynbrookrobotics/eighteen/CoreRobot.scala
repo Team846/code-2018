@@ -343,7 +343,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
   ButtonMappings.setup(this)
 
   val dashboard = Try {
-    val dashboard = new FunkyDashboard(1000, 8080)
+    val dashboard = new FunkyDashboard(100, 8080)
     dashboard.start()
     dashboard
   }
