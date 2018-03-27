@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen
 
 import com.lynbrookrobotics.eighteen.JoystickButtons._
-import com.lynbrookrobotics.eighteen.climber.winch.{Climb, WinchManualControl}
+import com.lynbrookrobotics.eighteen.climber.winch.{Climb, TightenHooks, WinchManualControl}
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.OpenCollector
 import com.lynbrookrobotics.eighteen.collector.pivot.PivotDown
@@ -288,6 +288,12 @@ object ButtonMappings {
         new WinchManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(winch.coreTicks)
         )(winch)
+      )
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(RightTwo) &&
+          climberWinchProps.get.enableWinchTightening
+      }.foreach(
+        new TightenHooks(winch).toContinuous
       )
     }
 

@@ -36,7 +36,7 @@ object RobotHardware {
 
     RobotHardware(
       climberDeployment = climberDeployment.map(DeploymentHardware.apply),
-      climberWinch = climberWinch.map(ClimberWinchHardware.apply),
+      climberWinch = climberWinch.map(ClimberWinchHardware.apply(_, coreTicks)),
       collectorClamp = collectorClamp.map(CollectorClampHardware.apply(_, coreTicks)),
       collectorPivot = collectorPivot.map(CollectorPivotHardware.apply),
       collectorRollers = collectorRollers.map(CollectorRollersHardware.apply),
