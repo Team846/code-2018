@@ -369,6 +369,11 @@
       "climbingSpeed": [
         85,
         "Percent"
+      ],
+      "enableWinchTightening": true,
+      "climbingTotalCurrent": [
+        30,
+        "Amperes"
       ]
     }
   },
