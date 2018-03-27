@@ -509,6 +509,26 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
           collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity Sensor Voltage")
         )
     }
+
+    climberWinch.foreach { c =>
+      board
+        .datasetGroup("Winch/Current")
+        .addDataset(
+          climberWinchHardware.leftCurrent.map(_.toAmperes).toTimeSeriesNumeric("Left TalonSRX Current Draw")
+        )
+
+      board
+        .datasetGroup("Winch/Current")
+        .addDataset(
+          climberWinchHardware.midCurrent.map(_.toAmperes).toTimeSeriesNumeric("Middle TalonSRX Current Draw")
+        )
+
+      board
+        .datasetGroup("Winch/Current")
+        .addDataset(
+          climberWinchHardware.rightCurrent.map(_.toAmperes).toTimeSeriesNumeric("Right TalonSRX Current Draw")
+        )
+    }
   }
 }
 

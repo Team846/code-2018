@@ -290,7 +290,8 @@ object ButtonMappings {
         )(winch)
       )
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightTwo)
+        driverHardware.operatorJoystick.getRawButton(RightTwo) &&
+          climberWinchProps.get.enableWinchTightening
       }.foreach(
         new TightenHooks(winch).toContinuous
       )
