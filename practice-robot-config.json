@@ -174,7 +174,7 @@
         "Feet"
       ],
       "maxAcceleration": [
-        5,
+        7,
         "FeetPerSecondSquared"
       ],
       "maxDeceleration": [
@@ -380,7 +380,7 @@
     },
     "props": {
       "collectSpeed": [
-        50,
+        80,
         "Percent"
       ],
       "purgeSpeed": [
