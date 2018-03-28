@@ -509,6 +509,14 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
           collectorClampHardware.proximitySensorReading.map(_.toVolts).toTimeSeriesNumeric("Proximity Sensor Voltage")
         )
     }
+
+    hardware.lidar.foreach { xv =>
+      board
+        .datasetGroup("LIDAR")
+        .addDataset(
+          xv.frames.map(_(180).toFeet).toTimeSeriesNumeric("Distance at 180 deg (feet)")
+        )
+    }
   }
 }
 

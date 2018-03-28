@@ -7,12 +7,14 @@ import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivotHardware
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollersHardware
 import com.lynbrookrobotics.eighteen.driver.DriverHardware
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainHardware
+import com.lynbrookrobotics.eighteen.drivetrain.slam.XVLidar
 import com.lynbrookrobotics.eighteen.forklift.ForkliftHardware
 import com.lynbrookrobotics.eighteen.lift.CubeLiftHardware
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.frc.{LEDControllerHardware, WPIClock}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
+import edu.wpi.first.wpilibj.SerialPort
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],
@@ -25,7 +27,8 @@ final case class RobotHardware(
   forklift: Option[ForkliftHardware],
   cubeLift: Option[CubeLiftHardware],
   camera: Option[LimeLightHardware],
-  ledHardware: Option[LEDControllerHardware]
+  ledHardware: Option[LEDControllerHardware],
+  lidar: Option[XVLidar]
 )
 
 object RobotHardware {
@@ -47,7 +50,8 @@ object RobotHardware {
       camera = robotConfig.limelight.map { l =>
         new LimeLightHardware(true)(WPIClock, Signal.constant(l))
       },
-      ledHardware = robotConfig.led.map(l => LEDControllerHardware(l))
+      ledHardware = robotConfig.led.map(l => LEDControllerHardware(l)),
+      lidar = Some(new XVLidar(SerialPort.Port.kUSB))
     )
   }
 }
