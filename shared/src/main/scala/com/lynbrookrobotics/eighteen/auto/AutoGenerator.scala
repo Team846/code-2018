@@ -74,7 +74,7 @@ class AutoGenerator(protected val r: CoreRobot) {
               collectorRollers,
               collectorPivot
             )
-            .forDuration(Seconds(0.25))
+            .forDuration(Seconds(1))
         )
         .then(
           liftElevatorToCollect(cubeLiftComp).toFinite
@@ -90,7 +90,7 @@ class AutoGenerator(protected val r: CoreRobot) {
     cubeLiftComp: CubeLiftComp
   ): FiniteTask = {
     liftElevatorToSwitch(cubeLiftComp).apply(
-      CollectorTasks.purgeCubeOpen(collectorRollers, collectorClamp, collectorPivot).forDuration(Seconds(0.25))
+      CollectorTasks.purgeCube(collectorRollers, collectorPivot).forDuration(Seconds(3))
     )
   }
 
@@ -113,11 +113,11 @@ class AutoGenerator(protected val r: CoreRobot) {
   }
 
   def pickupGroundCubeClosed(
-                        collectorRollers: CollectorRollers,
-                        collectorClamp: CollectorClamp,
-                        collectorPivot: CollectorPivot,
-                        cubeLift: CubeLiftComp
-                      ): ContinuousTask = {
+    collectorRollers: CollectorRollers,
+    collectorClamp: CollectorClamp,
+    collectorPivot: CollectorPivot,
+    cubeLift: CubeLiftComp
+  ): ContinuousTask = {
     liftElevatorToCollect(cubeLift).toContinuous.and(
       CollectorTasks.collectCubeWithoutOpen(collectorRollers, collectorPivot)
     )

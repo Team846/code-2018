@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect, SpinForPurge, SpinForSlowPurge}
+import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect, SpinForPurge, SpinForHardPurge}
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
@@ -89,15 +89,15 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
     }
 
     def pickupThirdCubeAfterScale(
-                         drivetrain: DrivetrainComponent,
-                         collectorRollers: CollectorRollers,
-                         collectorClamp: CollectorClamp,
-                         collectorPivot: CollectorPivot,
-                         cubeLift: CubeLiftComp,
-                         limeLightHardware: LimeLightHardware,
-                         pose: Stream[Point],
-                         relativeAngle: Stream[Angle]
-                       ): FiniteTask = {
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      limeLightHardware: LimeLightHardware,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = SameSideSwitchAndScalePoints.pickupThirdCubeAfterScalePoints,
         tolerance = Inches(6),
@@ -213,7 +213,8 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         targetTicksWithingTolerance = 5,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
-        .and(liftElevatorToScale(cubeLift).toFinite).andUntilDone(new PivotDown(collectorPivot))
+        .and(liftElevatorToScale(cubeLift).toFinite)
+        .andUntilDone(new PivotDown(collectorPivot))
         .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
@@ -271,7 +272,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         .withTimeout(Seconds(10))
         .then(
           backOutPostScale(drivetrain, pose, relativeAngle)
-            .and(liftElevatorToCollect(cubeLift).toFinite)
+            .and(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite))
             .andUntilDone(new PivotDown(collectorPivot))
             .withTimeout(Seconds(10))
         )
@@ -285,12 +286,12 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
             limeLightHardware,
             pose,
             relativeAngle
-          ).withTimeout(Seconds(2))
+          ).withTimeout(Seconds(5))
         ) // use third cube auto for 2nd cube
         .then(
           backUpPreThirdCubeDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, pose, relativeAngle)
-            .andUntilDone(liftElevatorToScale(cubeLift).toContinuous)
-            .withTimeout(Seconds(2))
+            .andUntilDone(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite).toContinuous)
+            .withTimeout(Seconds(5))
         )
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)

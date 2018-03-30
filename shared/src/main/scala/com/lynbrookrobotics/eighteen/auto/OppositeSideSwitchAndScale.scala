@@ -11,12 +11,11 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePu
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
 import com.lynbrookrobotics.potassium.units.Point
-import squants.{Angle, Percent}
+import squants.{Angle, Percent, Seconds}
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
-import squants.time.Seconds
 
 trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOppositeScaleAutoGenerator {
 
@@ -53,7 +52,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
           )(drivetrain)
             .withTimeout(Seconds(0.7))
             .andUntilDone(
-              liftElevatorToScale(cubeLift).toContinuous
+              new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite).toContinuous
             )
         )
         .then(
@@ -89,7 +88,6 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         .preserve
 
       dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-      //        .withTimeout(Seconds(15))
         .then(
           SameSideSwitchOppositeScale
             .pickupSecondCube(
@@ -101,7 +99,6 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
               pose,
               relativeAngle
             )
-            .withTimeout(Seconds(5))
         )
       //        .then(
       //          SameSideSwitchOppositeScale
@@ -204,7 +201,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
               pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
             )
             .then(
-              new SpinForCollect(collectorRollers).forDuration(Seconds(0.5))
+              new SpinForCollect(collectorRollers).forDuration(Seconds(1))
             )
             .then(
               new DriveDistanceWithTrapezoidalProfile(

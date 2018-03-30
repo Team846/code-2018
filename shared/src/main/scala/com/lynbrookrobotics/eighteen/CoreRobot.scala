@@ -183,8 +183,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 //      }
 //    }
 
-    // 3 cube when switch on our side, 1 cube in switch
-    // when switch on other side
+    // just switch
     addAutonomousRoutine(2) {
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
@@ -197,32 +196,24 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorPivot,
               cubeLiftComp
             )
-            .toContinuous
+            .toContinuous // op op
         case "RLL" | "RLR" =>
           generator.SameSideSwitchOppositeScale
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.SameSideSwitchAndScale
-            .oneInScale(
+          generator.OppositeSideSwitchAndScale
+            .oppositeSwitchOnly(
               drivetrain,
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp,
-              cameraHardware
+              cubeLiftComp
             )
-            .toContinuous
+            .toContinuous // op same
         case "RRL" | "RRR" =>
-          generator.SameSideSwitchAndScale
-            .oneInScale(
-              drivetrain,
-              collectorRollers,
-              collectorClamp,
-              collectorPivot,
-              cubeLiftComp,
-              cameraHardware
-            )
+          generator.SameSideSwitchOppositeScale
+            .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same same
         case _ =>
           println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
@@ -249,6 +240,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       }
     }
 
+    // scale only
     addAutonomousRoutine(4) {
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
@@ -261,12 +253,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorPivot,
               cubeLiftComp
             )
-            .toContinuous
+            .toContinuous  // op op
         case "RLL" | "RLR" =>
-          generator.SameSideSwitchOppositeScale
-            .threeInScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-            .toContinuous // same op
-        case "LRL" | "LRR" =>
           generator.OppositeSideSwitchAndScale
             .threeInScale(
               drivetrain,
@@ -275,7 +263,18 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorPivot,
               cubeLiftComp
             )
-            .toContinuous
+            .toContinuous // same op
+        case "LRL" | "LRR" =>
+          generator.SameSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // op same
         case "RRL" | "RRR" =>
           generator.SameSideSwitchAndScale
             .threeInScale(
