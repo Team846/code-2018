@@ -17,7 +17,7 @@ import com.lynbrookrobotics.potassium.frc.{Color, LEDController}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
-import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
+import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WaitTask}
 import edu.wpi.first.networktables.NetworkTableInstance
 import squants.space.{Degrees, Feet, Inches}
 
@@ -26,6 +26,7 @@ import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.wpilibj.DriverStation
 import squants.Percent
 import squants.motion.{DegreesPerSecond, FeetPerSecond}
+import squants.time.Seconds
 
 import scala.util.Try
 
@@ -292,6 +293,58 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       }
     }
 
+    addAutonomousRoutine(5) {
+      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
+      switchScalePattern match {
+        case "LLL" | "LLR" =>
+          new WaitTask(Seconds(2)).then(
+          generator.OppositeSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp
+            ))
+            .toContinuous  // op op
+        case "RLL" | "RLR" =>
+          new WaitTask(Seconds(2)).then(
+          generator.OppositeSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp
+            ))
+            .toContinuous // same op
+        case "LRL" | "LRR" =>
+          generator.SameSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // op same
+        case "RRL" | "RRR" =>
+          generator.SameSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // same same
+        case _ =>
+          println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
+          ContinuousTask.empty
+      }
+    }
   }
 
   for {
