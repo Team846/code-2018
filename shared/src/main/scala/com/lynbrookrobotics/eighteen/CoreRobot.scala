@@ -345,6 +345,50 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
           ContinuousTask.empty
       }
     }
+
+
+    addAutonomousRoutine(6) {
+      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
+      switchScalePattern match {
+        case "LLL" | "LLR" =>
+//          new DriveDistance(Feet(10), Inches(3))(drivetrain).withTimeout(Seconds(5))
+//            .toContinuous  // op op
+          new DriveOpenLoop(
+            drivetrainHardware.forwardPosition.mapToConstant(Percent(50)),
+            drivetrainHardware.forwardPosition.mapToConstant(Percent(0))
+          )(drivetrain).forDuration(Seconds(3))
+            .toContinuous
+        case "RLL" | "RLR" =>
+          generator.SameSideSwitchOppositeScale
+            .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous // same op
+        case "LRL" | "LRR" =>
+          generator.SameSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // op same
+        case "RRL" | "RRR" =>
+          generator.SameSideSwitchAndScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // same same
+        case _ =>
+          println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
+          ContinuousTask.empty
+      }
+    }
   }
 
   for {
