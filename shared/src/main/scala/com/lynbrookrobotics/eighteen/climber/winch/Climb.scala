@@ -12,7 +12,8 @@ class Climb(climberWinch: ClimberWinch)(implicit climberWinchProps: Signal[Climb
   override protected def onEnd(): Unit = climberWinch.resetToDefault()
 }
 
-class ReverseClimb(climberWinch: ClimberWinch)(implicit climberWinchProps: Signal[ClimberWinchProps]) extends ContinuousTask {
+class ReverseClimb(climberWinch: ClimberWinch)(implicit climberWinchProps: Signal[ClimberWinchProps])
+    extends ContinuousTask {
   override protected def onStart(): Unit = climberWinch.setController(
     climberWinch.coreTicks.map(_ => -Percent(10))
   )

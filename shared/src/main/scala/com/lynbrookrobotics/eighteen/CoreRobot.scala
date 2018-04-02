@@ -254,7 +254,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorPivot,
               cubeLiftComp
             )
-            .toContinuous  // op op
+            .toContinuous // op op
         case "RLL" | "RLR" =>
           generator.OppositeSideSwitchAndScale
             .threeInScale(
@@ -297,26 +297,30 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
         case "LLL" | "LLR" =>
-          new WaitTask(Seconds(2)).then(
-          generator.OppositeSideSwitchAndScale
-            .threeInScale(
-              drivetrain,
-              collectorRollers,
-              collectorClamp,
-              collectorPivot,
-              cubeLiftComp
-            ))
-            .toContinuous  // op op
+          new WaitTask(Seconds(2))
+            .then(
+              generator.OppositeSideSwitchAndScale
+                .threeInScale(
+                  drivetrain,
+                  collectorRollers,
+                  collectorClamp,
+                  collectorPivot,
+                  cubeLiftComp
+                )
+            )
+            .toContinuous // op op
         case "RLL" | "RLR" =>
-          new WaitTask(Seconds(2)).then(
-          generator.OppositeSideSwitchAndScale
-            .threeInScale(
-              drivetrain,
-              collectorRollers,
-              collectorClamp,
-              collectorPivot,
-              cubeLiftComp
-            ))
+          new WaitTask(Seconds(2))
+            .then(
+              generator.OppositeSideSwitchAndScale
+                .threeInScale(
+                  drivetrain,
+                  collectorRollers,
+                  collectorClamp,
+                  collectorPivot,
+                  cubeLiftComp
+                )
+            )
             .toContinuous // same op
         case "LRL" | "LRR" =>
           generator.SameSideSwitchAndScale
@@ -346,7 +350,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       }
     }
 
-
     addAutonomousRoutine(6) {
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
@@ -356,8 +359,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
           new DriveOpenLoop(
             drivetrainHardware.forwardPosition.mapToConstant(Percent(50)),
             drivetrainHardware.forwardPosition.mapToConstant(Percent(0))
-          )(drivetrain).forDuration(Seconds(3))
-            .toContinuous
+          )(drivetrain).forDuration(Seconds(3)).toContinuous
         case "RLL" | "RLR" =>
           generator.SameSideSwitchOppositeScale
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
