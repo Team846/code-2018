@@ -25,7 +25,7 @@ import scala.collection.mutable
 import com.lynbrookrobotics.potassium.{Component, Signal}
 import edu.wpi.first.wpilibj.DriverStation
 import squants.Percent
-import squants.motion.{DegreesPerSecond, FeetPerSecond}
+import squants.motion.FeetPerSecond
 import squants.time.Seconds
 
 import scala.util.Try
