@@ -57,6 +57,7 @@ lazy val jvm = robot.jvm
 val boehmFolder = file("cross-compile/bdwgc")
 val libunwindFolder = file("cross-compile/libunwind")
 val librtFolder = file("cross-compile/re2")
+val breezySLAMFolder = file("cross-compile/BreezySLAM")
 
 import scala.scalanative.sbtplugin.ScalaNativePluginInternal._
 import scala.scalanative.sbtplugin.Utilities._
@@ -94,7 +95,8 @@ val crossCompileSettings = Seq(
       (libunwindFolder / "lib" / "libunwind.a").abs :+
       (libunwindFolder / "lib" / "libunwind-arm.a").abs :+
       (librtFolder / "lib" / "libre2.a").abs :+
-      (boehmFolder / "gc.a").abs
+      (boehmFolder / "gc.a").abs :+
+      (breezySLAMFolder / "cpp" / "breezyslam.a").abs
 
     val paths = apppaths.map(_.abs) ++ opaths
     val compile = "arm-frc-linux-gnueabi-gcc" +: (flags ++ paths)
@@ -106,17 +108,18 @@ val crossCompileSettings = Seq(
 
     outpath
   },
-  nativeTarget := "armv7-frc-linux-gnueabi",
+  nativeTarget := "armv7l-frc-linux-gnueabi",
   nativeCompileOptions ++= Seq(
     "-funwind-tables",
     "-target",
-    "armv7-frc-linux-gnueabi",
+    "armv7l-frc-linux-gnueabi",
     "-mfpu=neon",
     "-mfloat-abi=soft",
     s"--sysroot=${CrossSettings.toolchainPath.abs}",
     s"-I${(libunwindFolder / "include").abs}",
     s"-I${(librtFolder / "include").abs}",
     s"-I${(boehmFolder / "include").abs}",
+    s"-I${(breezySLAMFolder / "c").abs}",
     s"-I${CrossSettings.toolchainPath.abs}/include/c++/5.5.0",
     s"-I${CrossSettings.toolchainPath.abs}/include/c++/5.5.0/arm-frc-linux-gnueabi",
     s"-I${(baseDirectory.value / "../cross-compile/allwpilib/wpilibj/src/arm-linux-jni").abs}",

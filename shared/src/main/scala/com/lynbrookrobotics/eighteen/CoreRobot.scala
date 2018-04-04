@@ -53,7 +53,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 
   implicit val collectorPivotHardware = hardware.collectorPivot.orNull
   val collectorPivot: Option[CollectorPivot] =
-    hardware.collectorPivot.map(_ => new CollectorPivot(coreTicks))
+    hardware.collectorPivot.map(_ => new CollectorPivot(driverHardware, coreTicks))
 
   implicit val climberDeploymentHardware = hardware.climberDeployment.orNull
   val climberDeployment: Option[Deployment] =
