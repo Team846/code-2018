@@ -430,7 +430,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       board
         .datasetGroup("Drivetrain/Current")
         .addDataset(
-            drivetrainHardware.leftFollowerCurrent.map(_.toAmperes).toTimeSeriesNumeric("Left follower current")
+          drivetrainHardware.leftFollowerCurrent.map(_.toAmperes).toTimeSeriesNumeric("Left follower current")
         )
 
       board
