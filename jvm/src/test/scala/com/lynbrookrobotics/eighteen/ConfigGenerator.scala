@@ -82,7 +82,8 @@ object ConfigGenerator extends App {
               Turns(18),
               Turns(74)
             ),
-            leftFudge = 1.0, rightFudge = 1.0,
+            leftFudge = 1.0,
+            rightFudge = 1.0,
             parallelMotorCurrentThreshold = Amperes(5),
             deltaVelocityStallThreshold = FeetPerSecond(10),
             stallTimeout = Seconds(3)
