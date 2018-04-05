@@ -96,6 +96,14 @@
       "twistyTotalRange": [
         0.75,
         "Feet"
+      ],
+      "maxCurrentDraw": [
+        20,
+        "Amperes"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
       ]
     },
     "ports": {
@@ -114,7 +122,11 @@
       "rightFollowerPort": 13,
       "leftFollowerPort": 14,
       "rightPort": 11,
-      "leftPort": 12
+      "leftPort": 12,
+      "rightFollowerPdpPort": 3,
+      "leftFollowerPdpPort": 1,
+      "rightPdpPort": 2,
+      "leftPdpPort": 0
     },
     "props": {
       "maxLeftVelocity": [
@@ -169,6 +181,10 @@
         35,
         "Amperes"
       ],
+      "parallelMotorCurrentThreshold" : [
+        5,
+        "Amperes"
+      ],
       "maxRightVelocity": [
         13.3,
         "FeetPerSecond"
@@ -181,6 +197,8 @@
         6,
         "Inches"
       ],
+      "leftFudge": 1.08,
+      "rightFudge": 1.08,
       "wheelOverEncoderGears": {
         "num": [
           18,
@@ -319,7 +337,15 @@
             "Percent"
           ]
         }
-      }
+      },
+      "deltaVelocityStallThreshold": [
+        10,
+        "FeetPerSecond"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
+      ]
     }
   },
   "driver": {

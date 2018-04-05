@@ -1,14 +1,16 @@
 package com.lynbrookrobotics.eighteen.lift
 
-import com.lynbrookrobotics.eighteen.SingleOutputChecker
-import com.lynbrookrobotics.potassium.Component
+import com.lynbrookrobotics.eighteen.{SingleOutputChecker, StallChecker}
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal.OpenLoop
 import com.lynbrookrobotics.potassium.streams.Stream
+import com.lynbrookrobotics.potassium.tasks.Task
+import com.lynbrookrobotics.potassium.{Component, Signal}
+import edu.wpi.first.wpilibj.RobotState
 import squants.electro.Volts
 import squants.{Each, Percent}
 
-class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardware)
+class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardware, props: Signal[CubeLiftProperties])
     extends Component[OffloadedSignal] {
   override def defaultController: Stream[OffloadedSignal] = coreTicks.mapToConstant(OpenLoop(Each(0)))
 
@@ -16,6 +18,18 @@ class CubeLiftComp(val coreTicks: Stream[Unit])(implicit hardware: CubeLiftHardw
     "Cube Lift Talon",
     hardware.talon.getLastCommand
   )
+
+  StallChecker
+    .timeAboveThreshold(
+      hardware.currentDraw,
+      props.get.maxCurrentDraw
+    )
+    .filter(_ => RobotState.isAutonomous)
+    .filter(_ > props.get.stallTimeout)
+    .foreach { stallTime =>
+      println(s"[ERROR] CUBE LIFT STALLED FOR $stallTime. ABORTING TASK.")
+      Task.abortCurrentTask()
+    }
 
   override def applySignal(signal: OffloadedSignal): Unit = check.assertSingleOutput {
     signal match {

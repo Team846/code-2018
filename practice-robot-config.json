@@ -93,6 +93,14 @@
         0,
         "Inches"
       ],
+      "maxCurrentDraw": [
+        20,
+        "Amperes"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
+      ],
       "twistyTotalRange": [
         0.75,
         "Feet"
@@ -209,6 +217,8 @@
           "Turns"
         ]
       },
+      "leftFudge": 1.08,
+      "rightFudge": 1.08,
       "rightVelocityGains": {
         "kd": {
           "den": [

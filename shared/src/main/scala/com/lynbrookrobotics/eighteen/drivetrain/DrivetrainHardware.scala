@@ -10,10 +10,11 @@ import com.lynbrookrobotics.potassium.frc.{LazyTalon, TalonEncoder}
 import com.lynbrookrobotics.potassium.sensors.imu.{ADIS16448, DigitalGyro}
 import com.lynbrookrobotics.potassium.streams._
 import com.lynbrookrobotics.potassium.units.{Ratio, Value3D}
-import edu.wpi.first.wpilibj.SPI
+import edu.wpi.first.wpilibj.{PowerDistributionPanel, SPI}
+import squants.electro.{Amperes, ElectricCurrent}
 import squants.motion.AngularVelocity
 import squants.time.{Milliseconds, Seconds}
-import squants.{Angle, Length, Velocity}
+import squants.{Angle, Dimensionless, Each, Length, Velocity}
 
 final case class DrivetrainData(
   leftEncoderVelocity: AngularVelocity,
@@ -27,11 +28,13 @@ final case class DrivetrainHardware(
   coreTicks: Stream[Unit],
   leftSRX: TalonSRX,
   rightSRX: TalonSRX,
-  leftFollowerSRX: BaseMotorController,
-  rightFollowerSRX: BaseMotorController,
+  leftFollower: BaseMotorController,
+  rightFollower: BaseMotorController,
   gyro: DigitalGyro,
   driverHardware: DriverHardware,
-  props: DrivetrainProperties
+  props: DrivetrainProperties,
+  ports: DrivetrainPorts,
+  pdp: PowerDistributionPanel
 ) extends TwoSidedDriveHardware {
   override val track: Length = props.track
 
@@ -43,11 +46,11 @@ final case class DrivetrainHardware(
   val right /*Back*/ =
     new LazyTalon(rightSRX)
 
-  leftFollowerSRX.follow(left.t)
-  rightFollowerSRX.follow(right.t)
+  leftFollower.follow(left.t)
+  rightFollower.follow(right.t)
 
   right.t.setInverted(true)
-  rightFollowerSRX.setInverted(true)
+  rightFollower.setInverted(true)
   right.t.setSensorPhase(false)
 
   import props._
@@ -58,7 +61,7 @@ final case class DrivetrainHardware(
   left.t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, escIdx, escTout)
   right.t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, escIdx, escTout)
 
-  Set(leftSRX, rightSRX, leftFollowerSRX, rightFollowerSRX)
+  Set(leftSRX, rightSRX, leftFollower, rightFollower)
     .foreach(it => TalonManager.configSlave(it))
 
   Set(left, right).foreach { it =>
@@ -94,12 +97,22 @@ final case class DrivetrainHardware(
   }
 
   override val leftPosition: Stream[Length] = rootDataStream.map(_.leftEncoderRotation).map { ar =>
-    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
+    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2) * leftFudge
   }
 
   override val rightPosition: Stream[Length] = rootDataStream.map(_.rightEncoderRotation).map { ar =>
-    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2)
+    (wheelOverEncoderGears * ar) onRadius (wheelDiameter / 2) * rightFudge
   }
+
+  val leftDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(left.t.getMotorOutputPercent))
+  val rightDutyCycle: Stream[Dimensionless] = coreTicks.map(_ => Each(right.t.getMotorOutputPercent))
+
+  val leftMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftPdpPort)))
+  val rightMasterCurrent: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(pdp.getCurrent(ports.rightPdpPort)))
+  val leftFollowerCurrent: Stream[ElectricCurrent] =
+    coreTicks.map(_ => Amperes(pdp.getCurrent(ports.leftFollowerPdpPort)))
+  val rightFollowerCurrent: Stream[ElectricCurrent] =
+    coreTicks.map(_ => Amperes(pdp.getCurrent(ports.rightFollowerPdpPort)))
 
   override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
   override lazy val turnPosition: Stream[Angle] = turnVelocity.integral
@@ -107,7 +120,12 @@ final case class DrivetrainHardware(
 }
 
 object DrivetrainHardware {
-  def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
+  def apply(
+    config: DrivetrainConfig,
+    coreTicks: Stream[Unit],
+    driverHardware: DriverHardware,
+    pdp: PowerDistributionPanel
+  ): DrivetrainHardware = {
     new DrivetrainHardware(
       coreTicks, {
         println(s"[DEBUG] Creating driver left master talon on port ${config.ports.leftPort}")
@@ -131,7 +149,9 @@ object DrivetrainHardware {
         new ADIS16448(new SPI(SPI.Port.kMXP), null)
       },
       driverHardware,
-      config.props
+      config.props,
+      config.ports,
+      pdp
     )
   }
 }

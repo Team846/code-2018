@@ -5,7 +5,7 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.offloaded.OffloadedDriv
 import com.lynbrookrobotics.potassium.control.offload.EscConfig
 import com.lynbrookrobotics.potassium.units._
 import squants.electro.ElectricCurrent
-import squants.{Acceleration, Angle, Dimensionless, Each, Length, Velocity}
+import squants.{Acceleration, Angle, Dimensionless, Each, Length, Time, Velocity}
 import squants.motion.RadiansPerSecond
 import squants.space.Turns
 import squants.time.Seconds
@@ -27,7 +27,12 @@ final case class DrivetrainProperties(
   blendExponent: Double,
   track: Length,
   wheelDiameter: Length,
-  wheelOverEncoderGears: Ratio[Angle, Angle]
+  wheelOverEncoderGears: Ratio[Angle, Angle],
+  leftFudge: Double,
+  rightFudge: Double,
+  parallelMotorCurrentThreshold: ElectricCurrent,
+  deltaVelocityStallThreshold: Velocity,
+  stallTimeout: Time
 ) extends OffloadedDriveProperties {
   override val encoderAngleOverTicks: Ratio[Angle, Dimensionless] = Ratio(Turns(1), Each(4096))
   override val escConfig: EscConfig[Length] = EscConfig(
@@ -44,5 +49,9 @@ final case class DrivetrainPorts(
   leftPort: Int,
   rightPort: Int,
   leftFollowerPort: Int,
-  rightFollowerPort: Int
+  rightFollowerPort: Int,
+  leftPdpPort: Int,
+  rightPdpPort: Int,
+  leftFollowerPdpPort: Int,
+  rightFollowerPdpPort: Int
 )

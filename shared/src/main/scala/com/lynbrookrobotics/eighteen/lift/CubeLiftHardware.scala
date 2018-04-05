@@ -6,7 +6,7 @@ import com.lynbrookrobotics.eighteen.TalonManager
 import com.lynbrookrobotics.potassium.commons.lift._
 import com.lynbrookrobotics.potassium.frc.LazyTalon
 import com.lynbrookrobotics.potassium.streams._
-import squants.electro.ElectricPotential
+import squants.electro.{Amperes, ElectricCurrent, ElectricPotential}
 import squants.space.Length
 import squants.{Dimensionless, Each}
 
@@ -40,6 +40,8 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
   def readPotentiometerVoltage: ElectricPotential = props.talonOverVoltage.recip * Each(sensors.getAnalogInRaw)
   val potentiometerVoltage: Stream[ElectricPotential] =
     coreTicks.map(_ => readPotentiometerVoltage)
+
+  val currentDraw: Stream[ElectricCurrent] = coreTicks.map(_ => Amperes(talon.t.getOutputCurrent))
 }
 
 object CubeLiftHardware {

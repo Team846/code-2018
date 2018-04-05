@@ -1,12 +1,15 @@
 package com.lynbrookrobotics.eighteen.drivetrain
 
-import com.lynbrookrobotics.eighteen.SingleOutputChecker
+import com.lynbrookrobotics.eighteen.{SingleOutputChecker, StallChecker}
 import com.lynbrookrobotics.potassium.clock.Clock
 import com.lynbrookrobotics.potassium.commons.drivetrain.twoSided.TwoSided
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.UnicycleSignal
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.streams.Stream
+import com.lynbrookrobotics.potassium.tasks.Task
 import com.lynbrookrobotics.potassium.{Component, Signal}
+import edu.wpi.first.wpilibj.RobotState
+import squants.time.Seconds
 import squants.{Each, Percent}
 
 class DrivetrainComponent(coreTicks: Stream[Unit])(
@@ -47,6 +50,54 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     "Drivetrain Left Master Talon (left, right)",
     (hardware.left.getLastCommand, hardware.right.getLastCommand)
   )
+
+  StallChecker
+    .timeAboveThreshold(
+      hardware.leftVelocity.zipAsync(hardware.leftDutyCycle).map {
+        case (currVelocity, dutyCycle) => (props.get.maxLeftVelocity * dutyCycle.toEach) - currVelocity
+      }.map(_.abs),
+      props.get.deltaVelocityStallThreshold
+    )
+    .filter(_ => RobotState.isAutonomous)
+    .filter(_ > props.get.stallTimeout)
+    .foreach { time =>
+      println(s"[ERROR] LEFT SIDE OF DRIVETRAIN STALLED FOR $time. ABORTING TASK.")
+      Task.abortCurrentTask()
+    }
+
+  StallChecker
+    .timeAboveThreshold(
+      hardware.rightVelocity.zipAsync(hardware.rightDutyCycle).map {
+        case (currVelocity, dutyCycle) => (props.get.maxRightVelocity * dutyCycle.toEach) - currVelocity
+      }.map(_.abs),
+      props.get.deltaVelocityStallThreshold
+    )
+    .filter(_ => RobotState.isAutonomous)
+    .filter(_ > props.get.stallTimeout)
+    .foreach { time =>
+      println(s"[ERROR] RIGHT SIDE OF DRIVETRAIN STALLED FOR $time. ABORTING TASK.")
+      Task.abortCurrentTask()
+    }
+
+  StallChecker
+    .timeAboveThreshold(
+      hardware.rightMasterCurrent.zipAsync(hardware.rightFollowerCurrent).map { case (m, f) => (m - f).abs },
+      props.get.parallelMotorCurrentThreshold
+    )
+    .filter(_ > Seconds(0))
+    .foreach { time =>
+      println(s"[WARNING] RIGHT MASTER AND RIGHT FOLLOWER HAVE DIFFERENT CURRENT DRAWS. CHECK FUNKY DASHBOARD.")
+    }
+
+  StallChecker
+    .timeAboveThreshold(
+      hardware.leftMasterCurrent.zipAsync(hardware.leftFollowerCurrent).map { case (m, f) => (m - f).abs },
+      props.get.parallelMotorCurrentThreshold
+    )
+    .filter(_ > Seconds(0))
+    .foreach { time =>
+      println(s"[WARNING] LEFT MASTER AND LEFT FOLLOWER HAVE DIFFERENT CURRENT DRAWS. CHECK FUNKY DASHBOARD.")
+    }
 
   override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput {
     hardware.left.applyCommand(signal.left)

@@ -13,6 +13,7 @@ import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.frc.{LEDControllerHardware, WPIClock}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
+import edu.wpi.first.wpilibj.PowerDistributionPanel
 
 final case class RobotHardware(
   climberDeployment: Option[DeploymentHardware],
@@ -33,6 +34,7 @@ object RobotHardware {
     import robotConfig._
 
     val driverHardware = DriverHardware(robotConfig.driver.get) // drivetrain depends on this
+    val pdp = new PowerDistributionPanel(0)
 
     RobotHardware(
       climberDeployment = climberDeployment.map(DeploymentHardware.apply),
@@ -41,7 +43,7 @@ object RobotHardware {
       collectorPivot = collectorPivot.map(CollectorPivotHardware.apply),
       collectorRollers = collectorRollers.map(CollectorRollersHardware.apply),
       driver = driverHardware,
-      drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware)),
+      drivetrain = robotConfig.drivetrain.map(DrivetrainHardware.apply(_, coreTicks, driverHardware, pdp)),
       forklift = robotConfig.forklift.map(ForkliftHardware.apply),
       cubeLift = robotConfig.cubeLift.map(CubeLiftHardware.apply(_, coreTicks)),
       camera = robotConfig.limelight.map { l =>

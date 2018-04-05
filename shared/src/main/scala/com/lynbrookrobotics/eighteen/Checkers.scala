@@ -1,5 +1,9 @@
 package com.lynbrookrobotics.eighteen
 
+import com.lynbrookrobotics.potassium.streams._
+import squants.time.Seconds
+import squants.{Quantity, Time}
+
 class SingleOutputChecker[T](hardwareName: String, get: => T) {
   private var lastOutput: Option[T] = None
 
@@ -19,4 +23,15 @@ class SingleOutputChecker[T](hardwareName: String, get: => T) {
 
     lastOutput = Some(get)
   }
+}
+
+object StallChecker {
+  def timeAboveThreshold[Q <: Quantity[Q]](stream: Stream[Q], threshold: => Q): Stream[Time] =
+    stream.zipWithDt
+      .scanLeft(Seconds(0)) {
+        case (stallTime, (value, dt)) =>
+          if (value > threshold) {
+            stallTime + dt
+          } else Seconds(0)
+      }
 }
