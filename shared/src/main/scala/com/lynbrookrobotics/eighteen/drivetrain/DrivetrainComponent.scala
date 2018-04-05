@@ -55,7 +55,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     .timeAboveThreshold(
       hardware.leftVelocity.zipAsync(hardware.leftDutyCycle).map {
         case (currVelocity, dutyCycle) => (props.get.maxLeftVelocity * dutyCycle.toEach) - currVelocity
-      },
+      }.map(_.abs),
       props.get.deltaVelocityStallThreshold
     )
     .filter(_ => RobotState.isAutonomous)
@@ -69,7 +69,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
     .timeAboveThreshold(
       hardware.rightVelocity.zipAsync(hardware.rightDutyCycle).map {
         case (currVelocity, dutyCycle) => (props.get.maxRightVelocity * dutyCycle.toEach) - currVelocity
-      },
+      }.map(_.abs),
       props.get.deltaVelocityStallThreshold
     )
     .filter(_ => RobotState.isAutonomous)
