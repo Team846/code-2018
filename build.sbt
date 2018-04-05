@@ -1,7 +1,6 @@
 import scala.sys.process.Process
 
 name := "code-2018"
-offline := true
 
 version := "0.1"
 
