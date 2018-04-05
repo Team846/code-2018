@@ -6,7 +6,7 @@
         "Inches"
       ],
       "highScaleHeight": [
-        68,
+        75,
         "Inches"
       ],
       "pidConfig": {
@@ -32,8 +32,8 @@
         },
         "kp": {
           "den": [
-            8,
-            "Inches"
+            0.8,
+            "Feet"
           ],
           "num": [
             100,
@@ -42,11 +42,11 @@
         }
       },
       "collectHeight": [
-        0.5,
+        0,
         "Inches"
       ],
       "voltageAtBottom": [
-        0.26,
+        0.277,
         "Volts"
       ],
       "liftPositionTolerance": [
@@ -63,11 +63,11 @@
       ],
       "voltageOverHeight": {
         "den": [
-          34.83,
+          80.25,
           "Inches"
         ],
         "num": [
-          0.71,
+          1.983,
           "Volts"
         ]
       },
@@ -86,16 +86,24 @@
         ]
       },
       "maxHeight": [
-        73,
+        80,
         "Inches"
       ],
       "minHeight": [
-        0.25,
+        0,
         "Inches"
       ],
       "twistyTotalRange": [
-        -1.5,
+        0.75,
         "Feet"
+      ],
+      "maxCurrentDraw": [
+        20,
+        "Amperes"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
       ]
     },
     "ports": {
@@ -114,11 +122,15 @@
       "rightFollowerPort": 14,
       "leftFollowerPort": 12,
       "rightPort": 13,
-      "leftPort": 11
+      "leftPort": 11,
+      "rightFollowerPdpPort": 3,
+      "leftFollowerPdpPort": 1,
+      "rightPdpPort": 2,
+      "leftPdpPort": 0
     },
     "props": {
       "maxLeftVelocity": [
-        12.8,
+        13,
         "FeetPerSecond"
       ],
       "turnVelocityGains": {
@@ -158,7 +170,7 @@
         "Feet"
       ],
       "maxAcceleration": [
-        8,
+        5,
         "FeetPerSecondSquared"
       ],
       "maxDeceleration": [
@@ -169,8 +181,12 @@
         35,
         "Amperes"
       ],
+      "parallelMotorCurrentThreshold": [
+        5,
+        "Amperes"
+      ],
       "maxRightVelocity": [
-        12.6,
+        13.3,
         "FeetPerSecond"
       ],
       "track": [
@@ -181,6 +197,8 @@
         6,
         "Inches"
       ],
+      "leftFudge": 1.08,
+      "rightFudge": 1.08,
       "wheelOverEncoderGears": {
         "num": [
           18,
@@ -214,11 +232,11 @@
         },
         "kp": {
           "den": [
-            3,
+            4,
             "FeetPerSecond"
           ],
           "num": [
-            50,
+            80,
             "Percent"
           ]
         }
@@ -250,12 +268,12 @@
             "Degrees"
           ],
           "num": [
-            110,
+            80,
             "Percent"
           ]
         }
       },
-      "blendExponent": 0,
+      "blendExponent": 1,
       "leftVelocityGains": {
         "kd": {
           "den": [
@@ -279,11 +297,11 @@
         },
         "kp": {
           "den": [
-            3,
+            4,
             "FeetPerSecond"
           ],
           "num": [
-            50,
+            80,
             "Percent"
           ]
         }
@@ -311,15 +329,23 @@
         },
         "kp": {
           "den": [
-            3,
+            5,
             "Feet"
           ],
           "num": [
-            100,
+            50,
             "Percent"
           ]
         }
-      }
+      },
+      "deltaVelocityStallThreshold": [
+        10,
+        "FeetPerSecond"
+      ],
+      "stallTimeout": [
+        3,
+        "Seconds"
+      ]
     }
   },
   "driver": {
@@ -345,8 +371,8 @@
   },
   "collectorRollers": {
     "ports": {
-      "rollerLeftPort": 0,
-      "rollerRightPort": 1
+      "rollerLeftPort": 1,
+      "rollerRightPort": 0
     },
     "props": {
       "collectSpeed": [
@@ -354,7 +380,7 @@
         "Percent"
       ],
       "purgeSpeed": [
-        50,
+        35,
         "Percent"
       ]
     }
