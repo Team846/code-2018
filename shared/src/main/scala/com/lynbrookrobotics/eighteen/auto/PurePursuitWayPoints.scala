@@ -211,4 +211,19 @@ object OppositeSideSwitchScalePoints {
       Inches(275.3) - Inches(12)
     )
   )
+
+  val feildWidth = Feet(25)
+  val pickupSecondCubePoints = SameSideSwitchAndScalePoints.pickupSecondCubePoints.map { p =>
+    Point(
+      feildWidth - p.x,
+      p.y
+    )
+  }
+
+  val pickupThirdCubePoints = SameSideSwitchAndScalePoints.pickupThirdCubeAfterScalePoints.map { p =>
+    Point(
+      feildWidth - p.x,
+      p.y
+    )
+  }
 }

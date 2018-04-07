@@ -6,11 +6,11 @@ import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinFo
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
-import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.ForwardsOnly
+import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.{BackwardsOnly, ForwardsOnly}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
 import com.lynbrookrobotics.potassium.units.Point
-import squants.{Angle, Percent, Seconds}
+import squants.{Angle, Dimensionless, Percent, Seconds}
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
@@ -40,122 +40,111 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 10,
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain)
-        .then(
-          printTask("done driving")
-        )
-        .then(
-          new RotateToAngle(
-            Degrees(30),
-            Degrees(5)
-          )(drivetrain)
-            .withTimeout(Seconds(0.7))
-            .andUntilDone(
-              new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite).toContinuous
-            )
-        )
-        .then(
-          printTask("done turning")
-        )
+      )(drivetrain).andUntilDone(liftElevatorToSwitch(cubeLift).toContinuous)
         .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
-        .then(
-          printTask("done shooting")
+    }
+
+    def pickUpSecondCube(pose: Stream[Point],
+                         angle: Stream[Angle],
+                          drivetrain: DrivetrainComponent,
+                          collectorRollers: CollectorRollers,
+                          collectorClamp: CollectorClamp,
+                          collectorPivot: CollectorPivot,
+                          cubeLift: CubeLiftComp
+                        ) = {
+        new FollowWayPointsWithPosition(
+          cruisingVelocity = purePursuitCruisingVelocity,
+          wayPoints = OppositeSideSwitchScalePoints.pickupSecondCubePoints,
+          tolerance = Inches(3),
+          position = pose,
+          turnPosition = angle,
+          maxTurnOutput = Percent(100),
+          forwardBackwardMode = ForwardsOnly
+        )(drivetrain)
+        .andUntilDone(
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+        ).then(
+          new SpinForCollect(collectorRollers).forDuration(Seconds(1))
         )
     }
 
-    def scaleSwitch3CubeAuto(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp
-    ): FiniteTask = {
-      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
-        curr - init
-      })
-
-      val pose = XYPosition
-        .circularTracking(
-          relativeAngle.map(compassToTrigonometric),
-          drivetrainHardware.forwardPosition
+    def dropOffSecondCube(pose: Stream[Point],
+                          angle: Stream[Angle],
+                          drivetrain: DrivetrainComponent,
+                          collectorRollers: CollectorRollers,
+                          collectorClamp: CollectorClamp,
+                          collectorPivot: CollectorPivot,
+                          cubeLift: CubeLiftComp
+                         ): FiniteTask = {
+        new FollowWayPointsWithPosition(
+          cruisingVelocity = purePursuitCruisingVelocity,
+          wayPoints = Seq(
+            OppositeSideSwitchScalePoints.pickupSecondCubePoints.last,
+            OppositeSideSwitchScalePoints.toScalePoints.last
+          ),
+          tolerance = Inches(3),
+          position = pose,
+          turnPosition = angle,
+          maxTurnOutput = Percent(100),
+          forwardBackwardMode = BackwardsOnly
+        )(drivetrain).andUntilDone(
+          liftElevatorToScale(cubeLift).toContinuous
+        ).then(
+          shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
-        .map(
-          p => p + sideStartingPose
-        )
-        .preserve
-
-      dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-        .then(
-          SameSideSwitchOppositeScale
-            .pickupSecondCube(
-              drivetrain,
-              collectorRollers,
-              collectorClamp,
-              collectorPivot,
-              cubeLift,
-              pose,
-              relativeAngle
-            )
-        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .dropOffSecondCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .pickUpThirdCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .dropOffThirdCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
     }
 
-    //    class RotateToAngleWithingTolerance extends FiniteTask {
-    //      override def onStart(): Unit = {
-    //        val (controller, error) = turnPositionControl(absoluteAngle)
-    //        val checkedController = controller.withCheckZipped(error) { error =>
-    //          if (error.abs < tolerance) {
-    //            finished()
-    //          }
-    //        }
-    //
-    //        drive.setController(childVelocityControl(speedControl(checkedController)))
-    //      }
-    //
-    //      override def onEnd(): Unit = {
-    //        drive.resetToDefault()
-    //      }
-    //    }
+    def pickUpThirdCube(pose: Stream[Point],
+                        angle: Stream[Angle],
+                        drivetrain: DrivetrainComponent,
+                        collectorRollers: CollectorRollers,
+                        collectorClamp: CollectorClamp,
+                        collectorPivot: CollectorPivot,
+                        cubeLift: CubeLiftComp
+                       ): FiniteTask = {
+      new FollowWayPointsWithPosition(
+        cruisingVelocity = purePursuitCruisingVelocity,
+        wayPoints = OppositeSideSwitchScalePoints.pickupThirdCubePoints,
+        tolerance = Inches(3),
+        position = pose,
+        turnPosition = angle,
+        maxTurnOutput = Percent(100),
+        forwardBackwardMode = ForwardsOnly
+      ).andUntilDone(
+        pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+      ).then(
+        new SpinForCollect(collectorRollers).forDuration(Seconds(1))
+      )
+    }
+
+    def dropOffThirdCube(pose: Stream[Point],
+                         angle: Stream[Angle],
+                         drivetrain: DrivetrainComponent,
+                         collectorRollers: CollectorRollers,
+                         collectorClamp: CollectorClamp,
+                         collectorPivot: CollectorPivot,
+                         cubeLift: CubeLiftComp
+                        ): FiniteTask = {
+      new FollowWayPointsWithPosition(
+        cruisingVelocity = purePursuitCruisingVelocity,
+        wayPoints = Seq(
+          OppositeSideSwitchScalePoints.pickupThirdCubePoints.last,
+          OppositeSideSwitchScalePoints.toScalePoints.last
+        ),
+        tolerance = Inches(3),
+        position = pose,
+        turnPosition = angle,
+        maxTurnOutput = Percent(100),
+        forwardBackwardMode = BackwardsOnly
+      )(drivetrain).andUntilDone(
+        liftElevatorToScale(cubeLift).toContinuous
+      ).then(
+        shootCubeScale(collectorRollers, collectorPivot, cubeLift)
+      )
+    }
+
     def threeInScale(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -179,107 +168,42 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
 
       dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
         .then(
-          new RotateToAngle(
-            Degrees(180) - Degrees(10),
-            Degrees(5)
-          )(drivetrain)
-            .withTimeout(Seconds(2))
-            .then(
-              new DriveDistanceWithTrapezoidalProfile(
-                cruisingVelocity = purePursuitCruisingVelocity,
-                finalVelocity = FeetPerSecond(0),
-                FeetPerSecondSquared(10), //drivetrainProps.get.maxAcceleration,
-                FeetPerSecondSquared(10),
-                //drivetrainProps.get.maxDeceleration,
-                Inches(40),
-                Inches(3),
-                Degrees(3)
-              )(drivetrain)
-            )
-            .andUntilDone(
-              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-            )
-            .then(
-              new SpinForCollect(collectorRollers).forDuration(Seconds(1))
-            )
-            .then(
-              new DriveDistanceWithTrapezoidalProfile(
-                cruisingVelocity = purePursuitCruisingVelocity,
-                finalVelocity = FeetPerSecond(0),
-                FeetPerSecondSquared(10), //drivetrainProps.get.maxAcceleration,
-                FeetPerSecondSquared(10),
-                -Inches(20),
-                Inches(3),
-                Degrees(5)
-              )(drivetrain)
-                .then(
-                  new RotateToAngle(
-                    Degrees(10),
-                    Degrees(3)
-                  )(drivetrain)
-                    .withTimeout(Seconds(1.5))
-                    .andUntilDone(
-                      liftElevatorToScale(cubeLift).toContinuous
-                    )
-                )
-                .then(
-                  shootCubeScale(collectorRollers, collectorPivot, cubeLift)
-                )
-            )
+          new RotateByAngle(
+            -Degrees(180),
+            Degrees(10),
+            timeWithinTolerance = 1
+          ).and(
+            new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite)
+          )
+        ).then(
+          pickUpSecondCube(pose, relativeAngle, drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift)
+        ).then(
+          new RotateByAngle(
+            Degrees(180),
+            Degrees(10),
+            timeWithinTolerance = 1
+          )
+        ).then(
+          dropOffSecondCube(pose, relativeAngle, drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift)
+        ).then(
+          new RotateByAngle(
+            -Degrees(180),
+            Degrees(10),
+            timeWithinTolerance = 1
+          ).and(
+            new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite)
+          )
+        ).then(
+          pickUpThirdCube(pose, relativeAngle, drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift)
+        ).then(
+          new RotateByAngle(
+            Degrees(180),
+            Degrees(10),
+            timeWithinTolerance = 1
+          )
+        ).then(
+          dropOffThirdCube(pose, relativeAngle, drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift)
         )
-      //        .withTimeout(Seconds(10))
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .pickupSecondCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .dropOffThirdCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .pickUpThirdCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .dropOffThirdCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
     }
 
     val oppositeSideDriveTimeOut = Seconds(10)

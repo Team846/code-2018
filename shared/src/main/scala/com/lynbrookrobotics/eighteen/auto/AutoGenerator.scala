@@ -67,19 +67,18 @@ class AutoGenerator(protected val r: CoreRobot) {
   ): FiniteTask = {
     liftElevatorToScale(cubeLiftComp).apply(
       new PivotDown(collectorPivot)
-        .forDuration(Milliseconds(500))
+        .forDuration(Seconds(0.5))
         .then(
           CollectorTasks
             .purgeCube(
               collectorRollers,
               collectorPivot
             )
-            .forDuration(Seconds(1))
-        )
+            .forDuration(Seconds(0.5))
+        )/*
         .then(
           liftElevatorToCollect(cubeLiftComp).toFinite
-        )
-        .then(printTask("done lowering"))
+        )*/
     )
   }
 
