@@ -2,7 +2,6 @@ package com.lynbrookrobotics.eighteen.collector.rollers
 
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.tasks.ContinuousTask
-import squants.Percent
 import squants.time.Milliseconds
 
 class SpinForCollect(rollers: CollectorRollers)(implicit props: Signal[CollectorRollersProperties])
