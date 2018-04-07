@@ -205,10 +205,11 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightOne) &&
-        driverHardware.operatorJoystick.getRawButton(RightFour)
+        driverHardware.operatorJoystick.getRawButton(RightSix)
       }.foreach(
         Signal(
           if (!climber.currentState) {
+            println("MOVIN UP!!!!!!")
             new WhileAtPosition(
               coreTicks.map(_ => cubeLiftProps.get.collectHeight),
               cubeLiftProps.get.liftPositionTolerance
@@ -283,7 +284,7 @@ object ButtonMappings {
       winch <- climberWinch
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightSix)
+        driverHardware.operatorJoystick.getRawButton(RightFour)
       }.foreach(
         new WinchManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(winch.coreTicks)

@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.collector
 
 import com.lynbrookrobotics.eighteen.collector.clamp._
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, CollectorRollersProperties, SpinForCollect, SpinForPurge}
+import com.lynbrookrobotics.eighteen.collector.rollers._
 import com.lynbrookrobotics.potassium.Signal
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 
@@ -23,6 +23,12 @@ object CollectorTasks {
     implicit collectorRollersProps: Signal[CollectorRollersProperties]
   ): ContinuousTask = {
     new SpinForPurge(rollers) and new PivotDown(pivot)
+  }
+
+  def purgeCubeHard(rollers: CollectorRollers, pivot: CollectorPivot)(
+    implicit collectorRollersProps: Signal[CollectorRollersProperties]
+  ): ContinuousTask = {
+    new SpinForHardPurge(rollers) and new PivotDown(pivot)
   }
 
   def purgeCubeOpen(rollers: CollectorRollers, clamp: CollectorClamp, pivot: CollectorPivot)(

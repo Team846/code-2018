@@ -183,7 +183,7 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitch
       cubeLift: CubeLiftComp,
       limeLightHardware: LimeLightHardware
     ): FiniteTask = {
-      SameSideSwitchAndScale.onlySwitch(
+      SameSideSwitchAndScale.oneInScale(
         drivetrain,
         collectorRollers,
         collectorClamp,
