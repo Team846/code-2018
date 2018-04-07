@@ -5,7 +5,7 @@ import com.lynbrookrobotics.potassium.control.PIDConfig
 import com.lynbrookrobotics.potassium.control.offload.EscConfig
 import com.lynbrookrobotics.potassium.units._
 import squants.Dimensionless
-import squants.electro.ElectricPotential
+import squants.electro.{ElectricCurrent, ElectricPotential}
 import squants.motion.Velocity
 import squants.space.Length
 
@@ -21,6 +21,7 @@ final case class CubeLiftProperties(
   exchangeHeight: Length,
   liftPositionTolerance: Length,
   maxMotorOutput: Dimensionless,
+  maxCurrent: ElectricCurrent,
   maxHeight: Length,
   minHeight: Length,
   twistyTotalRange: Length

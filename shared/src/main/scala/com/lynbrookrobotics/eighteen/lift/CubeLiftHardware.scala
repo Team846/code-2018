@@ -23,6 +23,10 @@ final case class CubeLiftHardware(talon: LazyTalon)(implicit coreTicks: Stream[U
   talon.t.configPeakOutputForward(props.maxMotorOutput.toEach, 0)
   talon.t.configPeakOutputReverse(-props.maxMotorOutput.toEach, 0)
 
+  talon.t.configContinuousCurrentLimit(props.maxCurrent.toAmperes.toInt, 0)
+  talon.t.configPeakCurrentDuration(0, 0)
+  talon.t.configPeakCurrentLimit(props.maxCurrent.toAmperes.toInt, 0)
+
   talon.t.configReverseSoftLimitThreshold(toNative(minHeight).toEach.toInt, 0)
   talon.t.configForwardSoftLimitThreshold(toNative(maxHeight).toEach.toInt, 0)
   talon.t.configForwardSoftLimitEnable(true, 0)

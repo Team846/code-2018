@@ -16,7 +16,7 @@ class ClimberWinch(val coreTicks: Stream[Unit])(implicit hardware: ClimberWinchH
   )
 
   override def applySignal(signal: Dimensionless): Unit = check.assertSingleOutput {
-    if (signal < Percent(0)) applySignal(Percent(0)) // ratchet
+    if (signal < -Percent(10)) applySignal(Percent(-10))
     else {
       hardware.leftMotor.applyCommand(OpenLoop(signal))
       hardware.middleMotor.applyCommand(OpenLoop(signal))

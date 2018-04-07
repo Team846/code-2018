@@ -9,6 +9,10 @@
         66,
         "Inches"
       ],
+      "maxCurrent": [
+        30,
+        "Amperes"
+      ],
       "pidConfig": {
         "kd": {
           "den": [
@@ -86,7 +90,7 @@
         ]
       },
       "maxHeight": [
-        74,
+        83,
         "Inches"
       ],
       "minHeight": [
@@ -158,7 +162,7 @@
         "Feet"
       ],
       "maxAcceleration": [
-        5,
+        7,
         "FeetPerSecondSquared"
       ],
       "maxDeceleration": [
@@ -250,7 +254,7 @@
             "Degrees"
           ],
           "num": [
-            80,
+            150,
             "Percent"
           ]
         }
@@ -350,11 +354,11 @@
     },
     "props": {
       "collectSpeed": [
-        50,
+        80,
         "Percent"
       ],
       "purgeSpeed": [
-        70,
+        35,
         "Percent"
       ],
       "sqrWaveFreq": [

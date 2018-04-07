@@ -103,7 +103,8 @@ object ConfigGenerator extends App {
             maxMotorOutput = Percent(20),
             maxHeight = Inches(35),
             minHeight = Inches(10),
-            twistyTotalRange = Feet(1)
+            twistyTotalRange = Feet(1),
+            maxCurrent = Amperes(35)
           )
         )
       ),
