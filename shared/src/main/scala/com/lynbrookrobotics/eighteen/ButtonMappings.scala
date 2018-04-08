@@ -132,6 +132,20 @@ object ButtonMappings {
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(LeftOne)
+      }.foreach(
+        new WhileAtPosition(
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.maxHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
+          cubeLiftProps.get.liftPositionTolerance
+        )(lift).toContinuous
+      )
+
+      driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftFour)
       }.foreach(
         new WhileAtPosition(
@@ -192,6 +206,12 @@ object ButtonMappings {
       rollers <- collectorRollers
       pivot <- collectorPivot
     } {
+      driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.driverJoystick.getRawButton(TriggerLeft)
+      }.foreach(
+        CollectorTasks.purgeCube(rollers, pivot)
+      )
+
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(Trigger)
       }.foreach(
