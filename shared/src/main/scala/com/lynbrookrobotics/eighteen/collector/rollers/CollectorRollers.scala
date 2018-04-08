@@ -25,6 +25,6 @@ class CollectorRollers(val coreTicks: Stream[Unit])(
 
   override def applySignal(signal: (Dimensionless, Dimensionless)): Unit = check.assertSingleOutput {
     hardware.rollerLeft.set(signal._1.toEach)
-    hardware.rollerRight.set(signal._2.toEach)
+    hardware.rollerRight.set(-signal._2.toEach)
   }
 }

@@ -22,19 +22,19 @@ object CollectorTasks {
   def purgeCube(rollers: CollectorRollers, pivot: CollectorPivot)(
     implicit collectorRollersProps: Signal[CollectorRollersProperties]
   ): ContinuousTask = {
-    new SpinForPurge(rollers) and new PivotDown(pivot)
+    new SpinForPurge(rollers)
   }
 
   def purgeCubeHard(rollers: CollectorRollers, pivot: CollectorPivot)(
     implicit collectorRollersProps: Signal[CollectorRollersProperties]
   ): ContinuousTask = {
-    new SpinForHardPurge(rollers) and new PivotDown(pivot)
+    new SpinForHardPurge(rollers)
   }
 
   def purgeCubeOpen(rollers: CollectorRollers, clamp: CollectorClamp, pivot: CollectorPivot)(
     implicit collectorRollersProps: Signal[CollectorRollersProperties]
   ): ContinuousTask = {
-    new SpinForPurge(rollers) and new OpenCollector(clamp) and new PivotDown(pivot)
+    new SpinForPurge(rollers) and new OpenCollector(clamp)
   }
 
   def collectUntilCubeIn(rollers: CollectorRollers, clamp: CollectorClamp, pivot: CollectorPivot)(
