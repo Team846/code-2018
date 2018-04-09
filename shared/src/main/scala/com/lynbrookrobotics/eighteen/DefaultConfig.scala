@@ -5,12 +5,16 @@ object DefaultConfig {
                |  "cubeLift": {
                |    "props": {
                |      "lowScaleHeight": [
-               |        66,
+               |        64,
                |        "Inches"
                |      ],
                |      "highScaleHeight": [
-               |        68,
+               |        66,
                |        "Inches"
+               |      ],
+               |      "maxCurrent": [
+               |        30,
+               |        "Amperes"
                |      ],
                |      "pidConfig": {
                |        "kd": {
@@ -45,11 +49,11 @@ object DefaultConfig {
                |        }
                |      },
                |      "collectHeight": [
-               |        0.5,
+               |        0,
                |        "Inches"
                |      ],
                |      "voltageAtBottom": [
-               |        0.316,
+               |        0.277,
                |        "Volts"
                |      ],
                |      "liftPositionTolerance": [
@@ -70,7 +74,7 @@ object DefaultConfig {
                |          "Inches"
                |        ],
                |        "num": [
-               |          2.5,
+               |          1.983,
                |          "Volts"
                |        ]
                |      },
@@ -89,15 +93,15 @@ object DefaultConfig {
                |        ]
                |      },
                |      "maxHeight": [
-               |        73,
+               |        83,
                |        "Inches"
                |      ],
                |      "minHeight": [
-               |        0.25,
+               |        0,
                |        "Inches"
                |      ],
                |      "twistyTotalRange": [
-               |        1.5,
+               |        0.75,
                |        "Feet"
                |      ]
                |    },
@@ -121,7 +125,7 @@ object DefaultConfig {
                |    },
                |    "props": {
                |      "maxLeftVelocity": [
-               |        17.7,
+               |        13,
                |        "FeetPerSecond"
                |      ],
                |      "turnVelocityGains": {
@@ -161,7 +165,7 @@ object DefaultConfig {
                |        "Feet"
                |      ],
                |      "maxAcceleration": [
-               |        5,
+               |        7,
                |        "FeetPerSecondSquared"
                |      ],
                |      "maxDeceleration": [
@@ -173,7 +177,7 @@ object DefaultConfig {
                |        "Amperes"
                |      ],
                |      "maxRightVelocity": [
-               |        17.7,
+               |        13.3,
                |        "FeetPerSecond"
                |      ],
                |      "track": [
@@ -253,7 +257,7 @@ object DefaultConfig {
                |            "Degrees"
                |          ],
                |          "num": [
-               |            50,
+               |            150,
                |            "Percent"
                |          ]
                |        }
@@ -348,21 +352,49 @@ object DefaultConfig {
                |  },
                |  "collectorRollers": {
                |    "ports": {
-               |      "rollerLeftPort": 0,
-               |      "rollerRightPort": 1
+               |      "rollerLeftPort": 1,
+               |      "rollerRightPort": 0
                |    },
                |    "props": {
                |      "collectSpeed": [
-               |        50,
+               |        80,
                |        "Percent"
                |      ],
                |      "purgeSpeed": [
-               |        70,
+               |        35,
+               |        "Percent"
+               |      ],
+               |      "sqrWaveFreq": [
+               |        4,
+               |        "Hertz"
+               |      ],
+               |      "sqrWaveAmpl": [
+               |        35,
                |        "Percent"
                |      ]
                |    }
                |  },
-               |  "climberWinch": null,
+               |  "climberWinch": {
+               |    "ports": {
+               |      "leftMotorPort": 5,
+               |      "middleMotorPort": 6,
+               |      "rightMotorPort": 7
+               |    },
+               |    "props": {
+               |      "climbingSpeed": [
+               |        85,
+               |        "Percent"
+               |      ],
+               |      "sqrWaveFreq": [
+               |        4,
+               |        "Hertz"
+               |      ],
+               |      "sqrWaveAmpl": [
+               |        35,
+               |        "Percent"
+               |      ]
+               |    }
+               |  },
                |  "limelight": {
                |    "cameraAngleRelativeToFront": [
                |      0,
@@ -374,5 +406,6 @@ object DefaultConfig {
                |    ]
                |  },
                |  "led": null
-               |}""".stripMargin
+               |}
+               |""".stripMargin
 }

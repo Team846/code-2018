@@ -132,6 +132,20 @@ object ButtonMappings {
       )
 
       driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.operatorJoystick.getRawButton(LeftOne)
+      }.foreach(
+        new WhileAtPosition(
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.maxHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
+          cubeLiftProps.get.liftPositionTolerance
+        )(lift).toContinuous
+      )
+
+      driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(LeftFour)
       }.foreach(
         new WhileAtPosition(
@@ -193,6 +207,12 @@ object ButtonMappings {
       pivot <- collectorPivot
     } {
       driverHardware.joystickStream.eventWhen { _ =>
+        driverHardware.driverJoystick.getRawButton(TriggerLeft)
+      }.foreach(
+        CollectorTasks.purgeCube(rollers, pivot)
+      )
+
+      driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(Trigger)
       }.foreach(
         CollectorTasks.purgeCube(rollers, pivot)
@@ -205,10 +225,11 @@ object ButtonMappings {
     } {
       driverHardware.joystickStream.eventWhen { _ =>
         driverHardware.operatorJoystick.getRawButton(RightOne) &&
-        driverHardware.operatorJoystick.getRawButton(RightFour)
+        driverHardware.operatorJoystick.getRawButton(RightSix)
       }.foreach(
         Signal(
           if (!climber.currentState) {
+            println("MOVIN UP!!!!!!")
             new WhileAtPosition(
               coreTicks.map(_ => cubeLiftProps.get.collectHeight),
               cubeLiftProps.get.liftPositionTolerance
@@ -283,7 +304,7 @@ object ButtonMappings {
       winch <- climberWinch
     } {
       driverHardware.joystickStream.eventWhen { _ =>
-        driverHardware.operatorJoystick.getRawButton(RightSix)
+        driverHardware.operatorJoystick.getRawButton(RightFour)
       }.foreach(
         new WinchManualControl(
           driverHardware.joystickStream.map(-_.operator.y).syncTo(winch.coreTicks)

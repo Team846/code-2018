@@ -12,7 +12,7 @@ class CollectorRollers(val coreTicks: Stream[Unit])(
 ) extends Component[(Dimensionless, Dimensionless)] {
   override def defaultController: Stream[(Dimensionless, Dimensionless)] = {
     if (driverHardware.station.isEnabled) {
-      coreTicks.mapToConstant((Percent(20), -Percent(20)))
+      coreTicks.mapToConstant((-Percent(20), -Percent(20)))
     } else {
       coreTicks.mapToConstant((Each(0), Each(0)))
     }
@@ -24,7 +24,7 @@ class CollectorRollers(val coreTicks: Stream[Unit])(
   )
 
   override def applySignal(signal: (Dimensionless, Dimensionless)): Unit = check.assertSingleOutput {
-    hardware.rollerLeft.set(-signal._1.toEach)
-    hardware.rollerRight.set(signal._2.toEach)
+    hardware.rollerLeft.set(signal._1.toEach)
+    hardware.rollerRight.set(-signal._2.toEach)
   }
 }

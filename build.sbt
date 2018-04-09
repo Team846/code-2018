@@ -11,6 +11,7 @@ resolvers in ThisBuild += "WPILib-Maven" at "http://lynbrookrobotics.com/wpilib-
 resolvers in ThisBuild += "opencv-maven" at "http://first.wpi.edu/FRC/roborio/maven/development"
 
 val potassiumVersion = "0.1.0-788ea16b"
+
 val wpiVersion = "2018.2.2"
 
 lazy val robot = crossProject(JVMPlatform, NativePlatform)
