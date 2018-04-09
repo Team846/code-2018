@@ -13,14 +13,15 @@ import com.lynbrookrobotics.potassium.units.{Ratio, Value3D}
 import edu.wpi.first.wpilibj.SPI
 import squants.motion.AngularVelocity
 import squants.time.{Milliseconds, Seconds}
-import squants.{Angle, Length, Velocity}
+import squants.{Acceleration, Angle, Length, Velocity}
 
 final case class DrivetrainData(
   leftEncoderVelocity: AngularVelocity,
   rightEncoderVelocity: AngularVelocity,
   leftEncoderRotation: Angle,
   rightEncoderRotation: Angle,
-  gyroVelocities: Value3D[AngularVelocity]
+  gyroVelocities: Value3D[AngularVelocity],
+  gyroAccelerations: Value3D[Acceleration]
 )
 
 final case class DrivetrainHardware(
@@ -79,7 +80,8 @@ final case class DrivetrainHardware(
       rightEncoder.getAngularVelocity,
       leftEncoder.getAngle,
       rightEncoder.getAngle,
-      gyro.getVelocities
+      gyro.getVelocities,
+      gyro.getAccelerations
     )
   )
 
@@ -104,7 +106,12 @@ final case class DrivetrainHardware(
   override lazy val turnVelocity: Stream[AngularVelocity] = rootDataStream.map(_.gyroVelocities).map(_.z)
   override lazy val turnPosition: Stream[Angle] = turnVelocity.integral
   turnPosition.foreach(_ => {})
+
+  lazy val xAcceleration: Stream[Acceleration] = rootDataStream.map(_.gyroAccelerations).map(_.x)
+  lazy val yAcceleration: Stream[Acceleration] = rootDataStream.map(_.gyroAccelerations).map(_.y)
+  lazy val zAcceleration: Stream[Acceleration] = rootDataStream.map(_.gyroAccelerations).map(_.z)
 }
+
 
 object DrivetrainHardware {
   def apply(config: DrivetrainConfig, coreTicks: Stream[Unit], driverHardware: DriverHardware): DrivetrainHardware = {
