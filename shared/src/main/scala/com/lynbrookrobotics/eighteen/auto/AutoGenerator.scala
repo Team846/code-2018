@@ -14,8 +14,8 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePu
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
-import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
-import squants.space.{Feet, Inches}
+import squants.motion.{FeetPerSecond, FeetPerSecondSquared, MetersPerSecond}
+import squants.space.{Degrees, Feet, Inches}
 import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Percent}
 
@@ -612,5 +612,31 @@ class AutoGenerator(protected val r: CoreRobot) {
       targetTicksWithingTolerance = 10,
       forwardBackwardMode = ForwardsOnly
     )(drivetrain)
+  }
+
+  def sameSideSideScaleAuto(drivetrain: DrivetrainComponent): FiniteTask = {
+    new DriveDistanceWithTrapezoidalProfile(
+      FeetPerSecond(10),
+      FeetPerSecond(0),
+      drivetrainProps.get.maxAcceleration,
+      drivetrainProps.get.maxDeceleration,
+      Inches(315.4645),
+      Inches(3),
+      Degrees(5)
+    ).then(
+        new RotateToAngle(
+        Degrees(-90),
+          Degrees(5)
+        )
+        (
+          drivetrain
+        )
+    ).then(
+      shootCubeScale(
+        collectorRollers.get,
+        collectorPivot.get,
+        cubeLiftComp.get
+      )
+    )
   }
 }
