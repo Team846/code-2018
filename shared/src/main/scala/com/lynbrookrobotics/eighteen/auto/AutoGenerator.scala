@@ -625,18 +625,18 @@ class AutoGenerator(protected val r: CoreRobot) {
       Degrees(5)
     ).then(
         new RotateToAngle(
-        Degrees(-90),
+          Degrees(-90),
           Degrees(5)
-        )
-        (
+        )(
           drivetrain
         )
-    ).then(
-      shootCubeScale(
-        collectorRollers.get,
-        collectorPivot.get,
-        cubeLiftComp.get
       )
-    )
+      .then(
+        shootCubeScale(
+          collectorRollers.get,
+          collectorPivot.get,
+          cubeLiftComp.get
+        )
+      )
   }
 }
