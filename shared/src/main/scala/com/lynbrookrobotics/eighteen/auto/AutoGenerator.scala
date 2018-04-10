@@ -12,7 +12,7 @@ import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
 import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePursuit.{BackwardsOnly, ForwardsOnly}
 import com.lynbrookrobotics.potassium.streams.Stream
-import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
+import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WaitTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared, MetersPerSecond}
 import squants.space.{Degrees, Feet, Inches}
@@ -616,17 +616,28 @@ class AutoGenerator(protected val r: CoreRobot) {
 
   def sameSideSideScaleAuto(drivetrain: DrivetrainComponent): FiniteTask = {
     new DriveDistanceWithTrapezoidalProfile(
-      FeetPerSecond(10),
-      FeetPerSecond(0),
-      drivetrainProps.get.maxAcceleration,
-      drivetrainProps.get.maxDeceleration,
-      Inches(315.4645),
-      Inches(3),
-      Degrees(5)
-    ).then(
+      cruisingVelocity = FeetPerSecond(10),
+      finalVelocity = FeetPerSecond(0),
+      acceleration = drivetrainProps.get.maxAcceleration,
+      deceleration = drivetrainProps.get.maxDeceleration,
+      targetDistance = Inches(315.4645),
+      tolerance = Inches(3),
+      toleranceAngle = Degrees(5)
+    )(
+      drivetrain
+    ).and(
+        new WaitTask(
+          Seconds(2)
+        ).then(
+            liftElevatorToScale(
+              cubeLiftComp.get
+            ).toFinite
+          )
+      )
+      .then(
         new RotateToAngle(
-          Degrees(-90),
-          Degrees(5)
+          absoluteAngle = Degrees(-90),
+          tolerance = Degrees(5)
         )(
           drivetrain
         )
