@@ -14,7 +14,7 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.control.purePu
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WaitTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
-import squants.motion.{FeetPerSecond, FeetPerSecondSquared, MetersPerSecond}
+import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Percent}
