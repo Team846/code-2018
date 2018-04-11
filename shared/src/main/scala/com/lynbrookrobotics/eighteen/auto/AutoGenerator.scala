@@ -614,7 +614,12 @@ class AutoGenerator(protected val r: CoreRobot) {
     )(drivetrain)
   }
 
-  def sameSideSideScaleAuto(drivetrain: DrivetrainComponent): FiniteTask = {
+  def sameSideSideScaleAuto(
+    drivetrain: DrivetrainComponent,
+    collectorRollers: CollectorRollers,
+    collectorPivot: CollectorPivot,
+    cubeLiftComp: CubeLiftComp
+  ): FiniteTask = {
     new DriveDistanceWithTrapezoidalProfile(
       cruisingVelocity = FeetPerSecond(10),
       finalVelocity = FeetPerSecond(0),
@@ -629,10 +634,10 @@ class AutoGenerator(protected val r: CoreRobot) {
         new WaitTask(
           Seconds(2)
         ).then(
-            liftElevatorToScale(
-              cubeLiftComp.get
-            ).toFinite
-          )
+          liftElevatorToScale(
+            cubeLiftComp
+          ).toFinite
+        )
       )
       .then(
         new RotateToAngle(
@@ -644,9 +649,9 @@ class AutoGenerator(protected val r: CoreRobot) {
       )
       .then(
         shootCubeScale(
-          collectorRollers.get,
-          collectorPivot.get,
-          cubeLiftComp.get
+          collectorRollers,
+          collectorPivot,
+          cubeLiftComp
         )
       )
   }
