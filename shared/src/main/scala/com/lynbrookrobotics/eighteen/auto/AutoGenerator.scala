@@ -75,7 +75,7 @@ class AutoGenerator(protected val r: CoreRobot) {
               collectorPivot
             )
             .forDuration(Seconds(0.5))
-        )/*
+        ) /*
         .then(
           liftElevatorToCollect(cubeLiftComp).toFinite
         )*/
