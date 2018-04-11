@@ -119,7 +119,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         turnPosition = angle,
         maxTurnOutput = Percent(100),
         forwardBackwardMode = ForwardsOnly
-      ).andUntilDone(
+      )(drivetrain).andUntilDone(
           pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
         )
         .then(
@@ -183,7 +183,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
             -Degrees(180),
             Degrees(10),
             timeWithinTolerance = 1
-          ).and(
+          )(drivetrain).and(
             new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite)
           )
         )
@@ -195,7 +195,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
             Degrees(180),
             Degrees(10),
             timeWithinTolerance = 1
-          )
+          )(drivetrain)
         )
         .then(
           dropOffSecondCube(pose, relativeAngle, drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift)
@@ -205,7 +205,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
             -Degrees(180),
             Degrees(10),
             timeWithinTolerance = 1
-          ).and(
+          )(drivetrain).and(
             new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite)
           )
         )
@@ -217,7 +217,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
             Degrees(180),
             Degrees(10),
             timeWithinTolerance = 1
-          )
+          )(drivetrain)
         )
         .then(
           dropOffThirdCube(pose, relativeAngle, drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift)
