@@ -125,6 +125,10 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     addAutonomousRoutine(10) {
       generator.threeCubeAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).toContinuous
     }
+
+    addAutonomousRoutine(12) {
+      generator.sameSideSideScaleAuto(drivetrain, collectorRollers, collectorPivot, cubeLiftComp).toContinuous
+    }
   }
 
   for {
