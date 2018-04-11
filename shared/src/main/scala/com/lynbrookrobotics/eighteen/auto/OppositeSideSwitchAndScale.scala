@@ -119,7 +119,8 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         turnPosition = angle,
         maxTurnOutput = Percent(100),
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain).andUntilDone(
+      )(drivetrain)
+        .andUntilDone(
           pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
         )
         .then(
