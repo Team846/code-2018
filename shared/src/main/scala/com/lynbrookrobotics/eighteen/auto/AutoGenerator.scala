@@ -15,7 +15,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
-import squants.space.{Feet, Inches}
+import squants.space.{Degrees, Feet, Inches}
 import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Percent}
 
@@ -381,30 +381,34 @@ class AutoGenerator(protected val r: CoreRobot) {
       )
   }
 
-  def rightCenterSwitch(
-    drivetrain: DrivetrainComponent,
-    collectorRollers: CollectorRollers,
-    collectorClamp: CollectorClamp,
-    collectorPivot: CollectorPivot,
-    cubeLiftComp: CubeLiftComp
-  ): FiniteTask = {
-    new FollowWayPoints(
-      Seq(
-        Point.origin,
-        Point(
-          Inches(38.5),
-          Inches(66.6)
-        ),
-        Point(
-          Inches(38.5),
-          Inches(107.8)
-        )
-      ),
+  val rightCenterSwitchPoints = Seq(
+    Point.origin,
+    Point(
+      Inches(38.5),
+      Inches(66.6)
+    ),
+    Point(
+      Inches(38.5),
+      Inches(107.8)
+    )
+  )
+  def rightCenterSwitch(drivetrain: DrivetrainComponent,
+                         collectorRollers: CollectorRollers,
+                         collectorClamp: CollectorClamp,
+                         collectorPivot: CollectorPivot,
+                         cubeLiftComp: CubeLiftComp,
+                         pose: Stream[Point],
+                         angle: Stream[Angle]
+                       ): FiniteTask = {
+    new FollowWayPointsWithPosition(
+      rightCenterSwitchPoints,
       tolerance = Inches(6),
       maxTurnOutput = Percent(100),
       cruisingVelocity = purePursuitCruisingVelocity,
       targetTicksWithingTolerance = 1,
-      forwardBackwardMode = ForwardsOnly
+      forwardBackwardMode = ForwardsOnly,
+      position = pose,
+      turnPosition = angle
     )(drivetrain)
       .withTimeout(centetSwitchDriveTimeOut)
       .then(
@@ -412,6 +416,94 @@ class AutoGenerator(protected val r: CoreRobot) {
       )
   }
 
+  def right2CubeSwitch(drivetrain: DrivetrainComponent,
+                       collectorRollers: CollectorRollers,
+                       collectorClamp: CollectorClamp,
+                       collectorPivot: CollectorPivot,
+                       cubeLiftComp: CubeLiftComp
+                      ): FiniteTask = {
+    val prePickupSecondCubePoint = Point(
+      Inches(23.5),
+      Inches(40.7)
+    )
+    val pickupSecondCubePoint = Point(
+      Inches(23.5) - Inches(11.5),
+      Inches(40.7) + Inches(19)
+    )
+
+    val pose = XYPosition.circularTracking(
+      drivetrainHardware.turnPosition,
+      drivetrainHardware.forwardPosition
+    )
+    rightCenterSwitch(
+      drivetrain,
+      collectorRollers,
+      collectorClamp,
+      collectorPivot,
+      cubeLiftComp,
+      pose,
+      drivetrainHardware.turnPosition
+    ).then(
+      new FollowWayPointsWithPosition(
+        Seq(
+          rightCenterSwitchPoints(rightCenterSwitchPoints.length - 1),
+          rightCenterSwitchPoints(rightCenterSwitchPoints.length - 2),
+          prePickupSecondCubePoint
+        ),
+        tolerance = Inches(6),
+        maxTurnOutput = Percent(100),
+        cruisingVelocity = purePursuitCruisingVelocity,
+        targetTicksWithingTolerance = 1,
+        forwardBackwardMode = BackwardsOnly,
+        position = pose,
+        turnPosition = drivetrainHardware.turnPosition
+      )(drivetrain).then(
+        new RotateToAngle(
+          -Degrees(30),
+          Degrees(10)
+        )(drivetrain)
+      ).andUntilDone(
+        liftElevatorToCollect(cubeLiftComp).toContinuous
+      ).then(
+        new FollowWayPointsWithPosition(
+          Seq(
+            prePickupSecondCubePoint,
+            pickupSecondCubePoint
+          ),
+          tolerance = Inches(6),
+          maxTurnOutput = Percent(100),
+          cruisingVelocity = purePursuitCruisingVelocity,
+          targetTicksWithingTolerance = 1,
+          forwardBackwardMode = ForwardsOnly,
+          position = pose,
+          turnPosition = drivetrainHardware.turnPosition
+        )(drivetrain).andUntilDone(
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+        ).then(
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).forDuration(Seconds(1))
+        ).then(
+          new RotateToAngle(
+            Degrees(30),
+            Degrees(10)
+          )(drivetrain)
+        ).then(
+          new FollowWayPointsWithPosition(
+            Seq(
+              pickupSecondCubePoint,
+              rightCenterSwitchPoints.last
+            ),
+            tolerance = Inches(6),
+            maxTurnOutput = Percent(100),
+            cruisingVelocity = purePursuitCruisingVelocity,
+            targetTicksWithingTolerance = 1,
+            forwardBackwardMode = ForwardsOnly,
+            position = pose,
+            turnPosition = drivetrainHardware.turnPosition
+          )(drivetrain)
+        )
+      )
+    )
+  }
   val centerStartingPose = Point(Inches(139.473), Inches(0))
 
   def collectCubeDrivingBack(collectorRollers: CollectorRollers, collectorPivot: CollectorPivot): ContinuousTask = {
