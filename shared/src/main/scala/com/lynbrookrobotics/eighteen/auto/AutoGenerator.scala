@@ -90,7 +90,7 @@ class AutoGenerator(protected val r: CoreRobot) {
     cubeLiftComp: CubeLiftComp
   ): FiniteTask = {
     liftElevatorToSwitch(cubeLiftComp).apply(
-      CollectorTasks.purgeCube(collectorRollers, collectorPivot).forDuration(Seconds(3))
+      CollectorTasks.purgeCube(collectorRollers, collectorPivot).forDuration(Seconds(0.25))
     )
   }
 
@@ -108,7 +108,7 @@ class AutoGenerator(protected val r: CoreRobot) {
     cubeLift: CubeLiftComp
   ): ContinuousTask = {
     liftElevatorToCollect(cubeLift).toContinuous.and(
-      CollectorTasks.collectCube(collectorRollers, collectorClamp, collectorPivot)
+      CollectorTasks.collectCubeWithoutOpen(collectorRollers, collectorPivot)
     )
   }
 
