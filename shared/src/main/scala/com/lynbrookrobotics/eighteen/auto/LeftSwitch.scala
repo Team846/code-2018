@@ -62,11 +62,13 @@ trait LeftSwitch extends AutoGenerator {
       Inches(60.6) + Feet(1)
     )
 
-    def driveFirstCube(drivetrain: DrivetrainComponent,
-                        collectorRollers: CollectorRollers,
-                        collectorClamp: CollectorClamp,
-                        collectorPivot: CollectorPivot,
-                        cubeLiftComp: CubeLiftComp): FiniteTask = {
+    def driveFirstCube(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLiftComp: CubeLiftComp
+    ): FiniteTask = {
       new FollowWayPoints(
         leftCenterSwitchPoints,
         tolerance = Inches(12),
@@ -74,7 +76,8 @@ trait LeftSwitch extends AutoGenerator {
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 1,
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain).withTimeout(centetSwitchDriveTimeOut)
+      )(drivetrain)
+        .withTimeout(centetSwitchDriveTimeOut)
         .andUntilDone(liftElevatorToSwitch(cubeLiftComp).toContinuous)
         .andUntilDone(
           new PivotDown(collectorPivot)
@@ -82,12 +85,12 @@ trait LeftSwitch extends AutoGenerator {
     }
 
     def twoCubeCenterSwitch(
-                             drivetrain: DrivetrainComponent,
-                             collectorRollers: CollectorRollers,
-                             collectorClamp: CollectorClamp,
-                             collectorPivot: CollectorPivot,
-                             cubeLiftComp: CubeLiftComp
-                           ): FiniteTask = {
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLiftComp: CubeLiftComp
+    ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
       })
@@ -99,133 +102,154 @@ trait LeftSwitch extends AutoGenerator {
         )
         .preserve
 
-      driveFirstCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).then(
-        new FollowWayPointsWithPosition( // BEGIN SECOND CUBE
-          Seq(
-            leftCenterSwitchPoints(leftCenterSwitchPoints.length - 1),
-            leftCenterSwitchPoints(leftCenterSwitchPoints.length - 2),
-            prePickupSecondCubePoint
-          ),
-          tolerance = Feet(2),
-          maxTurnOutput = Percent(100),
-          cruisingVelocity = purePursuitCruisingVelocity,
-          targetTicksWithingTolerance = 1,
-          forwardBackwardMode = BackwardsOnly,
-          position = pose,
-          turnPosition = relativeAngle
-        )(drivetrain).and(
-          dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-        ).andUntilDone(
-          new PivotDown(collectorPivot)
-        )
-      ).then(
-        new FollowWayPointsWithPosition(
-          Seq(
-            prePickupSecondCubePoint,
-            pickupSecondCubePoint
-          ),
-          tolerance = Inches(6),
-          maxTurnOutput = Percent(100),
-          cruisingVelocity = purePursuitCruisingVelocity,
-          targetTicksWithingTolerance = 1,
-          forwardBackwardMode = ForwardsOnly,
-          position = pose,
-          turnPosition = relativeAngle
-        )(drivetrain).andUntilDone(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
-            new OpenCollector(collectorClamp)
-          )
-        ).then(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-            .forDuration(Seconds(0.25))
-        )
-      ).then(
-        new DriveBeyondStraight(
-          -Inches(6),
-          Inches(6),
-          Degrees(5),
-          Percent(50)
-        )(drivetrain).withTimeout(Seconds(0.5)).then(
-          new FollowWayPointsWithPosition(
-            leftCenterSwitchPoints.takeRight(2),
+      driveFirstCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+        .then(
+          new FollowWayPointsWithPosition( // BEGIN SECOND CUBE
+            Seq(
+              leftCenterSwitchPoints(leftCenterSwitchPoints.length - 1),
+              leftCenterSwitchPoints(leftCenterSwitchPoints.length - 2),
+              prePickupSecondCubePoint
+            ),
             tolerance = Feet(2),
+            maxTurnOutput = Percent(100),
+            cruisingVelocity = purePursuitCruisingVelocity,
+            targetTicksWithingTolerance = 1,
+            forwardBackwardMode = BackwardsOnly,
+            position = pose,
+            turnPosition = relativeAngle
+          )(drivetrain)
+            .and(
+              dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            )
+            .andUntilDone(
+              new PivotDown(collectorPivot)
+            )
+        )
+        .then(
+          new FollowWayPointsWithPosition(
+            Seq(
+              prePickupSecondCubePoint,
+              pickupSecondCubePoint
+            ),
+            tolerance = Inches(6),
             maxTurnOutput = Percent(100),
             cruisingVelocity = purePursuitCruisingVelocity,
             targetTicksWithingTolerance = 1,
             forwardBackwardMode = ForwardsOnly,
             position = pose,
             turnPosition = relativeAngle
-          )(drivetrain).andUntilDone(
-            liftElevatorToSwitch(cubeLiftComp).toContinuous
-          )
-        ).andUntilDone(
-          new PivotDown(collectorPivot)
+          )(drivetrain)
+            .andUntilDone(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
+                new OpenCollector(collectorClamp)
+              )
+            )
+            .then(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+                .forDuration(Seconds(0.25))
+            )
         )
-      ).then(
-        new FollowWayPointsWithPosition( // BEGIN THIRD CUBE
-          Seq(
-            leftCenterSwitchPoints(leftCenterSwitchPoints.length - 1),
-            leftCenterSwitchPoints(leftCenterSwitchPoints.length - 2),
-            prePickupThirdCubePoint
-          ),
-          tolerance = Feet(2),
-          maxTurnOutput = Percent(100),
-          cruisingVelocity = purePursuitCruisingVelocity,
-          targetTicksWithingTolerance = 1,
-          forwardBackwardMode = BackwardsOnly,
-          position = pose,
-          turnPosition = relativeAngle
-        )(drivetrain).and(
-          dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-        ).andUntilDone(
-          new PivotDown(collectorPivot)
+        .then(
+          new DriveBeyondStraight(
+            -Inches(6),
+            Inches(6),
+            Degrees(5),
+            Percent(50)
+          )(drivetrain)
+            .withTimeout(Seconds(0.5))
+            .then(
+              new FollowWayPointsWithPosition(
+                leftCenterSwitchPoints.takeRight(2),
+                tolerance = Feet(2),
+                maxTurnOutput = Percent(100),
+                cruisingVelocity = purePursuitCruisingVelocity,
+                targetTicksWithingTolerance = 1,
+                forwardBackwardMode = ForwardsOnly,
+                position = pose,
+                turnPosition = relativeAngle
+              )(drivetrain).andUntilDone(
+                liftElevatorToSwitch(cubeLiftComp).toContinuous
+              )
+            )
+            .andUntilDone(
+              new PivotDown(collectorPivot)
+            )
         )
-      ).then(
-        new FollowWayPointsWithPosition(
-          Seq(
-            prePickupThirdCubePoint,
-            pickupThirdCubePoint
-          ),
-          tolerance = Inches(6),
-          maxTurnOutput = Percent(100),
-          cruisingVelocity = purePursuitCruisingVelocity,
-          targetTicksWithingTolerance = 1,
-          forwardBackwardMode = ForwardsOnly,
-          position = pose,
-          turnPosition = relativeAngle
-        )(drivetrain).andUntilDone(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
-            new OpenCollector(collectorClamp)
-          )
-        ).then(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-            .forDuration(Seconds(0.25))
-        )
-      ).then(
-        new DriveBeyondStraight(
-          -Inches(6),
-          Inches(6),
-          Degrees(5),
-          Percent(50)
-        )(drivetrain).withTimeout(Seconds(0.5)).then(
-          new FollowWayPointsWithPosition(
-            leftCenterSwitchPointsThirdCube.takeRight(2),
+        .then(
+          new FollowWayPointsWithPosition( // BEGIN THIRD CUBE
+            Seq(
+              leftCenterSwitchPoints(leftCenterSwitchPoints.length - 1),
+              leftCenterSwitchPoints(leftCenterSwitchPoints.length - 2),
+              prePickupThirdCubePoint
+            ),
             tolerance = Feet(2),
+            maxTurnOutput = Percent(100),
+            cruisingVelocity = purePursuitCruisingVelocity,
+            targetTicksWithingTolerance = 1,
+            forwardBackwardMode = BackwardsOnly,
+            position = pose,
+            turnPosition = relativeAngle
+          )(drivetrain)
+            .and(
+              dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            )
+            .andUntilDone(
+              new PivotDown(collectorPivot)
+            )
+        )
+        .then(
+          new FollowWayPointsWithPosition(
+            Seq(
+              prePickupThirdCubePoint,
+              pickupThirdCubePoint
+            ),
+            tolerance = Inches(6),
             maxTurnOutput = Percent(100),
             cruisingVelocity = purePursuitCruisingVelocity,
             targetTicksWithingTolerance = 1,
             forwardBackwardMode = ForwardsOnly,
             position = pose,
             turnPosition = relativeAngle
-          )(drivetrain).andUntilDone(
-            liftElevatorToSwitch(cubeLiftComp).toContinuous
-          )
-        ).then(
-          dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
-        ).andUntilDone(
-          new PivotDown(collectorPivot)
+          )(drivetrain)
+            .andUntilDone(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
+                new OpenCollector(collectorClamp)
+              )
+            )
+            .then(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+                .forDuration(Seconds(0.25))
+            )
         )
-      )
+        .then(
+          new DriveBeyondStraight(
+            -Inches(6),
+            Inches(6),
+            Degrees(5),
+            Percent(50)
+          )(drivetrain)
+            .withTimeout(Seconds(0.5))
+            .then(
+              new FollowWayPointsWithPosition(
+                leftCenterSwitchPointsThirdCube.takeRight(2),
+                tolerance = Feet(2),
+                maxTurnOutput = Percent(100),
+                cruisingVelocity = purePursuitCruisingVelocity,
+                targetTicksWithingTolerance = 1,
+                forwardBackwardMode = ForwardsOnly,
+                position = pose,
+                turnPosition = relativeAngle
+              )(drivetrain).andUntilDone(
+                liftElevatorToSwitch(cubeLiftComp).toContinuous
+              )
+            )
+            .then(
+              dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            )
+            .andUntilDone(
+              new PivotDown(collectorPivot)
+            )
+        )
     }
   }
 }
