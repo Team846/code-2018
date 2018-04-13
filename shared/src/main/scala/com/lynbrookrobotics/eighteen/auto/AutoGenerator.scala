@@ -15,7 +15,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
-import squants.space.{Degrees, Feet, Inches}
+import squants.space.{Feet, Inches}
 import squants.time.{Milliseconds, Seconds}
 import squants.{Angle, Percent}
 
