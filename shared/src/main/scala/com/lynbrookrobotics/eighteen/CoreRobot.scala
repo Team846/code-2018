@@ -227,12 +227,12 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchPosition = DriverStation.getInstance().getGameSpecificMessage.head
       switchPosition match {
         case 'L' =>
-          generator
-            .LeftCenterSwitch.twoCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+          generator.LeftCenterSwitch
+            .twoCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
         case 'R' =>
-          generator
-            .RightCenterSwitch.twoCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+          generator.RightCenterSwitch
+            .twoCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
         case _ =>
           println(s"Switch position didn't match what was expected. Was $switchPosition")
