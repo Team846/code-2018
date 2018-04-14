@@ -32,11 +32,7 @@ object SameSideSwitchAndScalePoints {
     Point(
       -Inches(45.7) - Inches(6),
       Inches(280.9) - Feet(1) - smallRoomFactor
-    ) /*
-    Point(
-      -Inches(41.3),
-      Inches(285.2) - smallRoomFactor - Inches(6)
-    )*/
+    )
   )
 
   val backupPostScalePoints = Seq(
@@ -51,7 +47,6 @@ object SameSideSwitchAndScalePoints {
     )
   )
   val pickupSecondCubePoints = Seq(
-    //    backupPostScalePoints.last,
     Point(
       toScalePoints.last.x,
       toScalePoints.last.y - Feet(1)
