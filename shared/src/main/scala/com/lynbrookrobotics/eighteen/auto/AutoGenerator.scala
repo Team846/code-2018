@@ -19,39 +19,7 @@ class AutoGenerator(protected val r: CoreRobot) {
 
   implicit class NightmareBugPatch(task: FiniteTask) {
     def nightmarePatch: FiniteTask = {
-      new FiniteTask with FiniteTaskFinishedListener {
-        override def onFinished(task: FiniteTask): Unit = {
-          // if the inner task finishes, we are done too
-          finished()
-        }
-
-        override protected def onStart(): Unit = {
-          val drive = r.drivetrain.get
-          drive.hasOutputted = false
-
-          task.setFinishedListener(this)
-          task.init()
-
-          clock.singleExecution(Milliseconds(100)) {
-            if (this.isRunning) {
-              if (drive.currentController != null && !drive.hasOutputted) {
-                println(s"DETECTED DROPPED DRIVETRAIN DATA, RESTARTING $task")
-                if (Stream.traceBrokenStream(drive.currentController)) {
-                  task.abort()
-                  task.setFinishedListener(this)
-                  task.init()
-                }
-              }
-            }
-          }
-        }
-
-        override protected def onEnd(): Unit = {
-          if (task.isRunning) {
-            task.abort()
-          }
-        }
-      }
+      task
     }
   }
 
