@@ -290,7 +290,7 @@ trait LeftSwitch extends AutoGenerator {
         )
     }
 
-    def twoCubeCenterSwitch(
+    def threeCubeCenterSwitch(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
       collectorClamp: CollectorClamp,

@@ -178,11 +178,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       switchPosition match {
         case 'L' =>
           generator.LeftCenterSwitch
-            .twoCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .threeCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
         case 'R' =>
           generator.RightCenterSwitch
-            .twoCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .threeCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
         case _ =>
           println(s"Switch position didn't match what was expected. Was $switchPosition")
