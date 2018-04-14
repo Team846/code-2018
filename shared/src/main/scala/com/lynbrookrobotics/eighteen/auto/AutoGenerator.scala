@@ -16,12 +16,6 @@ import squants.time.{Milliseconds, Seconds}
 class AutoGenerator(protected val r: CoreRobot) {
   import r._
 
-  implicit class NightmareBugPatch(task: FiniteTask) {
-    def nightmarePatch: FiniteTask = {
-      task
-    }
-  }
-
   val purePursuitCruisingVelocity = FeetPerSecond(10)
 
   val robotLength = Feet(3)
