@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
-import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
+import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
@@ -17,24 +17,7 @@ import squants.time.Seconds
 import squants.{Angle, Percent}
 
 object SameSideSwitchOppositeScalePoints {
-  import StartingPose._
-
   val prePickupPoint = Point(-Inches(264.0), Inches(232.3))
-  val toSwitchPoints = Seq(
-    startingPose,
-    Point(
-      -Inches(20),
-      Inches(133.5) - Inches(6)
-    ),
-    Point(
-      -Inches(25.6),
-      Inches(155.3) - Inches(6)
-    ),
-    Point(
-      -Inches(42),
-      Inches(155.3) - Inches(6)
-    )
-  )
 
   val driveBackPostSwitch = Seq(
     // Don't use toSwitchPoints.last because we drive back 12 inches
@@ -287,7 +270,8 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator with SameSi
         )
         .preserve
 
-      SameSideSwitch.dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+      SameSideSwitch
+        .dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
         .withTimeout(Seconds(5))
         .then(
           driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle).withTimeout(Seconds(3))

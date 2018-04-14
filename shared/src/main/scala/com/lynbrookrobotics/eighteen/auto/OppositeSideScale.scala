@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
-import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
+import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
 import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect}
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
@@ -12,7 +12,6 @@ import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.{Angle, Percent, Seconds}
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
-import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 
@@ -43,7 +42,6 @@ object OppositeSideScalePoints {
     )
   )
 }
-
 
 trait OppositeSideScale extends AutoGenerator {
   import r._

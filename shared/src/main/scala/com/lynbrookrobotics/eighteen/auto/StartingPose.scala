@@ -1,7 +1,7 @@
 package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.potassium.units.Point
-import squants.space.{Feet, Inches}
+import squants.space.Feet
 
 object StartingPose {
   val robotLength = Feet(3)

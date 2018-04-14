@@ -17,7 +17,7 @@ import com.lynbrookrobotics.potassium.frc.{Color, LEDController}
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
-import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WaitTask}
+import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask}
 import edu.wpi.first.networktables.NetworkTableInstance
 import squants.space.{Degrees, Feet, Inches}
 

@@ -1,5 +1,6 @@
 package com.lynbrookrobotics.eighteen.auto
 
+import com.lynbrookrobotics.eighteen.auto.StartingPose.startingPose
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
@@ -17,18 +18,35 @@ import squants.time.Seconds
 
 trait SameSideSwitch extends AutoGenerator {
   import r._
+
+  val toSwitchPoints = Seq(
+    startingPose,
+    Point(
+      -Inches(20),
+      Inches(133.5) - Inches(6)
+    ),
+    Point(
+      -Inches(25.6),
+      Inches(155.3) - Inches(6)
+    ),
+    Point(
+      -Inches(42),
+      Inches(155.3) - Inches(6)
+    )
+  )
+
   object SameSideSwitch {
     def dropOffToSwitch(
-                         drivetrain: DrivetrainComponent,
-                         collectorRollers: CollectorRollers,
-                         collectorClamp: CollectorClamp,
-                         collectorPivot: CollectorPivot,
-                         cubeLift: CubeLiftComp,
-                         pose: Stream[Point],
-                         relativeAngle: Stream[Angle]
-                       ): FiniteTask = {
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchOppositeScalePoints.toSwitchPoints,
+        wayPoints = toSwitchPoints,
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -44,12 +62,12 @@ trait SameSideSwitch extends AutoGenerator {
     }
 
     def justSwitchAuto(
-                        drivetrain: DrivetrainComponent,
-                        collectorRollers: CollectorRollers,
-                        collectorClamp: CollectorClamp,
-                        collectorPivot: CollectorPivot,
-                        cubeLift: CubeLiftComp
-                      ): FiniteTask = {
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp
+    ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
       })

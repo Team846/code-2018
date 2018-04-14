@@ -20,12 +20,12 @@ trait OppositeSideSwitch extends AutoGenerator {
 
   object OppositeSideSwitch {
     def justSwitchAuto(
-                            drivetrain: DrivetrainComponent,
-                            collectorRollers: CollectorRollers,
-                            collectorClamp: CollectorClamp,
-                            collectorPivot: CollectorPivot,
-                            cubeLift: CubeLiftComp
-                          ): FiniteTask = {
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp
+    ): FiniteTask = {
       val toScalePoints = OppositeSideScalePoints.toScalePoints
       val wayPoints = toScalePoints.take(3) ++ Seq(
         Point(
