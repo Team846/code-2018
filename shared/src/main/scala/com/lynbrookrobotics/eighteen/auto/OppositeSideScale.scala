@@ -16,10 +16,10 @@ import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 
-trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOppositeScaleAutoGenerator {
+trait OppositeSideScale extends AutoGenerator {
   import r._
 
-  object OppositeSideSwitchAndScale {
+  object OppositeSideScale {
     def dropOffToScale(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,

@@ -195,7 +195,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
         case "LLL" | "LLR" =>
-          generator.OppositeSideSwitchAndScale
+          generator.OppositeSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -205,7 +205,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op op
         case "RLL" | "RLR" =>
-          generator.OppositeSideSwitchAndScale
+          generator.OppositeSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
