@@ -16,6 +16,35 @@ import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 
+object OppositeSideScalePoints {
+  import StartingPose._
+
+  val toScalePoints = Seq(
+    startingPose,
+    Point(
+      -Inches(32.9),
+      Inches(210.6)
+    ),
+    Point(
+      -Inches(96.6),
+      Inches(232.5) - Feet(1.25)
+    ),
+    Point(
+      -Inches(187) - Feet(1),
+      Inches(232.5) - Feet(1.25)
+    ),
+    Point(
+      -Inches(222.4) + Inches(6),
+      Inches(251.3)
+    ),
+    Point(
+      -Inches(222.4) + Inches(6),
+      Inches(275.3) - Inches(12)
+    )
+  )
+}
+
+
 trait OppositeSideScale extends AutoGenerator {
   import r._
 
@@ -30,7 +59,7 @@ trait OppositeSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = OppositeSideSwitchScalePoints.toScalePoints,
+        wayPoints = OppositeSideScalePoints.toScalePoints,
         tolerance = Inches(3),
         maxTurnOutput = Percent(100),
         position = pose,

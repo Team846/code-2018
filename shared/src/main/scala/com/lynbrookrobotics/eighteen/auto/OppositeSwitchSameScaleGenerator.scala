@@ -15,6 +15,31 @@ import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Inches}
 
+object OppositeSwitchPointsSameSideScale {
+  val pickupSecondCubePoints = Seq(
+    SameSideSwitchAndScalePoints.backupPostScalePoints.last,
+    Point(
+      -Inches(48.1),
+      Inches(232.1)
+    ),
+    Point(
+      -Inches(151.2),
+      Inches(232.1)
+    ),
+    Point(
+      -Inches(159.6),
+      Inches(220.7)
+    )
+  )
+  val pickupThirdCubePoints = Seq(
+    pickupSecondCubePoints.last,
+    Point(
+      -Inches(182.5),
+      Inches(213.1)
+    )
+  )
+}
+
 trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideScale {
   import r._
 

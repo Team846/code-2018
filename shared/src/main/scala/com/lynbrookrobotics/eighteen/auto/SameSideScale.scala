@@ -14,7 +14,79 @@ import com.lynbrookrobotics.potassium.tasks.WaitTask
 import com.lynbrookrobotics.potassium.units.Point
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
-import squants.space.{Degrees, Inches}
+import squants.space.{Degrees, Feet, Inches}
+
+object SameSideSwitchAndScalePoints {
+  import StartingPose._
+
+  val toScalePoints = Seq(
+    startingPose,
+    Point(
+      startingPose.x,
+      Inches(162)
+    ),
+    Point(
+      -Inches(46.7),
+      Inches(241)
+    ),
+    Point(
+      -Inches(45.7) - Inches(6),
+      Inches(280.9) - Feet(1) - smallRoomFactor
+    ) /*
+    Point(
+      -Inches(41.3),
+      Inches(285.2) - smallRoomFactor - Inches(6)
+    )*/
+  )
+
+  val backupPostScalePoints = Seq(
+    toScalePoints.last,
+    Point(
+      -Inches(25.2),
+      Inches(268.0) - smallRoomFactor
+    ),
+    Point(
+      -Inches(0),
+      Inches(268) - smallRoomFactor
+    )
+  )
+  val pickupSecondCubePoints = Seq(
+    //    backupPostScalePoints.last,
+    Point(
+      toScalePoints.last.x,
+      toScalePoints.last.y - Feet(1)
+    ),
+    Point(
+      -Inches(41.8) - Inches(6) - Inches(4) - Feet(1) + Inches(4) + Inches(2),
+      Inches(228.3 + 6) - Inches(6) - smallRoomFactor
+    )
+  )
+
+  val pickupThirdCubeAfterSwitchPoints = Seq(
+    pickupSecondCubePoints.last,
+    Point(
+      -Inches(62.1) - Inches(9),
+      Inches(218.8) + Inches(4) - smallRoomFactor
+    )
+  )
+
+  val pickupThirdCubeAfterScalePoints = Seq(
+    toScalePoints.last,
+    pickupThirdCubeAfterSwitchPoints.last
+  )
+
+  val dropOffThirdCubePoints = Seq(
+    pickupThirdCubeAfterScalePoints.last,
+    Point(
+      -Inches(46.7),
+      Inches(241)
+    ),
+    Point(
+      -Inches(45.7) - Inches(6),
+      Inches(280.9) - Feet(1) - smallRoomFactor
+    )
+  )
+}
 
 trait SameSideScale extends AutoGenerator {
   import r._

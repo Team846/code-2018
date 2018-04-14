@@ -26,7 +26,7 @@ trait OppositeSideSwitch extends AutoGenerator {
                             collectorPivot: CollectorPivot,
                             cubeLift: CubeLiftComp
                           ): FiniteTask = {
-      val toScalePoints = OppositeSideSwitchScalePoints.toScalePoints
+      val toScalePoints = OppositeSideScalePoints.toScalePoints
       val wayPoints = toScalePoints.take(3) ++ Seq(
         Point(
           -Inches(226.8),

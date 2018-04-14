@@ -16,6 +16,83 @@ import squants.space.{Degrees, Inches}
 import squants.time.Seconds
 import squants.{Angle, Percent}
 
+object SameSideSwitchOppositeScalePoints {
+  import StartingPose._
+
+  val prePickupPoint = Point(-Inches(264.0), Inches(232.3))
+  val toSwitchPoints = Seq(
+    startingPose,
+    Point(
+      -Inches(20),
+      Inches(133.5) - Inches(6)
+    ),
+    Point(
+      -Inches(25.6),
+      Inches(155.3) - Inches(6)
+    ),
+    Point(
+      -Inches(42),
+      Inches(155.3) - Inches(6)
+    )
+  )
+
+  val driveBackPostSwitch = Seq(
+    // Don't use toSwitchPoints.last because we drive back 12 inches
+    // after delivering to switch
+    Point(
+      -Inches(25.6),
+      Inches(155.3)
+    ),
+    Point(
+      -Inches(32.9),
+      Inches(210.6)
+    ),
+    Point(
+      -Inches(48.9),
+      Inches(232.3)
+    ),
+    prePickupPoint
+  )
+
+  val pickupSecondCube = Seq(
+    prePickupPoint,
+    Point(
+      -Inches(230.7),
+      Inches(218.6)
+    )
+  )
+
+  val preDropOffPoint = Point(-Inches(266.7), Inches(218.6))
+  val backUpToDropOffSecondCube = Seq(
+    pickupSecondCube.last,
+    preDropOffPoint
+  )
+  val forwardsDropOffSecondCube = Seq(
+    preDropOffPoint,
+    Point(
+      -Inches(232.813),
+      Inches(278.0)
+    )
+  )
+
+  val backUpToPickupThirdCube = Seq(
+    forwardsDropOffSecondCube.last,
+    prePickupPoint
+  )
+  val pickupThirdCube = Seq(
+    prePickupPoint,
+    Point(
+      -Inches(203.8),
+      Inches(215.3)
+    )
+  )
+  val backUpToDropOffThirdCube = Seq(
+    pickupThirdCube.last,
+    preDropOffPoint
+  )
+  val forwardsDropOffThirdCube = forwardsDropOffSecondCube
+}
+
 trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator with SameSideSwitch {
   import r._
 
