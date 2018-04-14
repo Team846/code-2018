@@ -42,9 +42,6 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .then(
-          printTask("done driving")
-        )
-        .then(
           new RotateToAngle(
             Degrees(30),
             Degrees(5)
@@ -55,13 +52,10 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
             )
         )
         .then(
-          printTask("done turning")
-        )
-        .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
         .then(
-          printTask("done shooting")
+          liftElevatorToCollect(cubeLift).toFinite
         )
     }
 
@@ -224,6 +218,9 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
                 )
                 .then(
                   shootCubeScale(collectorRollers, collectorPivot, cubeLift)
+                )
+                .then(
+                  liftElevatorToCollect(cubeLift).toFinite
                 )
             )
         )

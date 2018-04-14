@@ -218,6 +218,9 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
+        .then(
+          liftElevatorToCollect(cubeLift).toFinite
+        )
     }
 
     def oneInScale(

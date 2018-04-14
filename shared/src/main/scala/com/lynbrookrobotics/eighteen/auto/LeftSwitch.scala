@@ -77,7 +77,7 @@ trait LeftSwitch extends AutoGenerator {
         targetTicksWithingTolerance = 1,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
-        .withTimeout(centetSwitchDriveTimeOut)
+        .withTimeout(centerSwitchDriveTimeOut)
         .andUntilDone(liftElevatorToSwitch(cubeLiftComp).toContinuous)
         .andUntilDone(
           new PivotDown(collectorPivot)

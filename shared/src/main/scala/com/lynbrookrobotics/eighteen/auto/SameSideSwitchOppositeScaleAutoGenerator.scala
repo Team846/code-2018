@@ -1,5 +1,6 @@
 package com.lynbrookrobotics.eighteen.auto
 
+import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
@@ -154,7 +155,10 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         forwardBackwardMode = BackwardsOnly
       )(drivetrain)
         .andUntilDone(
-          collectCubeDrivingBack(collectorRollers, collectorPivot)
+          CollectorTasks
+            .collectCubeWithoutOpen(collectorRollers, collectorPivot)
+            .forDuration(Seconds(1))
+            .toContinuous
         )
         .then(
           new FollowWayPointsWithPosition(
@@ -193,7 +197,10 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         forwardBackwardMode = BackwardsOnly
       )(drivetrain)
         .andUntilDone(
-          collectCubeDrivingBack(collectorRollers, collectorPivot)
+          CollectorTasks
+            .collectCubeWithoutOpen(collectorRollers, collectorPivot)
+            .forDuration(Seconds(1))
+            .toContinuous
         )
         .then(
           new FollowWayPointsWithPosition(
@@ -209,6 +216,9 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         )
         .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
+        )
+        .then(
+          liftElevatorToCollect(cubeLift).toFinite
         )
     }
 

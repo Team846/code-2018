@@ -49,7 +49,7 @@ trait RightSwitch extends AutoGenerator {
         turnPosition = angle
       )(drivetrain)
         .andUntilDone(liftElevatorToSwitch(cubeLiftComp).toContinuous)
-        .withTimeout(centetSwitchDriveTimeOut)
+        .withTimeout(centerSwitchDriveTimeOut)
         .andUntilDone(
           new PivotDown(collectorPivot)
         )
