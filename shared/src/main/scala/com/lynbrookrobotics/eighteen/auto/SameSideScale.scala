@@ -288,17 +288,21 @@ trait SameSideScale extends AutoGenerator {
             Degrees(10),
             5
           )(drivetrain)
-            .andUntilDone(new SpinForCollect(collectorRollers)).withTimeout(Seconds(2))
+            .andUntilDone(new SpinForCollect(collectorRollers))
+            .withTimeout(Seconds(2))
             .withTimeout(Seconds(5))
-        ).then(
+        )
+        .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
             .withTimeout(Seconds(6))
-        ).then(
+        )
+        .then(
           spinAroundPostScale(drivetrain, pose, relativeAngle)
             .and(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite))
             .andUntilDone(new PivotDown(collectorPivot))
             .withTimeout(Seconds(10))
-        ).then(
+        )
+        .then(
           pickupThirdCubeAfterScale(
             drivetrain,
             collectorRollers,

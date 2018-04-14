@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
 import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect}
+import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
@@ -107,7 +107,8 @@ trait OppositeSideScale extends AutoGenerator {
           new RotateToAngle(
             Degrees(180) - Degrees(10),
             Degrees(5)
-          )(drivetrain).withTimeout(Seconds(2))
+          )(drivetrain)
+            .withTimeout(Seconds(2))
             .andUntilDone(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toContinuous))
             .then(
               new DriveDistanceWithTrapezoidalProfile(
@@ -126,7 +127,8 @@ trait OppositeSideScale extends AutoGenerator {
             .then(
               pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
             )
-        ).then(
+        )
+        .then(
           new DriveDistanceWithTrapezoidalProfile(
             cruisingVelocity = purePursuitCruisingVelocity,
             finalVelocity = FeetPerSecond(0),
