@@ -140,8 +140,8 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
         case "LLL" | "LLR" =>
-          generator.OppositeSideSwitchAndScale
-            .oppositeSwitchOnly(
+          generator.OppositeSideSwitch
+            .justSwitchAuto(
               drivetrain,
               collectorRollers,
               collectorClamp,
@@ -150,12 +150,12 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op op
         case "RLL" | "RLR" =>
-          generator.SameSideSwitchOppositeScale
+          generator.SameSideSwitch
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.OppositeSideSwitchAndScale
-            .oppositeSwitchOnly(
+          generator.OppositeSideSwitch
+            .justSwitchAuto(
               drivetrain,
               collectorRollers,
               collectorClamp,
@@ -164,7 +164,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
-          generator.SameSideSwitchOppositeScale
+          generator.SameSideSwitch
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same same
         case _ =>
@@ -251,7 +251,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             drivetrainHardware.forwardPosition.mapToConstant(Percent(0))
           )(drivetrain).forDuration(Seconds(3)).toContinuous
         case "RLL" | "RLR" =>
-          generator.SameSideSwitchOppositeScale
+          generator.SameSideSwitch
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>

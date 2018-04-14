@@ -8,5 +8,6 @@ class FullAutoGenerator(r: CoreRobot)
     with SameSideSwitchScaleAutoGenerator
     with OppositeSwitchSameScaleGenerator
     with OppositeSideSwitchAndScale
+    with OppositeSideSwitch
     with RightSwitch
     with LeftSwitch

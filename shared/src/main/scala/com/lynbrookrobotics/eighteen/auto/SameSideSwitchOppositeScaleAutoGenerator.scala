@@ -16,42 +16,10 @@ import squants.space.{Degrees, Inches}
 import squants.time.Seconds
 import squants.{Angle, Percent}
 
-trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
+trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator with SameSideSwitch {
   import r._
 
   object SameSideSwitchOppositeScale {
-    val prePickupPoint = Point(
-      -Inches(264.0),
-      Inches(232.3)
-    )
-
-    val toSwitchDropOffTimeout = Seconds(5)
-
-    def dropOffToSwitch(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp,
-      pose: Stream[Point],
-      relativeAngle: Stream[Angle]
-    ): FiniteTask = {
-      new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchOppositeScalePoints.toSwitchPoints,
-        tolerance = Inches(6),
-        position = pose,
-        turnPosition = relativeAngle,
-        maxTurnOutput = Percent(100),
-        cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 10,
-        forwardBackwardMode = ForwardsOnly
-      )(drivetrain)
-        .andUntilDone(new PivotDown(collectorPivot).and(liftElevatorToSwitch(cubeLift).toContinuous))
-        .then(
-          dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-        )
-    }
-
     def driveBackPostSwitch(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -242,7 +210,7 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
         )
         .preserve
 
-      dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+      SameSideSwitch.dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
         .withTimeout(Seconds(5))
         .then(
           driveBackPostSwitch(drivetrain, collectorRollers, collectorClamp, pose, relativeAngle).withTimeout(Seconds(3))
@@ -263,31 +231,6 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
             .withTimeout(Seconds(3))
         )
-    }
-
-    def justSwitchAuto(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp
-    ): FiniteTask = {
-      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
-        curr - init
-      })
-
-      val pose = XYPosition
-        .circularTracking(
-          relativeAngle.map(compassToTrigonometric),
-          drivetrainHardware.forwardPosition
-        )
-        .map(
-          p => p + sideStartingPose
-        )
-        .preserve
-
-      dropOffToSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-        .withTimeout(Seconds(5))
     }
   }
 }
