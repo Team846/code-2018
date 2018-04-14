@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen.auto
 
-import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
+import com.lynbrookrobotics.eighteen.collector.clamp.{CollectorClamp, OpenCollector}
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect, SpinForPurge}
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
@@ -145,13 +145,12 @@ trait SameSideScale extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .andUntilDone(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).and(
+            new OpenCollector(collectorClamp)
+          )
         )
         .then(
           pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.25))
-        )
-        .then(
-          new PivotDown(collectorPivot).forDuration(Seconds(0.25))
         )
     }
 
@@ -176,7 +175,9 @@ trait SameSideScale extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .andUntilDone(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).and(
+            new OpenCollector(collectorClamp)
+          )
         )
         .then(
           pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
