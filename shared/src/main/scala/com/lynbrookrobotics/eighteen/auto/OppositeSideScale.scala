@@ -73,14 +73,11 @@ trait OppositeSideScale extends AutoGenerator {
           )(drivetrain)
             .withTimeout(Seconds(0.7))
             .andUntilDone(
-              new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite).toContinuous
+              liftElevatorToScale(cubeLift).toContinuous
             )
         )
         .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
-        )
-        .then(
-          liftElevatorToCollect(cubeLift).toFinite
         )
     }
 
@@ -110,8 +107,8 @@ trait OppositeSideScale extends AutoGenerator {
           new RotateToAngle(
             Degrees(180) - Degrees(10),
             Degrees(5)
-          )(drivetrain)
-            .withTimeout(Seconds(2))
+          )(drivetrain).withTimeout(Seconds(2))
+            .andUntilDone(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toContinuous))
             .then(
               new DriveDistanceWithTrapezoidalProfile(
                 cruisingVelocity = purePursuitCruisingVelocity,
@@ -127,34 +124,33 @@ trait OppositeSideScale extends AutoGenerator {
               pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
             )
             .then(
-              new SpinForCollect(collectorRollers).forDuration(Seconds(1))
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
+            )
+        ).then(
+          new DriveDistanceWithTrapezoidalProfile(
+            cruisingVelocity = purePursuitCruisingVelocity,
+            finalVelocity = FeetPerSecond(0),
+            FeetPerSecondSquared(10),
+            FeetPerSecondSquared(10),
+            -Inches(20),
+            Inches(3),
+            Degrees(5)
+          )(drivetrain)
+            .then(
+              new RotateToAngle(
+                Degrees(10),
+                Degrees(3)
+              )(drivetrain)
+                .withTimeout(Seconds(1.5))
+                .andUntilDone(
+                  liftElevatorToScale(cubeLift).toContinuous
+                )
             )
             .then(
-              new DriveDistanceWithTrapezoidalProfile(
-                cruisingVelocity = purePursuitCruisingVelocity,
-                finalVelocity = FeetPerSecond(0),
-                FeetPerSecondSquared(10),
-                FeetPerSecondSquared(10),
-                -Inches(20),
-                Inches(3),
-                Degrees(5)
-              )(drivetrain)
-                .then(
-                  new RotateToAngle(
-                    Degrees(10),
-                    Degrees(3)
-                  )(drivetrain)
-                    .withTimeout(Seconds(1.5))
-                    .andUntilDone(
-                      liftElevatorToScale(cubeLift).toContinuous
-                    )
-                )
-                .then(
-                  shootCubeScale(collectorRollers, collectorPivot, cubeLift)
-                )
-                .then(
-                  liftElevatorToCollect(cubeLift).toFinite
-                )
+              shootCubeScale(collectorRollers, collectorPivot, cubeLift)
+            )
+            .then(
+              liftElevatorToCollect(cubeLift).toFinite
             )
         )
       //        .withTimeout(Seconds(10))

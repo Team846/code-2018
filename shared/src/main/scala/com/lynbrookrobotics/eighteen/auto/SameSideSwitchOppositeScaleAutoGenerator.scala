@@ -101,8 +101,6 @@ trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator with SameSi
       )
     }
 
-    val cubePickupAndDropOffDriveTimout = Seconds(3)
-
     def pickupSecondCube(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,

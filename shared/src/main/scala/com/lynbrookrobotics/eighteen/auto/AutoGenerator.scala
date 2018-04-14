@@ -97,15 +97,4 @@ class AutoGenerator(protected val r: CoreRobot) {
       CollectorTasks.collectCubeWithoutOpen(collectorRollers, collectorPivot)
     )
   }
-
-  def pickupGroundCubeClosed(
-    collectorRollers: CollectorRollers,
-    collectorClamp: CollectorClamp,
-    collectorPivot: CollectorPivot,
-    cubeLift: CubeLiftComp
-  ): ContinuousTask = {
-    liftElevatorToCollect(cubeLift).toContinuous.and(
-      CollectorTasks.collectCubeWithoutOpen(collectorRollers, collectorPivot)
-    )
-  }
 }

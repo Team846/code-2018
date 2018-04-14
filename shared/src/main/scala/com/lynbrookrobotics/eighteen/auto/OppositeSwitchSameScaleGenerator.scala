@@ -170,7 +170,7 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideScale 
         .withTimeout(Seconds(5))
         .then(
           SameSideScale
-            .backOutPostScale(drivetrain, pose, relativeAngle)
+            .spinAroundPostScale(drivetrain, pose, relativeAngle)
             .and(liftElevatorToCollect(cubeLift).toFinite)
             .withTimeout(Seconds(3))
         )
