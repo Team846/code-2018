@@ -5,7 +5,7 @@ import com.lynbrookrobotics.eighteen.CoreRobot
 class FullAutoGenerator(r: CoreRobot)
     extends AutoGenerator(r)
     with SameSideSwitchOppositeScaleAutoGenerator
-    with SameSideSwitchScaleAutoGenerator
+    with SameSideScale
     with OppositeSwitchSameScaleGenerator
     with OppositeSideScale
     with OppositeSideSwitch

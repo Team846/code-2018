@@ -16,9 +16,9 @@ import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Inches}
 
-trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
+trait SameSideScale extends AutoGenerator {
   import r._
-  object SameSideSwitchAndScale {
+  object SameSideScale {
     def startToScaleDropOff(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,

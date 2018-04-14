@@ -15,8 +15,7 @@ import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Inches}
 
-trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitchScaleAutoGenerator {
-
+trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideScale {
   import r._
 
   object OppositeSideSwitchSameSideScale {
@@ -134,7 +133,7 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitch
         )
         .preserve
 
-      SameSideSwitchAndScale
+      SameSideScale
         .startToScaleDropOff(
           drivetrain,
           collectorRollers,
@@ -146,7 +145,7 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitch
         )
         .withTimeout(Seconds(5))
         .then(
-          SameSideSwitchAndScale
+          SameSideScale
             .backOutPostScale(drivetrain, pose, relativeAngle)
             .and(liftElevatorToCollect(cubeLift).toFinite)
             .withTimeout(Seconds(3))
@@ -173,24 +172,6 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideSwitch
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorPivot, collectorClamp, cubeLift)
         )
-    }
-
-    def scaleOnly(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware
-    ): FiniteTask = {
-      SameSideSwitchAndScale.oneInScale(
-        drivetrain,
-        collectorRollers,
-        collectorClamp,
-        collectorPivot,
-        cubeLift,
-        limeLightHardware
-      )
     }
   }
 }

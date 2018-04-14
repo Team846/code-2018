@@ -215,7 +215,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.SameSideSwitchAndScale
+          generator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -226,7 +226,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
-          generator.SameSideSwitchAndScale
+          generator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -255,7 +255,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.SameSideSwitchAndScale
+          generator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -266,7 +266,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
-          generator.SameSideSwitchAndScale
+          generator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
