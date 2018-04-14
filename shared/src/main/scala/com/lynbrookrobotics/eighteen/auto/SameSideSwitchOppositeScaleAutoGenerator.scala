@@ -17,7 +17,6 @@ import squants.time.Seconds
 import squants.{Angle, Percent}
 
 trait SameSideSwitchOppositeScaleAutoGenerator extends AutoGenerator {
-
   import r._
 
   object SameSideSwitchOppositeScale {

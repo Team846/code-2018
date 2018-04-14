@@ -59,97 +59,6 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
         )
     }
 
-    def scaleSwitch3CubeAuto(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp
-    ): FiniteTask = {
-      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
-        curr - init
-      })
-
-      val pose = XYPosition
-        .circularTracking(
-          relativeAngle.map(compassToTrigonometric),
-          drivetrainHardware.forwardPosition
-        )
-        .map(
-          p => p + sideStartingPose
-        )
-        .preserve
-
-      dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-        .then(
-          SameSideSwitchOppositeScale
-            .pickupSecondCube(
-              drivetrain,
-              collectorRollers,
-              collectorClamp,
-              collectorPivot,
-              cubeLift,
-              pose,
-              relativeAngle
-            )
-        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .dropOffSecondCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .pickUpThirdCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
-      //        .then(
-      //          SameSideSwitchOppositeScale
-      //            .dropOffThirdCube(
-      //              drivetrain,
-      //              collectorRollers,
-      //              collectorClamp,
-      //              collectorPivot,
-      //              cubeLift,
-      //              pose,
-      //              relativeAngle
-      //            )
-      //            .withTimeout(Seconds(5))
-      //        )
-    }
-
-    //    class RotateToAngleWithingTolerance extends FiniteTask {
-    //      override def onStart(): Unit = {
-    //        val (controller, error) = turnPositionControl(absoluteAngle)
-    //        val checkedController = controller.withCheckZipped(error) { error =>
-    //          if (error.abs < tolerance) {
-    //            finished()
-    //          }
-    //        }
-    //
-    //        drive.setController(childVelocityControl(speedControl(checkedController)))
-    //      }
-    //
-    //      override def onEnd(): Unit = {
-    //        drive.resetToDefault()
-    //      }
-    //    }
     def threeInScale(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -182,9 +91,8 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
               new DriveDistanceWithTrapezoidalProfile(
                 cruisingVelocity = purePursuitCruisingVelocity,
                 finalVelocity = FeetPerSecond(0),
-                FeetPerSecondSquared(10), //drivetrainProps.get.maxAcceleration,
                 FeetPerSecondSquared(10),
-                //drivetrainProps.get.maxDeceleration,
+                FeetPerSecondSquared(10),
                 Inches(40),
                 Inches(3),
                 Degrees(3)
@@ -200,7 +108,7 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
               new DriveDistanceWithTrapezoidalProfile(
                 cruisingVelocity = purePursuitCruisingVelocity,
                 finalVelocity = FeetPerSecond(0),
-                FeetPerSecondSquared(10), //drivetrainProps.get.maxAcceleration,
+                FeetPerSecondSquared(10),
                 FeetPerSecondSquared(10),
                 -Inches(20),
                 Inches(3),
@@ -344,59 +252,5 @@ trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOpposi
           dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
         )
     }
-
-    def justSwitchAuto(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware
-    ): FiniteTask = {
-      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
-        curr - init
-      })
-
-      val pose = XYPosition
-        .circularTracking(
-          relativeAngle.map(compassToTrigonometric),
-          drivetrainHardware.forwardPosition
-        )
-        .map(
-          p => p + sideStartingPose
-        )
-        .preserve
-
-      dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-        .withTimeout(Seconds(10))
-        .then(
-          SameSideSwitchOppositeScale
-            .pickupSecondCube(
-              drivetrain,
-              collectorRollers,
-              collectorClamp,
-              collectorPivot,
-              cubeLift,
-              pose,
-              relativeAngle
-            )
-            .withTimeout(Seconds(5))
-        )
-        .then(
-          SameSideSwitchOppositeScale
-            .pickupSecondCube(
-              drivetrain,
-              collectorRollers,
-              collectorClamp,
-              collectorPivot,
-              cubeLift,
-              pose,
-              relativeAngle
-            )
-            .withTimeout(Seconds(5))
-        )
-    }
-
   }
-
 }
