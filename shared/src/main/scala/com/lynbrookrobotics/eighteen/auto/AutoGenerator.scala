@@ -29,22 +29,16 @@ class AutoGenerator(protected val r: CoreRobot) {
 
   val sideStartingPose = Point(-robotWidth / 2, robotLength / 2)
 
-  val liftUpMaxAcceleration = FeetPerSecondSquared(10)
-  val liftDownMaxAcceleration = FeetPerSecondSquared(15)
-
-  val driveBeyondFastLimit = Percent(50)
-  val driveBeyondSlowLimit = Percent(10)
-
   val centerSwitchDriveTimeOut = Seconds(5)
 
   def printTask(message: String): FiniteTask = {
     new FiniteTask {
-      override protected def onEnd(): Unit = {}
-
       override protected def onStart(): Unit = {
-        finished()
         println(message)
+        finished()
       }
+
+      override protected def onEnd(): Unit = {}
     }
   }
 

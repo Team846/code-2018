@@ -17,10 +17,8 @@ import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 
 trait OppositeSideSwitchAndScale extends AutoGenerator with SameSideSwitchOppositeScaleAutoGenerator {
-
   import r._
 
-  // TODO: pls name better
   object OppositeSideSwitchAndScale {
     def dropOffToScale(
       drivetrain: DrivetrainComponent,
