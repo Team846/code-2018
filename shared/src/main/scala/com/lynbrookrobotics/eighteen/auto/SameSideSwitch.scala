@@ -19,23 +19,23 @@ import squants.time.Seconds
 trait SameSideSwitch extends AutoGenerator {
   import r._
 
-  val toSwitchPoints = Seq(
-    startingPose,
-    Point(
-      -Inches(20),
-      Inches(133.5) - Inches(6)
-    ),
-    Point(
-      -Inches(25.6),
-      Inches(155.3) - Inches(6)
-    ),
-    Point(
-      -Inches(42),
-      Inches(155.3) - Inches(6)
-    )
-  )
-
   object SameSideSwitch {
+    val toSwitchPoints = Seq(
+      startingPose,
+      Point(
+        -Inches(20),
+        Inches(133.5) - Inches(6)
+      ),
+      Point(
+        -Inches(25.6),
+        Inches(155.3) - Inches(6)
+      ),
+      Point(
+        -Inches(42),
+        Inches(155.3) - Inches(6)
+      )
+    ).map(invertXIfFromLeft)
+
     def dropOffToSwitch(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -86,5 +86,4 @@ trait SameSideSwitch extends AutoGenerator {
         .withTimeout(Seconds(5))
     }
   }
-
 }

@@ -15,7 +15,7 @@ import squants.space.{Feet, Inches}
 
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 
-trait OppositeSideSwitch extends AutoGenerator {
+trait OppositeSideSwitch extends AutoGenerator with OppositeSideScale {
   import r._
 
   object OppositeSideSwitch {
@@ -26,7 +26,7 @@ trait OppositeSideSwitch extends AutoGenerator {
       collectorPivot: CollectorPivot,
       cubeLift: CubeLiftComp
     ): FiniteTask = {
-      val toScalePoints = OppositeSideScalePoints.toScalePoints
+      val toScalePoints = OppositeSideScale.toScalePoints
       val wayPoints = toScalePoints.take(3) ++ Seq(
         Point(
           -Inches(226.8),
@@ -48,7 +48,7 @@ trait OppositeSideSwitch extends AutoGenerator {
           -Inches(228.7),
           Inches(181) - Feet(1)
         )
-      )
+      ).map(invertXIfFromLeft)
 
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init

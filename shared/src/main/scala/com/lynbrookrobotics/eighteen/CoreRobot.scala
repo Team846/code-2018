@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.auto.FullAutoGenerator
+import com.lynbrookrobotics.eighteen.auto.{CenterAutoGenerator, FullAutoGenerator, LeftAutoGenerator, RightAutoGenerator}
 import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
 import com.lynbrookrobotics.eighteen.climber.winch.ClimberWinch
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
@@ -110,7 +110,9 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
     autonomousRoutines(id) = () => task
   }
 
-  val generator = new FullAutoGenerator(this)
+  val centerGenerator = new CenterAutoGenerator(this)
+  val startFromRightGenerator = new RightAutoGenerator(this)
+  val startFromLeftGenerator = new LeftAutoGenerator(this)
 
   for {
     drivetrain <- drivetrain
@@ -140,7 +142,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
         case "LLL" | "LLR" =>
-          generator.OppositeSideSwitch
+          startFromRightGenerator.OppositeSideSwitch
             .justSwitchAuto(
               drivetrain,
               collectorRollers,
@@ -150,11 +152,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op op
         case "RLL" | "RLR" =>
-          generator.SameSideSwitch
+          startFromRightGenerator.SameSideSwitch
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.OppositeSideSwitch
+          startFromRightGenerator.OppositeSideSwitch
             .justSwitchAuto(
               drivetrain,
               collectorRollers,
@@ -164,7 +166,44 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
-          generator.SameSideSwitch
+          startFromRightGenerator.SameSideSwitch
+            .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous // same same
+        case _ =>
+          println(s"Switch scale patter didn't match what was expected. Was $switchScalePattern")
+          ContinuousTask.empty
+      }
+    }
+
+    addAutonomousRoutine(12) { // switch from the left side
+      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
+      switchScalePattern match {
+        case "LLL" | "LLR" =>
+          startFromLeftGenerator.OppositeSideSwitch
+            .justSwitchAuto(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp
+            )
+            .toContinuous // op op
+        case "RLL" | "RLR" =>
+          startFromLeftGenerator.SameSideSwitch
+            .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            .toContinuous // same op
+        case "LRL" | "LRR" =>
+          startFromLeftGenerator.OppositeSideSwitch
+            .justSwitchAuto(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp
+            )
+            .toContinuous // op same
+        case "RRL" | "RRR" =>
+          startFromLeftGenerator.SameSideSwitch
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same same
         case _ =>
@@ -177,17 +216,16 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchPosition = DriverStation.getInstance().getGameSpecificMessage.head
       switchPosition match {
         case 'L' =>
-          generator.LeftCenterSwitch
+          centerGenerator.LeftCenterSwitch
             .threeCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
         case 'R' =>
-          generator.RightCenterSwitch
+          centerGenerator.RightCenterSwitch
             .threeCubeCenterSwitch(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous
         case _ =>
           println(s"Switch position didn't match what was expected. Was $switchPosition")
           ContinuousTask.empty
-
       }
     }
 
@@ -195,7 +233,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
         case "LLL" | "LLR" =>
-          generator.OppositeSideScale
+          startFromRightGenerator.OppositeSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -205,7 +243,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op op
         case "RLL" | "RLR" =>
-          generator.OppositeSideScale
+          startFromRightGenerator.OppositeSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -215,7 +253,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.SameSideScale
+          startFromRightGenerator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -226,7 +264,58 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
-          generator.SameSideScale
+          startFromRightGenerator.SameSideScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // same same
+        case _ =>
+          println(s"Switch scale pattern didn't match what was expected. Was $switchScalePattern")
+          ContinuousTask.empty
+      }
+    }
+
+    addAutonomousRoutine(14) { // scale from the left side
+      val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
+      switchScalePattern match {
+        case "LLL" | "LLR" =>
+          startFromLeftGenerator.OppositeSideScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp
+            )
+            .toContinuous // op op
+        case "RLL" | "RLR" =>
+          startFromLeftGenerator.OppositeSideScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp
+            )
+            .toContinuous // same op
+        case "LRL" | "LRR" =>
+          startFromLeftGenerator.SameSideScale
+            .threeInScale(
+              drivetrain,
+              collectorRollers,
+              collectorClamp,
+              collectorPivot,
+              cubeLiftComp,
+              cameraHardware
+            )
+            .toContinuous // op same
+        case "RRL" | "RRR" =>
+          startFromLeftGenerator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -251,11 +340,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             drivetrainHardware.forwardPosition.mapToConstant(Percent(0))
           )(drivetrain).forDuration(Seconds(3)).toContinuous
         case "RLL" | "RLR" =>
-          generator.SameSideSwitch
+          startFromRightGenerator.SameSideSwitch
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          generator.SameSideScale
+          startFromRightGenerator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -266,7 +355,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
-          generator.SameSideScale
+          startFromRightGenerator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -349,7 +438,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
         drivetrainHardware.forwardPosition
       )
       .map(
-        p => p + generator.sideStartingPose
+        p => p + startFromRightGenerator.sideStartingPose
       )
       .preserve
 
@@ -375,7 +464,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
           drivetrainHardware.forwardPosition
         )
         .map(
-          p => p + generator.sideStartingPose
+          p => p + startFromRightGenerator.sideStartingPose
         )
         .preserve
 
@@ -489,7 +578,6 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
 }
 
 object CoreRobot {
-
   implicit class ToTimeSeriesNumeric[T](val stream: Stream[T]) extends AnyVal {
     def toTimeSeriesNumeric(name: String)(implicit ev: T => Double): TimeSeriesNumeric = {
       var lastValue: Double = 0.0
@@ -500,5 +588,4 @@ object CoreRobot {
       }
     }
   }
-
 }

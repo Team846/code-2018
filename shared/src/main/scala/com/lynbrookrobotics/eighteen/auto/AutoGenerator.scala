@@ -10,18 +10,34 @@ import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.FeetPerSecond
-import squants.space.Feet
+import squants.space.{Angle, Feet}
 import squants.time.{Milliseconds, Seconds}
 
-class AutoGenerator(protected val r: CoreRobot) {
+class AutoGenerator(protected val r: CoreRobot, protected val startFromLeft: Boolean) {
   import r._
+
+  def invertXIfFromLeft(point: Point) = {
+    if (startFromLeft) {
+      Point(-point.x, point.y)
+    } else {
+      point
+    }
+  }
+
+  def invertIfFromLeft(angle: Angle) = {
+    if (startFromLeft) {
+      -angle
+    } else {
+      angle
+    }
+  }
 
   val purePursuitCruisingVelocity = FeetPerSecond(10)
 
   val robotLength = Feet(3)
   val robotWidth = Feet(3)
 
-  val sideStartingPose = Point(-robotWidth / 2, robotLength / 2)
+  val sideStartingPose = invertXIfFromLeft(Point(-robotWidth / 2, robotLength / 2))
 
   val centerSwitchDriveTimeOut = Seconds(5)
 

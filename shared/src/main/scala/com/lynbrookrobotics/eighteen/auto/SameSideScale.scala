@@ -16,76 +16,76 @@ import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Feet, Inches}
 
-object SameSideSwitchAndScalePoints {
-  import StartingPose._
-
-  val toScalePoints = Seq(
-    startingPose,
-    Point(
-      startingPose.x,
-      Inches(162)
-    ),
-    Point(
-      -Inches(46.7),
-      Inches(241)
-    ),
-    Point(
-      -Inches(45.7) - Inches(6),
-      Inches(280.9) - Feet(1) - smallRoomFactor
-    )
-  )
-
-  val backupPostScalePoints = Seq(
-    toScalePoints.last,
-    Point(
-      -Inches(25.2),
-      Inches(268.0) - smallRoomFactor
-    ),
-    Point(
-      -Inches(0),
-      Inches(268) - smallRoomFactor
-    )
-  )
-  val pickupSecondCubePoints = Seq(
-    Point(
-      toScalePoints.last.x,
-      toScalePoints.last.y - Feet(1)
-    ),
-    Point(
-      -Inches(41.8) - Inches(6) - Inches(4) - Feet(1) + Inches(4) + Inches(2),
-      Inches(228.3 + 6) - Inches(6) - smallRoomFactor
-    )
-  )
-
-  val pickupThirdCubeAfterSwitchPoints = Seq(
-    pickupSecondCubePoints.last,
-    Point(
-      -Inches(62.1) - Inches(9),
-      Inches(218.8) + Inches(4) - smallRoomFactor
-    )
-  )
-
-  val pickupThirdCubeAfterScalePoints = Seq(
-    toScalePoints.last,
-    pickupThirdCubeAfterSwitchPoints.last
-  )
-
-  val dropOffThirdCubePoints = Seq(
-    pickupThirdCubeAfterScalePoints.last,
-    Point(
-      -Inches(46.7),
-      Inches(241)
-    ),
-    Point(
-      -Inches(45.7) - Inches(6),
-      Inches(280.9) - Feet(1) - smallRoomFactor
-    )
-  )
-}
-
 trait SameSideScale extends AutoGenerator {
   import r._
+
   object SameSideScale {
+    import StartingPose._
+
+    val toScalePoints = Seq(
+      startingPose,
+      Point(
+        startingPose.x,
+        Inches(162)
+      ),
+      Point(
+        -Inches(46.7),
+        Inches(241)
+      ),
+      Point(
+        -Inches(45.7) - Inches(6),
+        Inches(280.9) - Feet(1) - smallRoomFactor
+      )
+    ).map(invertXIfFromLeft)
+
+    val backupPostScalePoints = Seq(
+      toScalePoints.last,
+      Point(
+        -Inches(25.2),
+        Inches(268.0) - smallRoomFactor
+      ),
+      Point(
+        -Inches(0),
+        Inches(268) - smallRoomFactor
+      )
+    ).map(invertXIfFromLeft)
+
+    val pickupSecondCubePoints = Seq(
+      Point(
+        toScalePoints.last.x,
+        toScalePoints.last.y - Feet(1)
+      ),
+      Point(
+        -Inches(41.8) - Inches(6) - Inches(4) - Feet(1) + Inches(4) + Inches(2),
+        Inches(228.3 + 6) - Inches(6) - smallRoomFactor
+      )
+    ).map(invertXIfFromLeft)
+
+    val pickupThirdCubeAfterSwitchPoints = Seq(
+      pickupSecondCubePoints.last,
+      Point(
+        -Inches(62.1) - Inches(9),
+        Inches(218.8) + Inches(4) - smallRoomFactor
+      )
+    ).map(invertXIfFromLeft)
+
+    val pickupThirdCubeAfterScalePoints = Seq(
+      toScalePoints.last,
+      pickupThirdCubeAfterSwitchPoints.last
+    ).map(invertXIfFromLeft)
+
+    val dropOffThirdCubePoints = Seq(
+      pickupThirdCubeAfterScalePoints.last,
+      Point(
+        -Inches(46.7),
+        Inches(241)
+      ),
+      Point(
+        -Inches(45.7) - Inches(6),
+        Inches(280.9) - Feet(1) - smallRoomFactor
+      )
+    ).map(invertXIfFromLeft)
+
     def startToScaleDropOff(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -96,7 +96,7 @@ trait SameSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.toScalePoints,
+        wayPoints = toScalePoints,
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -118,7 +118,7 @@ trait SameSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new RotateByAngle(
-        -Degrees(155),
+        invertIfFromLeft(-Degrees(155)),
         Degrees(25),
         1
       )(drivetrain)
@@ -135,7 +135,7 @@ trait SameSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.pickupSecondCubePoints,
+        wayPoints = pickupSecondCubePoints,
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -165,7 +165,7 @@ trait SameSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.pickupThirdCubeAfterScalePoints,
+        wayPoints = pickupThirdCubeAfterScalePoints,
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -194,7 +194,7 @@ trait SameSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.dropOffThirdCubePoints,
+        wayPoints = dropOffThirdCubePoints,
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -284,7 +284,7 @@ trait SameSideScale extends AutoGenerator {
         ) // use third cube auto for 2nd cube
         .then(
           new RotateByAngle(
-            Degrees(-180),
+            invertIfFromLeft(Degrees(-180)),
             Degrees(10),
             5
           )(drivetrain)
@@ -316,7 +316,7 @@ trait SameSideScale extends AutoGenerator {
         )
         .then(
           new RotateByAngle(
-            Degrees(180),
+            invertIfFromLeft(Degrees(180)),
             Degrees(25),
             1
           )(drivetrain)

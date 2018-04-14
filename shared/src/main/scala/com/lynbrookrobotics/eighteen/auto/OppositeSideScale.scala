@@ -15,38 +15,36 @@ import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
 import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
 import squants.space.{Degrees, Feet, Inches}
 
-object OppositeSideScalePoints {
-  import StartingPose._
-
-  val toScalePoints = Seq(
-    startingPose,
-    Point(
-      -Inches(32.9),
-      Inches(210.6)
-    ),
-    Point(
-      -Inches(96.6),
-      Inches(232.5) - Feet(1.25)
-    ),
-    Point(
-      -Inches(187) - Feet(1),
-      Inches(232.5) - Feet(1.25)
-    ),
-    Point(
-      -Inches(222.4) + Inches(6),
-      Inches(251.3)
-    ),
-    Point(
-      -Inches(222.4) + Inches(6),
-      Inches(275.3) - Inches(12)
-    )
-  )
-}
-
 trait OppositeSideScale extends AutoGenerator {
   import r._
 
   object OppositeSideScale {
+    import StartingPose._
+
+    val toScalePoints = Seq(
+      startingPose,
+      Point(
+        -Inches(32.9),
+        Inches(210.6)
+      ),
+      Point(
+        -Inches(96.6),
+        Inches(232.5) - Feet(1.25)
+      ),
+      Point(
+        -Inches(187) - Feet(1),
+        Inches(232.5) - Feet(1.25)
+      ),
+      Point(
+        -Inches(222.4) + Inches(6),
+        Inches(251.3)
+      ),
+      Point(
+        -Inches(222.4) + Inches(6),
+        Inches(275.3) - Inches(12)
+      )
+    ).map(invertXIfFromLeft)
+
     def dropOffToScale(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -57,7 +55,7 @@ trait OppositeSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = OppositeSideScalePoints.toScalePoints,
+        wayPoints = toScalePoints,
         tolerance = Inches(3),
         maxTurnOutput = Percent(100),
         position = pose,
@@ -68,7 +66,7 @@ trait OppositeSideScale extends AutoGenerator {
       )(drivetrain)
         .then(
           new RotateToAngle(
-            Degrees(30),
+            invertIfFromLeft(Degrees(30)),
             Degrees(5)
           )(drivetrain)
             .withTimeout(Seconds(0.7))
@@ -105,7 +103,7 @@ trait OppositeSideScale extends AutoGenerator {
       dropOffToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
         .then(
           new RotateToAngle(
-            Degrees(180) - Degrees(10),
+            invertIfFromLeft(Degrees(180) - Degrees(10)),
             Degrees(5)
           )(drivetrain)
             .withTimeout(Seconds(2))
@@ -140,7 +138,7 @@ trait OppositeSideScale extends AutoGenerator {
           )(drivetrain)
             .then(
               new RotateToAngle(
-                Degrees(10),
+                invertIfFromLeft(Degrees(10)),
                 Degrees(3)
               )(drivetrain)
                 .withTimeout(Seconds(1.5))
