@@ -15,27 +15,12 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
   props: Signal[DrivetrainProperties],
   clock: Clock
 ) extends Component[TwoSided[OffloadedSignal]] {
-  private var currentController: Stream[TwoSided[OffloadedSignal]] = null
-  private var lastTime = 0L
-
-  private var detectedOnce = false
-  clock(Milliseconds(200)) { _ =>
-    if (currentController != null && lastTime == 0) {
-      if (detectedOnce) {
-        println("DETECTED DROPPED DRIVETRAIN DATA")
-        Stream.traceBrokenStream(currentController)
-        detectedOnce = false
-      } else {
-        detectedOnce = true
-      }
-    } else {
-      detectedOnce = false
-    }
-  }
+  var currentController: Stream[TwoSided[OffloadedSignal]] = null
+  var hasOutputted = false
 
   override def setController(controller: Stream[TwoSided[OffloadedSignal]]): Unit = {
     currentController = controller
-    lastTime = 0
+    hasOutputted = false
 
     super.setController(controller)
   }
@@ -75,7 +60,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
   )
 
   override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput {
-    lastTime = System.currentTimeMillis()
+    hasOutputted = true
     hardware.left.applyCommand(signal.left)
     hardware.right.applyCommand(signal.right)
   }

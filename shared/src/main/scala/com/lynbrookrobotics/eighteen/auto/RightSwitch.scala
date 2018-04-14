@@ -68,7 +68,7 @@ trait RightSwitch extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly,
         position = pose,
         turnPosition = angle
-      )(drivetrain)
+      )(drivetrain).nightmarePatch
         .andUntilDone(liftElevatorToSwitch(cubeLiftComp).toContinuous)
         .withTimeout(centerSwitchDriveTimeOut)
         .andUntilDone(
@@ -98,7 +98,7 @@ trait RightSwitch extends AutoGenerator {
         forwardBackwardMode = BackwardsOnly,
         position = pose,
         turnPosition = relativeAngle
-      )(drivetrain)
+      )(drivetrain).nightmarePatch
         .and(
           dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
         )
@@ -119,7 +119,7 @@ trait RightSwitch extends AutoGenerator {
       new RotateToAngle(
         -Degrees(30),
         Degrees(20)
-      )(drivetrain)
+      )(drivetrain).nightmarePatch
         .andUntilDone(
           liftElevatorToCollect(cubeLiftComp).toContinuous
         )
@@ -139,7 +139,7 @@ trait RightSwitch extends AutoGenerator {
             forwardBackwardMode = ForwardsOnly,
             position = pose,
             turnPosition = relativeAngle
-          )(drivetrain).andUntilDone(
+          )(drivetrain).nightmarePatch.andUntilDone(
             pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
           )
         )
@@ -159,12 +159,12 @@ trait RightSwitch extends AutoGenerator {
         Inches(1),
         Degrees(5),
         Percent(20)
-      )(drivetrain)
+      )(drivetrain).nightmarePatch
         .then(
           new RotateToAngle(
             Degrees(30),
             Degrees(20)
-          )(drivetrain)
+          )(drivetrain).nightmarePatch
         )
         .then(
           new FollowWayPointsWithPosition(
@@ -177,7 +177,7 @@ trait RightSwitch extends AutoGenerator {
             forwardBackwardMode = ForwardsOnly,
             position = pose,
             turnPosition = relativeAngle
-          )(drivetrain)
+          )(drivetrain).nightmarePatch
             .andUntilDone(liftElevatorToSwitch(cubeLiftComp).toContinuous)
         )
         .andUntilDone(
@@ -207,7 +207,7 @@ trait RightSwitch extends AutoGenerator {
         forwardBackwardMode = BackwardsOnly,
         position = pose,
         turnPosition = relativeAngle
-      )(drivetrain)
+      )(drivetrain).nightmarePatch
         .and(
           dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
         )
@@ -228,7 +228,7 @@ trait RightSwitch extends AutoGenerator {
       new RotateToAngle(
         -Degrees(30),
         Degrees(20)
-      )(drivetrain)
+      )(drivetrain).nightmarePatch
         .andUntilDone(
           liftElevatorToCollect(cubeLiftComp).toContinuous
         )
@@ -248,7 +248,7 @@ trait RightSwitch extends AutoGenerator {
             forwardBackwardMode = ForwardsOnly,
             position = pose,
             turnPosition = relativeAngle
-          )(drivetrain).andUntilDone(
+          )(drivetrain).nightmarePatch.andUntilDone(
             pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
           )
         )
@@ -268,12 +268,12 @@ trait RightSwitch extends AutoGenerator {
         Inches(1),
         Degrees(5),
         Percent(20)
-      )(drivetrain)
+      )(drivetrain).nightmarePatch
         .then(
           new RotateToAngle(
             Degrees(30),
             Degrees(20)
-          )(drivetrain)
+          )(drivetrain).nightmarePatch
         )
         .then(
           new FollowWayPointsWithPosition(
@@ -285,7 +285,7 @@ trait RightSwitch extends AutoGenerator {
             forwardBackwardMode = ForwardsOnly,
             position = pose,
             turnPosition = relativeAngle
-          )(drivetrain)
+          )(drivetrain).nightmarePatch
             .andUntilDone(liftElevatorToSwitch(cubeLiftComp).toContinuous)
             .then(
               dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)

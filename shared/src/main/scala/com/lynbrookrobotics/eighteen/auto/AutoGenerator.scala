@@ -7,14 +7,53 @@ import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
-import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
+import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, FiniteTaskFinishedListener, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.FeetPerSecond
 import squants.space.Feet
 import squants.time.{Milliseconds, Seconds}
+import com.lynbrookrobotics.potassium.streams.Stream
 
 class AutoGenerator(protected val r: CoreRobot) {
   import r._
+
+  implicit class NightmareBugPatch(task: FiniteTask) {
+    def nightmarePatch: FiniteTask = {
+      new FiniteTask with FiniteTaskFinishedListener {
+        override def onFinished(task: FiniteTask): Unit = {
+          // if the inner task finishes, we are done too
+          finished()
+        }
+
+        override protected def onStart(): Unit = {
+          val drive = r.drivetrain.get
+          drive.hasOutputted = false
+
+          task.setFinishedListener(this)
+          task.init()
+
+          clock.singleExecution(Milliseconds(100)) {
+            if (this.isRunning) {
+              if (drive.currentController != null && !drive.hasOutputted) {
+                println(s"DETECTED DROPPED DRIVETRAIN DATA, RESTARTING $task")
+                if (Stream.traceBrokenStream(drive.currentController)) {
+                  task.abort()
+                  task.setFinishedListener(this)
+                  task.init()
+                }
+              }
+            }
+          }
+        }
+
+        override protected def onEnd(): Unit = {
+          if (task.isRunning) {
+            task.abort()
+          }
+        }
+      }
+    }
+  }
 
   val purePursuitCruisingVelocity = FeetPerSecond(10)
 
