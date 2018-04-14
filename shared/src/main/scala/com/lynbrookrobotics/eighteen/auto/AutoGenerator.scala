@@ -7,12 +7,11 @@ import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
-import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, FiniteTaskFinishedListener, WrapperTask}
+import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.FeetPerSecond
 import squants.space.Feet
 import squants.time.{Milliseconds, Seconds}
-import com.lynbrookrobotics.potassium.streams.Stream
 
 class AutoGenerator(protected val r: CoreRobot) {
   import r._
