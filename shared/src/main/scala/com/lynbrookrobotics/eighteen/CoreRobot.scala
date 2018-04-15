@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen
 
-import com.lynbrookrobotics.eighteen.auto.{CenterAutoGenerator, FullAutoGenerator, LeftAutoGenerator, RightAutoGenerator}
+import com.lynbrookrobotics.eighteen.auto.{CenterAutoGenerator, LeftAutoGenerator, RightAutoGenerator}
 import com.lynbrookrobotics.eighteen.climber.deployment.Deployment
 import com.lynbrookrobotics.eighteen.climber.winch.ClimberWinch
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp

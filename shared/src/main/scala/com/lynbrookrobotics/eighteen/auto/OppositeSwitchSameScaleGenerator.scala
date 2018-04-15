@@ -14,35 +14,34 @@ import com.lynbrookrobotics.potassium.units.Point
 import squants.{Angle, Percent, Seconds}
 import squants.space.{Degrees, Inches}
 
-object OppositeSwitchPointsSameSideScale {
-  val pickupSecondCubePoints = Seq(
-    SameSideSwitchAndScalePoints.backupPostScalePoints.last,
-    Point(
-      -Inches(48.1),
-      Inches(232.1)
-    ),
-    Point(
-      -Inches(151.2),
-      Inches(232.1)
-    ),
-    Point(
-      -Inches(159.6),
-      Inches(220.7)
-    )
-  )
-  val pickupThirdCubePoints = Seq(
-    pickupSecondCubePoints.last,
-    Point(
-      -Inches(182.5),
-      Inches(213.1)
-    )
-  )
-}
-
 trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideScale {
   import r._
 
   object OppositeSideSwitchSameSideScale {
+    val pickupSecondCubePoints = Seq(
+      SameSideScale.backupPostScalePoints.last,
+      Point(
+        -Inches(48.1),
+        Inches(232.1)
+      ),
+      Point(
+        -Inches(151.2),
+        Inches(232.1)
+      ),
+      Point(
+        -Inches(159.6),
+        Inches(220.7)
+      )
+    )
+
+    val pickupThirdCubePoints = Seq(
+      pickupSecondCubePoints.last,
+      Point(
+        -Inches(182.5),
+        Inches(213.1)
+      )
+    )
+
     def pickupSecondCube(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -53,7 +52,7 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideScale 
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = OppositeSwitchPointsSameSideScale.pickupSecondCubePoints,
+        wayPoints = pickupSecondCubePoints,
         tolerance = Inches(3),
         position = pose,
         turnPosition = relativeAngle,
@@ -108,7 +107,7 @@ trait OppositeSwitchSameScaleGenerator extends AutoGenerator with SameSideScale 
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = OppositeSwitchPointsSameSideScale.pickupThirdCubePoints,
+        wayPoints = pickupThirdCubePoints,
         tolerance = Inches(3),
         position = pose,
         turnPosition = relativeAngle,
