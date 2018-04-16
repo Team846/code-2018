@@ -30,23 +30,23 @@ trait OppositeSideSwitch extends AutoGenerator with OppositeSideScale {
       val wayPoints = toScalePoints.take(3) ++ Seq(
         Point(
           -Inches(226.8),
-          Inches(232) - Feet(1.25)
+          toScalePoints(2).y
         ),
         Point(
-          -Inches(259.3),
+          -Inches(259.3) - Inches(4),
           Inches(209.6)
         ),
         Point(
-          -Inches(259.3),
+          -Inches(259.3) - Inches(4),
           Inches(195.5)
         ),
         Point(
-          -Inches(245.2),
+          -Inches(245.2) - Inches(4),
           Inches(181) - Feet(1)
         ),
         Point(
-          -Inches(228.7),
-          Inches(181) - Feet(1)
+          -Inches(228.7) - Inches(4),
+          Inches(181) - Feet(1) - Inches(6)
         )
       ).map(invertXIfFromLeft)
 

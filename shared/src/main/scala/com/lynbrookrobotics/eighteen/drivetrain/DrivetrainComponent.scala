@@ -18,10 +18,9 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
   var currentController: Stream[TwoSided[OffloadedSignal]] = null
   var hasOutputted = false
 
-  clock(Milliseconds(500)) { _ =>
+  clock(Milliseconds(200)) { _ =>
     if (currentController != null && !hasOutputted) {
       println("DETECTED DROPPED DRIVETRAIN DATA")
-      Thread.sleep(100) // delay to allow the stream to try and fix itself
       Stream.traceBrokenStream(currentController)
     }
   }

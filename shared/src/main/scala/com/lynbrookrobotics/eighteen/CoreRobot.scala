@@ -179,7 +179,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
         case "LLL" | "LLR" =>
-          startFromLeftGenerator.OppositeSideSwitch
+          startFromLeftGenerator.SameSideSwitch
             .justSwitchAuto(
               drivetrain,
               collectorRollers,
@@ -189,11 +189,11 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op op
         case "RLL" | "RLR" =>
-          startFromLeftGenerator.SameSideSwitch
+          startFromLeftGenerator.OppositeSideSwitch
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          startFromLeftGenerator.OppositeSideSwitch
+          startFromLeftGenerator.SameSideSwitch
             .justSwitchAuto(
               drivetrain,
               collectorRollers,
@@ -203,7 +203,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
-          startFromLeftGenerator.SameSideSwitch
+          startFromLeftGenerator.OppositeSideSwitch
             .justSwitchAuto(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
             .toContinuous // same same
         case _ =>
@@ -259,8 +259,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp,
-              cameraHardware
+              cubeLiftComp
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
@@ -270,8 +269,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp,
-              cameraHardware
+              cubeLiftComp
             )
             .toContinuous // same same
         case _ =>
@@ -284,7 +282,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
       val switchScalePattern = DriverStation.getInstance().getGameSpecificMessage
       switchScalePattern match {
         case "LLL" | "LLR" =>
-          startFromLeftGenerator.OppositeSideScale
+          startFromLeftGenerator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -294,7 +292,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // op op
         case "RLL" | "RLR" =>
-          startFromLeftGenerator.OppositeSideScale
+          startFromLeftGenerator.SameSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
@@ -304,25 +302,23 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
             )
             .toContinuous // same op
         case "LRL" | "LRR" =>
-          startFromLeftGenerator.SameSideScale
+          startFromLeftGenerator.OppositeSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp,
-              cameraHardware
+              cubeLiftComp
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
-          startFromLeftGenerator.SameSideScale
+          startFromLeftGenerator.OppositeSideScale
             .threeInScale(
               drivetrain,
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp,
-              cameraHardware
+              cubeLiftComp
             )
             .toContinuous // same same
         case _ =>
@@ -350,8 +346,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp,
-              cameraHardware
+              cubeLiftComp
             )
             .toContinuous // op same
         case "RRL" | "RRR" =>
@@ -361,8 +356,7 @@ class CoreRobot(configFileValue: Signal[String], updateConfigFile: String => Uni
               collectorRollers,
               collectorClamp,
               collectorPivot,
-              cubeLiftComp,
-              cameraHardware
+              cubeLiftComp
             )
             .toContinuous // same same
         case _ =>

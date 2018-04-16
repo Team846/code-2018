@@ -10,7 +10,7 @@ import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, WrapperTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.FeetPerSecond
-import squants.space.{Angle, Feet}
+import squants.space.{Angle, Feet, Inches}
 import squants.time.{Milliseconds, Seconds}
 
 class AutoGenerator(protected val r: CoreRobot, protected val startFromLeft: Boolean) {
@@ -54,7 +54,7 @@ class AutoGenerator(protected val r: CoreRobot, protected val startFromLeft: Boo
 
   def liftElevatorToScale(cubeLiftComp: CubeLiftComp): WrapperTask = {
     new WhileAtPosition(
-      cubeLiftHardware.position.map(_ => cubeLiftProps.get.lowScaleHeight),
+      cubeLiftHardware.position.map(_ => cubeLiftProps.get.maxHeight - Inches(8)),
       cubeLiftProps.get.liftPositionTolerance
     )(cubeLiftComp)
   }
@@ -72,16 +72,12 @@ class AutoGenerator(protected val r: CoreRobot, protected val startFromLeft: Boo
     cubeLiftComp: CubeLiftComp
   ): FiniteTask = {
     liftElevatorToScale(cubeLiftComp).apply(
-      new PivotDown(collectorPivot)
-        .forDuration(Milliseconds(500))
-        .then(
-          CollectorTasks
-            .purgeCube(
-              collectorRollers,
-              collectorPivot
-            )
-            .forDuration(Seconds(1))
+      CollectorTasks
+        .purgeCube(
+          collectorRollers,
+          collectorPivot
         )
+        .forDuration(Seconds(0.25))
     )
   }
 

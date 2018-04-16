@@ -33,10 +33,10 @@ trait SameSideScale extends AutoGenerator {
         Inches(241)
       ),
       Point(
-        -Inches(45.7) - Inches(6),
-        Inches(280.9) - Feet(1) - smallRoomFactor
+        -Inches(45.7) - Inches(6) - Inches(6),
+        Inches(280.9) - Feet(1.5) - smallRoomFactor
       )
-    ).map(invertXIfFromLeft)
+    )
 
     val backupPostScalePoints = Seq(
       toScalePoints.last,
@@ -48,7 +48,7 @@ trait SameSideScale extends AutoGenerator {
         -Inches(0),
         Inches(268) - smallRoomFactor
       )
-    ).map(invertXIfFromLeft)
+    )
 
     val pickupSecondCubePoints = Seq(
       Point(
@@ -56,23 +56,23 @@ trait SameSideScale extends AutoGenerator {
         toScalePoints.last.y - Feet(1)
       ),
       Point(
-        -Inches(41.8) - Inches(6) - Inches(4) - Feet(1) + Inches(4) + Inches(2),
+        -Inches(41.8) - Inches(4) - Feet(1) - Inches(6),
         Inches(228.3 + 6) - Inches(6) - smallRoomFactor
       )
-    ).map(invertXIfFromLeft)
+    )
 
     val pickupThirdCubeAfterSwitchPoints = Seq(
       pickupSecondCubePoints.last,
       Point(
-        -Inches(62.1) - Inches(9),
+        -Inches(62.1) - Inches(9) - Inches(14),
         Inches(218.8) + Inches(4) - smallRoomFactor
       )
-    ).map(invertXIfFromLeft)
+    )
 
     val pickupThirdCubeAfterScalePoints = Seq(
       toScalePoints.last,
       pickupThirdCubeAfterSwitchPoints.last
-    ).map(invertXIfFromLeft)
+    )
 
     val dropOffThirdCubePoints = Seq(
       pickupThirdCubeAfterScalePoints.last,
@@ -81,10 +81,10 @@ trait SameSideScale extends AutoGenerator {
         Inches(241)
       ),
       Point(
-        -Inches(45.7) - Inches(6),
-        Inches(280.9) - Feet(1) - smallRoomFactor
+        -Inches(45.7) - Inches(6) - Inches(6),
+        Inches(280.9) - Feet(1.5) - smallRoomFactor
       )
-    ).map(invertXIfFromLeft)
+    )
 
     def startToScaleDropOff(
       drivetrain: DrivetrainComponent,
@@ -96,18 +96,18 @@ trait SameSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = toScalePoints,
+        wayPoints = toScalePoints.map(invertXIfFromLeft),
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 5,
+        targetTicksWithingTolerance = 2,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .and(new WaitTask(Seconds(2)).then(liftElevatorToScale(cubeLift).toFinite))
         .then(
-          new SpinForPurge(collectorRollers).forDuration(Seconds(0.5))
+          shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
         .andUntilDone(new PivotDown(collectorPivot))
     }
@@ -118,7 +118,7 @@ trait SameSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new RotateByAngle(
-        invertIfFromLeft(-Degrees(155)),
+        invertIfFromLeft(-Degrees(115)),
         Degrees(25),
         1
       )(drivetrain)
@@ -130,12 +130,11 @@ trait SameSideScale extends AutoGenerator {
       collectorClamp: CollectorClamp,
       collectorPivot: CollectorPivot,
       cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware,
       pose: Stream[Point],
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = pickupSecondCubePoints,
+        wayPoints = pickupSecondCubePoints.map(invertXIfFromLeft),
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -150,7 +149,7 @@ trait SameSideScale extends AutoGenerator {
           )
         )
         .then(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.25))
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
         )
     }
 
@@ -160,12 +159,11 @@ trait SameSideScale extends AutoGenerator {
       collectorClamp: CollectorClamp,
       collectorPivot: CollectorPivot,
       cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware,
       pose: Stream[Point],
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = pickupThirdCubeAfterScalePoints,
+        wayPoints = pickupThirdCubeAfterScalePoints.map(invertXIfFromLeft),
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -194,24 +192,19 @@ trait SameSideScale extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = dropOffThirdCubePoints,
+        wayPoints = dropOffThirdCubePoints.map(invertXIfFromLeft),
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
-        maxTurnOutput = Percent(100),
+        maxTurnOutput = Percent(40),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 5,
+        targetTicksWithingTolerance = 2,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .and(liftElevatorToScale(cubeLift).toFinite)
-        .andUntilDone(new PivotDown(collectorPivot))
         .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
-        )
-        .then(
-          liftElevatorToCollect(cubeLift).toFinite
-            .andUntilDone(new PivotDown(collectorPivot))
-        )
+        ).andUntilDone(new PivotDown(collectorPivot))
     }
 
     def oneInScale(
@@ -245,8 +238,7 @@ trait SameSideScale extends AutoGenerator {
       collectorRollers: CollectorRollers,
       collectorClamp: CollectorClamp,
       collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware
+      cubeLift: CubeLiftComp
     ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
@@ -266,9 +258,9 @@ trait SameSideScale extends AutoGenerator {
         .withTimeout(Seconds(10))
         .then(
           spinAroundPostScale(drivetrain, pose, relativeAngle)
-            .and(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite))
+            .and(new WaitTask(Seconds(0.75)).then(liftElevatorToCollect(cubeLift).toFinite))
             .andUntilDone(new PivotDown(collectorPivot))
-            .withTimeout(Seconds(10))
+            .withTimeout(Seconds(2))
         )
         .then(
           pickupSecondCube(
@@ -277,7 +269,6 @@ trait SameSideScale extends AutoGenerator {
             collectorClamp,
             collectorPivot,
             cubeLift,
-            limeLightHardware,
             pose,
             relativeAngle
           ).withTimeout(Seconds(5))
@@ -285,12 +276,11 @@ trait SameSideScale extends AutoGenerator {
         .then(
           new RotateByAngle(
             invertIfFromLeft(Degrees(-180)),
-            Degrees(10),
+            Degrees(25),
             5
           )(drivetrain)
             .andUntilDone(new SpinForCollect(collectorRollers))
             .withTimeout(Seconds(2))
-            .withTimeout(Seconds(5))
         )
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
@@ -298,9 +288,9 @@ trait SameSideScale extends AutoGenerator {
         )
         .then(
           spinAroundPostScale(drivetrain, pose, relativeAngle)
-            .and(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite))
+            .and(new WaitTask(Seconds(0.75)).then(liftElevatorToCollect(cubeLift).toFinite))
             .andUntilDone(new PivotDown(collectorPivot))
-            .withTimeout(Seconds(10))
+            .withTimeout(Seconds(2))
         )
         .then(
           pickupThirdCubeAfterScale(
@@ -309,14 +299,13 @@ trait SameSideScale extends AutoGenerator {
             collectorClamp,
             collectorPivot,
             cubeLift,
-            limeLightHardware,
             pose,
             relativeAngle
-          ).withTimeout(Seconds(10))
+          ).withTimeout(Seconds(5))
         )
         .then(
           new RotateByAngle(
-            invertIfFromLeft(Degrees(180)),
+            invertIfFromLeft(Degrees(210)),
             Degrees(25),
             1
           )(drivetrain)
@@ -326,7 +315,7 @@ trait SameSideScale extends AutoGenerator {
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
             .andUntilDone(new PivotDown(collectorPivot))
-            .withTimeout(Seconds(10))
+            .withTimeout(Seconds(5))
         )
     }
   }
