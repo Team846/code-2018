@@ -30,7 +30,12 @@ object ButtonMappings {
         driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach(
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.collectHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous and CollectorTasks.collectCube(rollers, clamp, pivot)
       )
@@ -46,7 +51,12 @@ object ButtonMappings {
         !driverHardware.driverJoystick.getRawButton(TriggerBottom)
       }.foreach(
         new WhileAtPosition(
-          coreTicks.map(_ => cubeLiftProps.get.collectHeight),
+          driverHardware.joystickStream
+            .map(_.operator.z)
+            .map { twisty =>
+              cubeLiftProps.get.collectHeight + (cubeLiftProps.get.twistyTotalRange * twisty.toEach)
+            }
+            .syncTo(coreTicks),
           cubeLiftProps.get.liftPositionTolerance
         )(lift).toContinuous and CollectorTasks.collectCubeWithoutOpen(rollers, pivot)
       )

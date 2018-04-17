@@ -1,8 +1,8 @@
 package com.lynbrookrobotics.eighteen.auto
 
-import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
+import com.lynbrookrobotics.eighteen.collector.clamp.{CollectorClamp, OpenCollector}
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect, SpinForPurge}
+import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect}
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
@@ -14,11 +14,78 @@ import com.lynbrookrobotics.potassium.tasks.WaitTask
 import com.lynbrookrobotics.potassium.units.Point
 import com.lynbrookrobotics.potassium.vision.limelight.LimeLightHardware
 import squants.{Angle, Percent, Seconds}
-import squants.space.{Degrees, Inches}
+import squants.space.{Degrees, Feet, Inches}
 
-trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
+trait SameSideScale extends AutoGenerator {
   import r._
-  object SameSideSwitchAndScale {
+
+  object SameSideScale {
+    import StartingPose._
+
+    val toScalePoints = Seq(
+      startingPose,
+      Point(
+        startingPose.x,
+        Inches(162)
+      ),
+      Point(
+        -Inches(46.7),
+        Inches(241)
+      ),
+      Point(
+        -Inches(45.7) - Inches(6) - Inches(6),
+        Inches(280.9) - Feet(1.5) - smallRoomFactor
+      )
+    )
+
+    val backupPostScalePoints = Seq(
+      toScalePoints.last,
+      Point(
+        -Inches(25.2),
+        Inches(268.0) - smallRoomFactor
+      ),
+      Point(
+        -Inches(0),
+        Inches(268) - smallRoomFactor
+      )
+    )
+
+    val pickupSecondCubePoints = Seq(
+      Point(
+        toScalePoints.last.x,
+        toScalePoints.last.y - Feet(1)
+      ),
+      Point(
+        -Inches(41.8) - Inches(4) - Feet(1) - Inches(6),
+        Inches(228.3 + 6) - Inches(6) - smallRoomFactor
+      )
+    )
+
+    val pickupThirdCubeAfterSwitchPoints = Seq(
+      pickupSecondCubePoints.last,
+      Point(
+        -Inches(62.1) - Inches(9) - Inches(14),
+        Inches(218.8) + Inches(4) - smallRoomFactor
+      )
+    )
+
+    val pickupThirdCubeAfterScalePoints = Seq(
+      toScalePoints.last,
+      pickupThirdCubeAfterSwitchPoints.last
+    )
+
+    val dropOffThirdCubePoints = Seq(
+      pickupThirdCubeAfterScalePoints.last,
+      Point(
+        -Inches(46.7),
+        Inches(241)
+      ),
+      Point(
+        -Inches(45.7) - Inches(6) - Inches(6),
+        Inches(280.9) - Feet(1.5) - smallRoomFactor
+      )
+    )
+
     def startToScaleDropOff(
       drivetrain: DrivetrainComponent,
       collectorRollers: CollectorRollers,
@@ -29,29 +96,29 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.toScalePoints,
+        wayPoints = toScalePoints.map(invertXIfFromLeft),
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
         maxTurnOutput = Percent(100),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 5,
+        targetTicksWithingTolerance = 2,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .and(new WaitTask(Seconds(2)).then(liftElevatorToScale(cubeLift).toFinite))
         .then(
-          new SpinForPurge(collectorRollers).forDuration(Seconds(0.5))
+          shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
         .andUntilDone(new PivotDown(collectorPivot))
     }
 
-    def backOutPostScale(
+    def spinAroundPostScale(
       drivetrain: DrivetrainComponent,
       pose: Stream[Point],
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new RotateByAngle(
-        -Degrees(155),
+        invertIfFromLeft(-Degrees(115)),
         Degrees(25),
         1
       )(drivetrain)
@@ -63,12 +130,11 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       collectorClamp: CollectorClamp,
       collectorPivot: CollectorPivot,
       cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware,
       pose: Stream[Point],
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.pickupSecondCubePoints,
+        wayPoints = pickupSecondCubePoints.map(invertXIfFromLeft),
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -78,13 +144,12 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .andUntilDone(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).and(
+            new OpenCollector(collectorClamp)
+          )
         )
         .then(
-          pickupGroundCubeClosed(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.25))
-        )
-        .then(
-          new PivotDown(collectorPivot).forDuration(Seconds(0.25))
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
         )
     }
 
@@ -94,12 +159,11 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       collectorClamp: CollectorClamp,
       collectorPivot: CollectorPivot,
       cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware,
       pose: Stream[Point],
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.pickupThirdCubeAfterScalePoints,
+        wayPoints = pickupThirdCubeAfterScalePoints.map(invertXIfFromLeft),
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
@@ -109,89 +173,13 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .andUntilDone(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).and(
+            new OpenCollector(collectorClamp)
+          )
         )
         .then(
-          pickupGroundCubeClosed(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
         )
-        .then(
-          new PivotDown(collectorPivot).forDuration(Seconds(0.25))
-        )
-    }
-
-    def pickupThirdCubeAfterSwitch(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware,
-      pose: Stream[Point],
-      relativeAngle: Stream[Angle]
-    ): FiniteTask = {
-      new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.pickupThirdCubeAfterSwitchPoints,
-        tolerance = Inches(6),
-        position = pose,
-        turnPosition = relativeAngle,
-        maxTurnOutput = Percent(100),
-        cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 1,
-        forwardBackwardMode = ForwardsOnly
-      )(drivetrain)
-        .andUntilDone(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-        )
-        .then(
-          pickupGroundCubeClosed(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.25))
-        )
-    }
-
-    def dropOffSecondCube(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp,
-      pose: Stream[Point],
-      relativeAngle: Stream[Angle]
-    ): FiniteTask = {
-      liftElevatorToSwitch(cubeLift).toFinite
-        .then(
-          new DriveBeyondStraight(
-            Inches(3),
-            Inches(1),
-            Degrees(5),
-            Percent(20)
-          )(drivetrain)
-        )
-        .andUntilDone(new PivotDown(collectorPivot))
-        .then(
-          dropCubeSwitch(collectorRollers, collectorClamp, collectorPivot, cubeLift)
-        )
-        .then(
-          new DriveBeyondStraight(
-            -Inches(15),
-            Inches(1),
-            Degrees(5),
-            Percent(20)
-          )(drivetrain)
-        )
-    }
-
-    def backUpPreThirdCubeDropOff(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      pose: Stream[Point],
-      relativeAngle: Stream[Angle]
-    ): FiniteTask = {
-      new RotateByAngle(
-        Degrees(-180),
-        Degrees(10),
-        5
-      )(drivetrain).andUntilDone(new SpinForCollect(collectorRollers)).withTimeout(Seconds(2))
     }
 
     def dropOffThirdCube(
@@ -204,20 +192,20 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       relativeAngle: Stream[Angle]
     ): FiniteTask = {
       new FollowWayPointsWithPosition(
-        wayPoints = SameSideSwitchAndScalePoints.dropOffThirdCubePoints,
+        wayPoints = dropOffThirdCubePoints.map(invertXIfFromLeft),
         tolerance = Inches(6),
         position = pose,
         turnPosition = relativeAngle,
-        maxTurnOutput = Percent(100),
+        maxTurnOutput = Percent(40),
         cruisingVelocity = purePursuitCruisingVelocity,
-        targetTicksWithingTolerance = 5,
+        targetTicksWithingTolerance = 2,
         forwardBackwardMode = ForwardsOnly
       )(drivetrain)
         .and(liftElevatorToScale(cubeLift).toFinite)
-        .andUntilDone(new PivotDown(collectorPivot))
         .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
         )
+        .andUntilDone(new PivotDown(collectorPivot))
     }
 
     def oneInScale(
@@ -251,8 +239,7 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       collectorRollers: CollectorRollers,
       collectorClamp: CollectorClamp,
       collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware
+      cubeLift: CubeLiftComp
     ): FiniteTask = {
       val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
         curr - init
@@ -271,10 +258,10 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
       startToScaleDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
         .withTimeout(Seconds(10))
         .then(
-          backOutPostScale(drivetrain, pose, relativeAngle)
-            .and(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite))
+          spinAroundPostScale(drivetrain, pose, relativeAngle)
+            .and(new WaitTask(Seconds(0.75)).then(liftElevatorToCollect(cubeLift).toFinite))
             .andUntilDone(new PivotDown(collectorPivot))
-            .withTimeout(Seconds(10))
+            .withTimeout(Seconds(2))
         )
         .then(
           pickupSecondCube(
@@ -283,19 +270,28 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
             collectorClamp,
             collectorPivot,
             cubeLift,
-            limeLightHardware,
             pose,
             relativeAngle
           ).withTimeout(Seconds(5))
         ) // use third cube auto for 2nd cube
         .then(
-          backUpPreThirdCubeDropOff(drivetrain, collectorRollers, collectorClamp, collectorPivot, pose, relativeAngle)
-            .andUntilDone(new WaitTask(Seconds(0.5)).then(liftElevatorToCollect(cubeLift).toFinite).toContinuous)
-            .withTimeout(Seconds(5))
+          new RotateByAngle(
+            invertIfFromLeft(Degrees(-180)),
+            Degrees(25),
+            5
+          )(drivetrain)
+            .andUntilDone(new SpinForCollect(collectorRollers))
+            .withTimeout(Seconds(2))
         )
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
             .withTimeout(Seconds(6))
+        )
+        .then(
+          spinAroundPostScale(drivetrain, pose, relativeAngle)
+            .and(new WaitTask(Seconds(0.75)).then(liftElevatorToCollect(cubeLift).toFinite))
+            .andUntilDone(new PivotDown(collectorPivot))
+            .withTimeout(Seconds(2))
         )
         .then(
           pickupThirdCubeAfterScale(
@@ -304,82 +300,13 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
             collectorClamp,
             collectorPivot,
             cubeLift,
-            limeLightHardware,
-            pose,
-            relativeAngle
-          ).withTimeout(Seconds(10))
-        )
-        .then(
-          new RotateByAngle(
-            Degrees(180),
-            Degrees(25),
-            1
-          )(drivetrain)
-            .andUntilDone(new SpinForCollect(collectorRollers))
-            .andUntilDone(new PivotDown(collectorPivot))
-        )
-        .then(
-          dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-            .andUntilDone(new PivotDown(collectorPivot))
-            .withTimeout(Seconds(10))
-        )
-    }
-
-    def scaleSwitchScale(
-      drivetrain: DrivetrainComponent,
-      collectorRollers: CollectorRollers,
-      collectorClamp: CollectorClamp,
-      collectorPivot: CollectorPivot,
-      cubeLift: CubeLiftComp,
-      limeLightHardware: LimeLightHardware
-    ): FiniteTask = {
-      val relativeAngle = drivetrainHardware.turnPosition.relativize((init, curr) => {
-        curr - init
-      })
-
-      val pose = XYPosition
-        .circularTracking(
-          relativeAngle.map(compassToTrigonometric),
-          drivetrainHardware.forwardPosition
-        )
-        .map(
-          p => p + sideStartingPose
-        )
-        .preserve
-
-      SameSideSwitchAndScale
-        .oneInScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, limeLightHardware)
-        .then(
-          backOutPostScale(drivetrain, pose, relativeAngle)
-            .and(liftElevatorToCollect(cubeLift).toFinite)
-            .andUntilDone(new PivotDown(collectorPivot))
-        )
-        .then(
-          pickupSecondCube(
-            drivetrain,
-            collectorRollers,
-            collectorClamp,
-            collectorPivot,
-            cubeLift,
-            limeLightHardware,
             pose,
             relativeAngle
           ).withTimeout(Seconds(5))
         )
         .then(
-          dropOffSecondCube(
-            drivetrain,
-            collectorRollers,
-            collectorClamp,
-            collectorPivot,
-            cubeLift,
-            pose,
-            relativeAngle
-          ).withTimeout(Seconds(4))
-        )
-        .then(
           new RotateByAngle(
-            Degrees(180),
+            invertIfFromLeft(Degrees(210)),
             Degrees(25),
             1
           )(drivetrain)
@@ -388,9 +315,9 @@ trait SameSideSwitchScaleAutoGenerator extends AutoGenerator {
         )
         .then(
           dropOffThirdCube(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-            .withTimeout(Seconds(3))
+            .andUntilDone(new PivotDown(collectorPivot))
+            .withTimeout(Seconds(5))
         )
     }
-
   }
 }
