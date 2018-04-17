@@ -7,6 +7,7 @@ import com.lynbrookrobotics.potassium.commons.drivetrain.unicycle.UnicycleSignal
 import com.lynbrookrobotics.potassium.control.offload.OffloadedSignal
 import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.{Component, Signal}
+import squants.time.Milliseconds
 import squants.{Each, Percent}
 
 class DrivetrainComponent(coreTicks: Stream[Unit])(
@@ -14,6 +15,23 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
   props: Signal[DrivetrainProperties],
   clock: Clock
 ) extends Component[TwoSided[OffloadedSignal]] {
+  var currentController: Stream[TwoSided[OffloadedSignal]] = null
+  var hasOutputted = false
+
+  clock(Milliseconds(200)) { _ =>
+    if (currentController != null && !hasOutputted) {
+      println("DETECTED DROPPED DRIVETRAIN DATA")
+      Stream.traceBrokenStream(currentController)
+    }
+  }
+
+  override def setController(controller: Stream[TwoSided[OffloadedSignal]]): Unit = {
+    currentController = controller
+    hasOutputted = false
+
+    super.setController(controller)
+  }
+
   override def defaultController: Stream[TwoSided[OffloadedSignal]] = {
     import hardware.driverHardware.station.{isEnabled, isOperatorControl}
 
@@ -49,6 +67,7 @@ class DrivetrainComponent(coreTicks: Stream[Unit])(
   )
 
   override def applySignal(signal: TwoSided[OffloadedSignal]): Unit = check.assertSingleOutput {
+    hasOutputted = true
     hardware.left.applyCommand(signal.left)
     hardware.right.applyCommand(signal.right)
   }

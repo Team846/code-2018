@@ -90,7 +90,7 @@
         ]
       },
       "maxHeight": [
-        83,
+        50,
         "Inches"
       ],
       "minHeight": [
@@ -98,8 +98,8 @@
         "Inches"
       ],
       "twistyTotalRange": [
-        0.75,
-        "Feet"
+        13,
+        "Inches"
       ],
       "maxCurrentDraw": [
         20,
@@ -174,7 +174,7 @@
         "Feet"
       ],
       "maxAcceleration": [
-        2,
+        4,
         "FeetPerSecondSquared"
       ],
       "maxDeceleration": [
@@ -201,8 +201,8 @@
         6,
         "Inches"
       ],
-      "leftFudge": 1.08,
-      "rightFudge": 1.08,
+      "leftFudge": 1,
+      "rightFudge": 1,
       "wheelOverEncoderGears": {
         "num": [
           18,
@@ -392,7 +392,7 @@
         "Hertz"
       ],
       "sqrWaveAmpl": [
-        35,
+        50,
         "Percent"
       ]
     }
