@@ -3,7 +3,7 @@ package com.lynbrookrobotics.eighteen.auto
 import com.lynbrookrobotics.eighteen.CoreRobot
 import com.lynbrookrobotics.eighteen.collector.CollectorTasks
 import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
-import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
+import com.lynbrookrobotics.eighteen.collector.pivot.CollectorPivot
 import com.lynbrookrobotics.eighteen.cubeLift.positionTasks._
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
@@ -11,7 +11,7 @@ import com.lynbrookrobotics.potassium.tasks.{ContinuousTask, FiniteTask, Wrapper
 import com.lynbrookrobotics.potassium.units.Point
 import squants.motion.FeetPerSecond
 import squants.space.{Angle, Feet, Inches}
-import squants.time.{Milliseconds, Seconds}
+import squants.time.Seconds
 
 class AutoGenerator(protected val r: CoreRobot, protected val startFromLeft: Boolean) {
   import r._

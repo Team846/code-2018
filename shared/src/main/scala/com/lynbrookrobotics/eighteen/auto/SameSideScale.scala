@@ -2,7 +2,7 @@ package com.lynbrookrobotics.eighteen.auto
 
 import com.lynbrookrobotics.eighteen.collector.clamp.{CollectorClamp, OpenCollector}
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
-import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect, SpinForPurge}
+import com.lynbrookrobotics.eighteen.collector.rollers.{CollectorRollers, SpinForCollect}
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
 import com.lynbrookrobotics.eighteen.lift.CubeLiftComp
 import com.lynbrookrobotics.potassium.commons.cartesianPosition.XYPosition
@@ -204,7 +204,8 @@ trait SameSideScale extends AutoGenerator {
         .and(liftElevatorToScale(cubeLift).toFinite)
         .then(
           shootCubeScale(collectorRollers, collectorPivot, cubeLift)
-        ).andUntilDone(new PivotDown(collectorPivot))
+        )
+        .andUntilDone(new PivotDown(collectorPivot))
     }
 
     def oneInScale(

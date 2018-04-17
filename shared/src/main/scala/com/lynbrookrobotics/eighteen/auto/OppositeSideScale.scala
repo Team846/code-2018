@@ -12,7 +12,7 @@ import com.lynbrookrobotics.potassium.tasks.{FiniteTask, WaitTask}
 import com.lynbrookrobotics.potassium.units.Point
 import squants.{Angle, Percent, Seconds}
 import com.lynbrookrobotics.eighteen.drivetrain.unicycleTasks._
-import squants.motion.{FeetPerSecond, FeetPerSecondSquared}
+import squants.motion.FeetPerSecond
 import squants.space.{Degrees, Feet, Inches}
 
 trait OppositeSideScale extends AutoGenerator {
@@ -100,9 +100,11 @@ trait OppositeSideScale extends AutoGenerator {
             .withTimeout(Seconds(0.7))
             .andUntilDone(
               liftElevatorToScale(cubeLift).toContinuous
-            ).then(
-            shootCubeScale(collectorRollers, collectorPivot, cubeLift)
-          ).andUntilDone(new PivotDown(collectorPivot))
+            )
+            .then(
+              shootCubeScale(collectorRollers, collectorPivot, cubeLift)
+            )
+            .andUntilDone(new PivotDown(collectorPivot))
         )
     }
 
@@ -114,13 +116,15 @@ trait OppositeSideScale extends AutoGenerator {
       )(drivetrain)
     }
 
-    def dropAdditionalCubeToScale(drivetrain: DrivetrainComponent,
-                                  collectorRollers: CollectorRollers,
-                                  collectorClamp: CollectorClamp,
-                                  collectorPivot: CollectorPivot,
-                                  cubeLift: CubeLiftComp,
-                                  pose: Stream[Point],
-                                  relativeAngle: Stream[Angle]): FiniteTask = {
+    def dropAdditionalCubeToScale(
+      drivetrain: DrivetrainComponent,
+      collectorRollers: CollectorRollers,
+      collectorClamp: CollectorClamp,
+      collectorPivot: CollectorPivot,
+      cubeLift: CubeLiftComp,
+      pose: Stream[Point],
+      relativeAngle: Stream[Angle]
+    ): FiniteTask = {
       new FollowWayPointsWithPosition(
         wayPoints = toScalePoints.takeRight(3).map(invertXIfFromLeft),
         tolerance = Inches(6),
@@ -130,17 +134,22 @@ trait OppositeSideScale extends AutoGenerator {
         cruisingVelocity = purePursuitCruisingVelocity,
         targetTicksWithingTolerance = 2,
         forwardBackwardMode = ForwardsOnly
-      )(drivetrain).withTimeout(Seconds(2)).and(
-        liftElevatorToScale(cubeLift).toFinite
-      ).then(
-        new RotateByAngle(
-          invertIfFromLeft(Degrees(25)),
-          Degrees(10),
-          1
-        )(drivetrain).withTimeout(Seconds(2))
-      ).then(
-        shootCubeScale(collectorRollers, collectorPivot, cubeLift)
-      ).andUntilDone(new PivotDown(collectorPivot))
+      )(drivetrain)
+        .withTimeout(Seconds(2))
+        .and(
+          liftElevatorToScale(cubeLift).toFinite
+        )
+        .then(
+          new RotateByAngle(
+            invertIfFromLeft(Degrees(25)),
+            Degrees(10),
+            1
+          )(drivetrain).withTimeout(Seconds(2))
+        )
+        .then(
+          shootCubeScale(collectorRollers, collectorPivot, cubeLift)
+        )
+        .andUntilDone(new PivotDown(collectorPivot))
     }
 
     def threeInScale(
@@ -170,7 +179,8 @@ trait OppositeSideScale extends AutoGenerator {
             .withTimeout(Seconds(2))
             .andUntilDone(new WaitTask(Seconds(0.75)).then(liftElevatorToCollect(cubeLift).toContinuous))
             .andUntilDone(new PivotDown(collectorPivot))
-        ).then(
+        )
+        .then(
           new FollowWayPointsWithPosition(
             wayPoints = pickupSecondCube.map(invertXIfFromLeft),
             tolerance = Inches(6),
@@ -180,14 +190,17 @@ trait OppositeSideScale extends AutoGenerator {
             cruisingVelocity = purePursuitCruisingVelocity,
             targetTicksWithingTolerance = 1,
             forwardBackwardMode = ForwardsOnly
-          )(drivetrain).andUntilDone(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).and(
-              new OpenCollector(collectorClamp)
+          )(drivetrain)
+            .andUntilDone(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).and(
+                new OpenCollector(collectorClamp)
+              )
             )
-          ).then(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
-          )
-        ).then(
+            .then(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
+            )
+        )
+        .then(
           new RotateByAngle(
             invertIfFromLeft(Degrees(180)),
             Degrees(25),
@@ -195,14 +208,25 @@ trait OppositeSideScale extends AutoGenerator {
           )(drivetrain)
             .andUntilDone(new SpinForCollect(collectorRollers))
             .withTimeout(Seconds(2))
-        ).then(
-          dropAdditionalCubeToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
-        ).then(
+        )
+        .then(
+          dropAdditionalCubeToScale(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          )
+        )
+        .then(
           spinAroundPostScale(drivetrain)
             .withTimeout(Seconds(2))
             .andUntilDone(new WaitTask(Seconds(0.75)).then(liftElevatorToCollect(cubeLift).toContinuous))
             .andUntilDone(new PivotDown(collectorPivot))
-        ).then(
+        )
+        .then(
           new FollowWayPointsWithPosition(
             wayPoints = pickupThirdCube.map(invertXIfFromLeft),
             tolerance = Inches(6),
@@ -212,14 +236,17 @@ trait OppositeSideScale extends AutoGenerator {
             cruisingVelocity = purePursuitCruisingVelocity,
             targetTicksWithingTolerance = 1,
             forwardBackwardMode = ForwardsOnly
-          )(drivetrain).andUntilDone(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).and(
-              new OpenCollector(collectorClamp)
+          )(drivetrain)
+            .andUntilDone(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).and(
+                new OpenCollector(collectorClamp)
+              )
             )
-          ).then(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
-          )
-        ).then(
+            .then(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
+            )
+        )
+        .then(
           new RotateByAngle(
             invertIfFromLeft(-Degrees(180)),
             Degrees(25),
@@ -227,8 +254,17 @@ trait OppositeSideScale extends AutoGenerator {
           )(drivetrain)
             .andUntilDone(new SpinForCollect(collectorRollers))
             .withTimeout(Seconds(2))
-        ).then(
-          dropAdditionalCubeToScale(drivetrain, collectorRollers, collectorClamp, collectorPivot, cubeLift, pose, relativeAngle)
+        )
+        .then(
+          dropAdditionalCubeToScale(
+            drivetrain,
+            collectorRollers,
+            collectorClamp,
+            collectorPivot,
+            cubeLift,
+            pose,
+            relativeAngle
+          )
         )
     }
   }
