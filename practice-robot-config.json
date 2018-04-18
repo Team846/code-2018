@@ -2,11 +2,11 @@
   "cubeLift": {
     "props": {
       "lowScaleHeight": [
-        50,
+        53,
         "Inches"
       ],
       "highScaleHeight": [
-        50,
+        75,
         "Inches"
       ],
       "pidConfig": {
@@ -90,7 +90,7 @@
         ]
       },
       "maxHeight": [
-        50,
+        88,
         "Inches"
       ],
       "minHeight": [
@@ -174,11 +174,11 @@
         "Feet"
       ],
       "maxAcceleration": [
-        4,
+        10,
         "FeetPerSecondSquared"
       ],
       "maxDeceleration": [
-        2,
+        3,
         "FeetPerSecondSquared"
       ],
       "maxCurrent": [
@@ -384,7 +384,7 @@
         "Percent"
       ],
       "purgeSpeed": [
-        80,
+        60,
         "Percent"
       ],
       "sqrWaveFreq": [
