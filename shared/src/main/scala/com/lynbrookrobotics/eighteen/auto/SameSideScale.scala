@@ -56,8 +56,8 @@ trait SameSideScale extends AutoGenerator {
         toScalePoints.last.y - Feet(1)
       ),
       Point(
-        -Inches(41.8) - Inches(4) - Feet(1) - Inches(6),
-        Inches(228.3 + 6) - Inches(6) - smallRoomFactor
+        -Inches(41.8) - Inches(4) - Feet(1) - Inches(10),
+        Inches(228.3 + 6) - smallRoomFactor
       )
     )
 
@@ -82,7 +82,7 @@ trait SameSideScale extends AutoGenerator {
       ),
       Point(
         -Inches(45.7) - Inches(6) - Inches(6),
-        Inches(280.9) - Feet(1.5) - smallRoomFactor
+        Inches(280.9) - Feet(2) - smallRoomFactor
       )
     )
 
@@ -149,7 +149,7 @@ trait SameSideScale extends AutoGenerator {
           )
         )
         .then(
-          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(0.5))
+          pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLift).forDuration(Seconds(1))
         )
     }
 

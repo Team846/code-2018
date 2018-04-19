@@ -1,6 +1,6 @@
 package com.lynbrookrobotics.eighteen.auto
 
-import com.lynbrookrobotics.eighteen.collector.clamp.CollectorClamp
+import com.lynbrookrobotics.eighteen.collector.clamp.{CollectorClamp, OpenCollector}
 import com.lynbrookrobotics.eighteen.collector.pivot.{CollectorPivot, PivotDown}
 import com.lynbrookrobotics.eighteen.collector.rollers.CollectorRollers
 import com.lynbrookrobotics.eighteen.drivetrain.DrivetrainComponent
@@ -12,7 +12,7 @@ import com.lynbrookrobotics.potassium.streams.Stream
 import com.lynbrookrobotics.potassium.tasks.FiniteTask
 import com.lynbrookrobotics.potassium.units.Point
 import squants.space.{Degrees, Feet, Inches}
-import squants.{Angle, Percent}
+import squants.{Angle, Percent, Seconds}
 
 trait RightSwitch extends AutoGenerator {
   import r._
@@ -41,13 +41,13 @@ trait RightSwitch extends AutoGenerator {
     )
 
     val pickupSecondCubePoint = Point(
-      Inches(23.5) - Inches(11.5) - Inches(3) - Inches(2),
-      Inches(40.7) + Inches(19) + Inches(3)
+      Inches(23.5) - Inches(11.5) - Inches(3) - Inches(2) - Inches(4),
+      Inches(40.7) + Inches(19) + Inches(3) + Inches(4)
     )
 
     val pickupThirdCubePoint = Point(
-      Inches(23.5) - Inches(11.5) + Feet(0.75),
-      Inches(40.7) + Inches(19) + Feet(1)
+      Inches(23.5) - Inches(11.5) + Feet(0.75) -  Inches(6),
+      Inches(40.7) + Inches(19) + Feet(1) + Inches(6)
     )
 
     def driveFirstCube(
@@ -140,7 +140,12 @@ trait RightSwitch extends AutoGenerator {
             position = pose,
             turnPosition = relativeAngle
           )(drivetrain).andUntilDone(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
+              new OpenCollector(collectorClamp)
+            )
+          )
+          .then(
+            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).forDuration(Seconds(0.5))
           )
         )
     }
@@ -249,7 +254,11 @@ trait RightSwitch extends AutoGenerator {
             position = pose,
             turnPosition = relativeAngle
           )(drivetrain).andUntilDone(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp)
+            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
+              new OpenCollector(collectorClamp)
+            )
+          ).then(
+            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).forDuration(Seconds(0.5))
           )
         )
     }
