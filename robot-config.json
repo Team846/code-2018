@@ -50,7 +50,7 @@
         "Inches"
       ],
       "voltageAtBottom": [
-        0.277,
+        0.313,
         "Volts"
       ],
       "liftPositionTolerance": [
@@ -90,7 +90,7 @@
         ]
       },
       "maxHeight": [
-        83,
+        82,
         "Inches"
       ],
       "minHeight": [
@@ -358,6 +358,10 @@
         "Percent"
       ],
       "purgeSpeed": [
+        40,
+        "Percent"
+      ],
+      "purgeSpeedAuto": [
         60,
         "Percent"
       ],

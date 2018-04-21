@@ -25,6 +25,12 @@ object CollectorTasks {
     new SpinForPurge(rollers)
   }
 
+  def purgeCubeAuto(rollers: CollectorRollers, pivot: CollectorPivot)(
+    implicit collectorRollersProps: Signal[CollectorRollersProperties]
+  ): ContinuousTask = {
+    new SpinForPurge(rollers)
+  }
+
   def purgeCubeHard(rollers: CollectorRollers, pivot: CollectorPivot)(
     implicit collectorRollersProps: Signal[CollectorRollersProperties]
   ): ContinuousTask = {

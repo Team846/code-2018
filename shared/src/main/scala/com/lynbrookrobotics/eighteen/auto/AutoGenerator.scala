@@ -73,7 +73,7 @@ class AutoGenerator(protected val r: CoreRobot, protected val startFromLeft: Boo
   ): FiniteTask = {
     liftElevatorToScale(cubeLiftComp).apply(
       CollectorTasks
-        .purgeCube(
+        .purgeCubeAuto(
           collectorRollers,
           collectorPivot
         )
@@ -88,7 +88,7 @@ class AutoGenerator(protected val r: CoreRobot, protected val startFromLeft: Boo
     cubeLiftComp: CubeLiftComp
   ): FiniteTask = {
     liftElevatorToSwitch(cubeLiftComp).apply(
-      CollectorTasks.purgeCube(collectorRollers, collectorPivot).forDuration(Seconds(0.25))
+      CollectorTasks.purgeCubeAuto(collectorRollers, collectorPivot).forDuration(Seconds(0.25))
     )
   }
 

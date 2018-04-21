@@ -33,7 +33,7 @@ trait SameSideScale extends AutoGenerator {
         Inches(241)
       ),
       Point(
-        -Inches(45.7) - Inches(6) - Inches(6),
+        -Inches(45.7) - Inches(6) - Inches(6) + Feet(0.5),
         Inches(280.9) - Feet(1.5) - smallRoomFactor
       )
     )
@@ -56,15 +56,15 @@ trait SameSideScale extends AutoGenerator {
         toScalePoints.last.y - Feet(1)
       ),
       Point(
-        -Inches(41.8) - Inches(4) - Feet(1) - Inches(10),
-        Inches(228.3 + 6) - smallRoomFactor
+        -Inches(41.8) - Inches(4) - Feet(0.8),
+        Inches(228.3 + 6 - 10) - smallRoomFactor
       )
     )
 
     val pickupThirdCubeAfterSwitchPoints = Seq(
       pickupSecondCubePoints.last,
       Point(
-        -Inches(62.1) - Inches(9) - Inches(14),
+        -Inches(62.1) - Inches(9) - Inches(4),
         Inches(218.8) + Inches(4) - smallRoomFactor
       )
     )
