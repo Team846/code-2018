@@ -364,6 +364,10 @@ object DefaultConfig {
                |        35,
                |        "Percent"
                |      ],
+               |      "purgeSpeedAuto": [
+               |        60,
+               |        "Percent"
+               |      ],
                |      "sqrWaveFreq": [
                |        4,
                |        "Hertz"

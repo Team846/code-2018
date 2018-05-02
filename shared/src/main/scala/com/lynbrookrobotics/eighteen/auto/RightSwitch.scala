@@ -46,7 +46,7 @@ trait RightSwitch extends AutoGenerator {
     )
 
     val pickupThirdCubePoint = Point(
-      Inches(23.5) - Inches(11.5) + Feet(0.75) -  Inches(6),
+      Inches(23.5) - Inches(11.5) + Feet(0.75) - Inches(6),
       Inches(40.7) + Inches(19) + Feet(1) + Inches(6)
     )
 
@@ -139,14 +139,15 @@ trait RightSwitch extends AutoGenerator {
             forwardBackwardMode = ForwardsOnly,
             position = pose,
             turnPosition = relativeAngle
-          )(drivetrain).andUntilDone(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
-              new OpenCollector(collectorClamp)
+          )(drivetrain)
+            .andUntilDone(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
+                new OpenCollector(collectorClamp)
+              )
             )
-          )
-          .then(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).forDuration(Seconds(0.5))
-          )
+            .then(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).forDuration(Seconds(0.5))
+            )
         )
     }
 
@@ -253,13 +254,15 @@ trait RightSwitch extends AutoGenerator {
             forwardBackwardMode = ForwardsOnly,
             position = pose,
             turnPosition = relativeAngle
-          )(drivetrain).andUntilDone(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
-              new OpenCollector(collectorClamp)
+          )(drivetrain)
+            .andUntilDone(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).and(
+                new OpenCollector(collectorClamp)
+              )
             )
-          ).then(
-            pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).forDuration(Seconds(0.5))
-          )
+            .then(
+              pickupGroundCube(collectorRollers, collectorClamp, collectorPivot, cubeLiftComp).forDuration(Seconds(0.5))
+            )
         )
     }
 
