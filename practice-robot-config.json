@@ -387,6 +387,10 @@
         60,
         "Percent"
       ],
+      "purgeSpeedAuto": [
+        60,
+        "Percent"
+      ],
       "sqrWaveFreq": [
         4,
         "Hertz"

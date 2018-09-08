@@ -8,6 +8,7 @@ final case class CollectorRollersPorts(rollerLeftPort: Int, rollerRightPort: Int
 final case class CollectorRollersProperties(
   collectSpeed: Dimensionless,
   purgeSpeed: Dimensionless,
+  purgeSpeedAuto: Dimensionless,
   sqrWaveFreq: Frequency,
   sqrWaveAmpl: Dimensionless
 )

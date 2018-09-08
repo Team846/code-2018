@@ -29,6 +29,19 @@ class SpinForPurge(rollers: CollectorRollers)(implicit collectorRollersProps: Si
   }
 }
 
+class SpinForPurgeAuto(rollers: CollectorRollers)(implicit collectorRollersProps: Signal[CollectorRollersProperties])
+    extends ContinuousTask {
+  override protected def onStart(): Unit = {
+    rollers.setController(
+      rollers.coreTicks.map(_ => (collectorRollersProps.get.purgeSpeedAuto, collectorRollersProps.get.purgeSpeedAuto))
+    )
+  }
+
+  override protected def onEnd(): Unit = {
+    rollers.resetToDefault()
+  }
+}
+
 class SpinForHardPurge(rollers: CollectorRollers)(implicit collectorRollersProps: Signal[CollectorRollersProperties])
     extends ContinuousTask {
   override protected def onStart(): Unit = {

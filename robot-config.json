@@ -2,11 +2,11 @@
   "cubeLift": {
     "props": {
       "lowScaleHeight": [
-        64,
+        53,
         "Inches"
       ],
       "highScaleHeight": [
-        66,
+        72,
         "Inches"
       ],
       "maxCurrent": [
@@ -50,7 +50,7 @@
         "Inches"
       ],
       "voltageAtBottom": [
-        0.277,
+        0.297,
         "Volts"
       ],
       "liftPositionTolerance": [
@@ -90,7 +90,7 @@
         ]
       },
       "maxHeight": [
-        83,
+        82,
         "Inches"
       ],
       "minHeight": [
@@ -98,8 +98,8 @@
         "Inches"
       ],
       "twistyTotalRange": [
-        0.75,
-        "Feet"
+        13,
+        "Inches"
       ]
     },
     "ports": {
@@ -162,7 +162,7 @@
         "Feet"
       ],
       "maxAcceleration": [
-        7,
+        10,
         "FeetPerSecondSquared"
       ],
       "maxDeceleration": [
@@ -358,7 +358,11 @@
         "Percent"
       ],
       "purgeSpeed": [
-        35,
+        40,
+        "Percent"
+      ],
+      "purgeSpeedAuto": [
+        60,
         "Percent"
       ],
       "sqrWaveFreq": [
@@ -366,7 +370,7 @@
         "Hertz"
       ],
       "sqrWaveAmpl": [
-        35,
+        50,
         "Percent"
       ]
     }
