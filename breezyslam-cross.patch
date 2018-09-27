@@ -86,3 +86,106 @@ index dee4f6e..16bae1b 100644
  	
  install: libbreezyslam.$(LIBEXT)
  	cp libbreezyslam.$(LIBEXT) $(LIBDIR)
+diff --git a/c/coreslam.c b/c/coreslam.c
+index bcb2d7d..35b52f9 100644
+--- a/c/coreslam.c
++++ b/c/coreslam.c
+@@ -378,6 +378,10 @@ void
+     }
+ }
+ 
++scan_t * scan_alloc() {
++    return (scan_t *)malloc(sizeof(scan_t));
++}
++
+ void scan_init(
+     scan_t * scan, 
+     int span,
+diff --git a/cpp/Makefile b/cpp/Makefile
+index dee4f6e..16bae1b 100644
+--- a/cpp/Makefile
++++ b/cpp/Makefile
+@@ -16,19 +16,22 @@
+ #  along with this code.  If not, see <http:#www.gnu.org/licenses/>.
+ 
+ # Where you want to put the library
+-LIBDIR = /usr/local/lib
++LIBDIR = /usr/local/arm-frc-linux-gnueabi/lib
+ 
+ # Set library extension based on OS
+-ifeq ("$(shell uname)","Darwin")
+-  LIBEXT = dylib
+-else ifeq ("$(shell uname)","Linux")
+-  CFLAGS = -fPIC
+-  LIBEXT = so
+-else
+-  LIBEXT = dll
+-endif
++# ifeq ("$(shell uname)","Darwin")
++#   LIBEXT = dylib
++# else ifeq ("$(shell uname)","Linux")
++#   CFLAGS = -fPIC
++#   LIBEXT = so
++# else
++#   LIBEXT = dll
++# endif
++
++CFLAGS = -fPIC
++LIBEXT = so
+ 
+-ARCH = $(shell uname -m)
++ARCH = "armv7l"
+ 
+ # Set SIMD compile params based on architecture
+ ifeq ("$(ARCH)","armv7l")
+@@ -44,36 +47,41 @@ all: libbreezyslam.$(LIBEXT)
+ test: breezytest
+ 	./breezytest
+ 
++breezyslam.a: algorithms.o  Scan.o Map.o WheeledRobot.o \
++                         coreslam.o coreslam_$(ARCH).o random.o ziggurat.o
++	arm-frc-linux-gnueabi-ar rvs breezyslam.a algorithms.o Scan.o Map.o WheeledRobot.o \
++                        coreslam.o coreslam_$(ARCH).o random.o ziggurat.o
++
+ libbreezyslam.$(LIBEXT): algorithms.o  Scan.o Map.o WheeledRobot.o \
+                          coreslam.o coreslam_$(ARCH).o random.o ziggurat.o
+-	g++ -O3 -shared algorithms.o Scan.o Map.o WheeledRobot.o \
++	arm-frc-linux-gnueabi-g++ -O3 -shared algorithms.o Scan.o Map.o WheeledRobot.o \
+                         coreslam.o coreslam_$(ARCH).o random.o ziggurat.o \
+           -o libbreezyslam.$(LIBEXT) -lm
+ 
+ algorithms.o: algorithms.cpp algorithms.hpp Laser.hpp Position.hpp Map.hpp Scan.hpp Velocities.hpp \
+                WheeledRobot.hpp ../c/coreslam.h 
+-	g++ -O3 -I../c -c -Wall $(CFLAGS) algorithms.cpp
++	arm-frc-linux-gnueabi-g++ -O3 -I../c -c -Wall $(CFLAGS) algorithms.cpp
+ 
+ Scan.o: Scan.cpp Scan.hpp Velocities.hpp Laser.hpp ../c/coreslam.h
+-	g++ -O3 -I../c -c -Wall $(CFLAGS) Scan.cpp
++	arm-frc-linux-gnueabi-g++ -O3 -I../c -c -Wall $(CFLAGS) Scan.cpp
+ 
+ Map.o: Map.cpp Map.hpp Position.hpp Scan.hpp ../c/coreslam.h
+-	g++ -O3 -I../c -c -Wall $(CFLAGS) Map.cpp
++	arm-frc-linux-gnueabi-g++ -O3 -I../c -c -Wall $(CFLAGS) Map.cpp
+ 
+ WheeledRobot.o: WheeledRobot.cpp WheeledRobot.hpp 
+-	g++ -O3 -I../c -c -Wall $(CFLAGS) WheeledRobot.cpp
++	arm-frc-linux-gnueabi-g++ -O3 -I../c -c -Wall $(CFLAGS) WheeledRobot.cpp
+ 
+ coreslam.o: ../c/coreslam.c ../c/coreslam.h
+-	gcc -O3 -c -Wall $(CFLAGS) ../c/coreslam.c
++	arm-frc-linux-gnueabi-gcc -O3 -c -Wall $(CFLAGS) ../c/coreslam.c
+ 
+ coreslam_$(ARCH).o: ../c/coreslam_$(ARCH).c ../c/coreslam.h
+-	gcc -O3 -c -Wall $(CFLAGS) $(SIMD_FLAGS) ../c/coreslam_$(ARCH).c
++	arm-frc-linux-gnueabi-gcc -O3 -c -Wall $(CFLAGS) $(SIMD_FLAGS) ../c/coreslam_$(ARCH).c
+ 
+ random.o: ../c/random.c
+-	gcc -O3 -c -Wall $(CFLAGS) ../c/random.c
++	arm-frc-linux-gnueabi-gcc -O3 -c -Wall $(CFLAGS) ../c/random.c
+ 	
+ ziggurat.o: ../c/ziggurat.c
+-	gcc -O3 -c -Wall $(CFLAGS) ../c/ziggurat.c
++	arm-frc-linux-gnueabi-gcc -O3 -c -Wall $(CFLAGS) ../c/ziggurat.c
+ 	
+ install: libbreezyslam.$(LIBEXT)
+ 	cp libbreezyslam.$(LIBEXT) $(LIBDIR)

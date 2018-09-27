@@ -35,9 +35,9 @@ lazy val robot = crossProject(JVMPlatform, NativePlatform)
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % Test
   )
   .nativeSettings(
-    libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.2",
-    libraryDependencies += "com.lynbrookrobotics" %%% "ntcore-scala-native" % "0.1.2",
-    libraryDependencies += "com.lynbrookrobotics" %%% "phoenix-scala-native" % "0.1.2",
+    libraryDependencies += "com.lynbrookrobotics" %%% "wpilib-scala-native" % "0.1.3+20180327-1841",
+    libraryDependencies += "com.lynbrookrobotics" %%% "ntcore-scala-native" % "0.1.3+20180327-1841",
+    libraryDependencies += "com.lynbrookrobotics" %%% "phoenix-scala-native" % "0.1.3+20180327-1841",
     scalaVersion := "2.11.12",
     scalacOptions ++= Seq("-target:jvm-1.8")
   )
